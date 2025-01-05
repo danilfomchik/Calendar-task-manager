@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
+
 import { SliceNames } from "./types";
 import counterSlice from "./counter/counterSlice";
 

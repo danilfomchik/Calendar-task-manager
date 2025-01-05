@@ -1,10 +1,10 @@
+import { useSelector } from "react-redux";
+
 import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { useAppDispatch } from "./redux/store";
 import { increment } from "./redux/counter/counterSlice";
 import { selectCounterValue } from "./redux/counter/selectors";
-import { useSelector } from "react-redux";
 
 function App() {
     const dispatch = useAppDispatch();
@@ -17,9 +17,6 @@ function App() {
     return (
         <>
             <div>
-                <a href="https://vite.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
                 <a href="https://react.dev" target="_blank">
                     <img
                         src={reactLogo}
