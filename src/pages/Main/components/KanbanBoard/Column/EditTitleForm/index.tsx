@@ -1,16 +1,16 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import {useDispatch} from 'react-redux';
+import {SubmitHandler, useForm} from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
 
 import Button from '@/components/Button';
 import CheckIcon from '@/icons/CheckIcon';
 import CloseIcon from '@/icons/CloseIcon';
-import { TEditTitleFormProps, TFormValues } from './types';
-import { validation } from './form';
-import { updateColumnTitle } from '@/redux/columns/columnsSlice';
+import {TEditTitleFormProps, TFormValues} from './types';
+import {validation} from './form';
+import {updateColumnTitle} from '@/redux/columns/columnsSlice';
 
-const EditTitleForm = ({ column, onCloseEditMode }: TEditTitleFormProps) => {
+const EditTitleForm = ({column, onCloseEditMode}: TEditTitleFormProps) => {
     const dispatch = useDispatch();
     const methods = useForm<TFormValues>({
         resolver: yupResolver(validation),
@@ -23,13 +23,11 @@ const EditTitleForm = ({ column, onCloseEditMode }: TEditTitleFormProps) => {
     const {
         register,
         handleSubmit,
-        formState: { errors, isDirty },
+        formState: {errors, isDirty},
     } = methods;
 
-    const onSubmit: SubmitHandler<TFormValues> = (data) => {
-        dispatch(
-            updateColumnTitle({ columnId: column.id, newTitle: data.title }),
-        );
+    const onSubmit: SubmitHandler<TFormValues> = data => {
+        dispatch(updateColumnTitle({columnId: column.id, newTitle: data.title}));
         onCloseEditMode();
     };
 
@@ -52,11 +50,7 @@ const EditTitleForm = ({ column, onCloseEditMode }: TEditTitleFormProps) => {
                         icon={<CheckIcon size="size-5" />}
                         type="submit"
                     />
-                    <Button
-                        className="text-sm p-2"
-                        icon={<CloseIcon size="size-5" />}
-                        onClick={onCloseEditMode}
-                    />
+                    <Button className="text-sm p-2" icon={<CloseIcon size="size-5" />} onClick={onCloseEditMode} />
                 </div>
             </div>
             {errors.title && (

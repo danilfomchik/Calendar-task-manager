@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import {useCallback} from 'react';
 import {
     DndContext,
     DragEndEvent,
@@ -9,8 +9,8 @@ import {
     useSensor,
     useSensors,
 } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
-import { useDispatch, useSelector } from 'react-redux';
+import {arrayMove} from '@dnd-kit/sortable';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Button from '@/components/Button';
 import AddIcon from '@/icons/AddIcon';
@@ -23,14 +23,9 @@ import {
     setActiveTask,
     setColumns,
 } from '@/redux/columns/columnsSlice';
-import {
-    selectActiveColumn,
-    selectActiveTask,
-    selectAllTasks,
-    selectColumns,
-} from '@/redux/columns/selectors';
-import { CurrentDraggableType } from './types';
-import { TId } from '@/redux/columns/types';
+import {selectActiveColumn, selectActiveTask, selectAllTasks, selectColumns} from '@/redux/columns/selectors';
+import {CurrentDraggableType} from './types';
+import {TId} from '@/redux/columns/types';
 import DragOverlay from './ColumnsList/DragOverlay';
 
 const KanbanBoard = () => {
@@ -63,7 +58,7 @@ const KanbanBoard = () => {
     }, [activeColumn, activeTask, dispatch]);
 
     const handleDragStart = (event: DragStartEvent) => {
-        const { current } = event.active.data;
+        const {current} = event.active.data;
 
         if (current?.type === CurrentDraggableType.Column) {
             dispatch(setActiveColumn(current?.column));
@@ -75,7 +70,7 @@ const KanbanBoard = () => {
     };
 
     const initDragEvent = (event: DragEndEvent | DragOverEvent) => {
-        const { active, over } = event;
+        const {active, over} = event;
 
         const activeId = active.id;
         const overId = over ? over.id : null;
@@ -107,36 +102,20 @@ const KanbanBoard = () => {
             const dragEvent = initDragEvent(event);
             if (!dragEvent) return;
 
-            const {
-                activeId,
-                overId,
-                activeElement,
-                overElement,
-                activeType,
-                overType,
-            } = dragEvent;
+            const {activeId, overId, activeElement, overElement, activeType, overType} = dragEvent;
 
             const isActiveATask = activeType === CurrentDraggableType.Task;
             const isOverAColumn = overType === CurrentDraggableType.Column;
 
             // moving columns
-            const activeColumnIndex = columns.findIndex(
-                (column) => column.id === activeId,
-            );
-            const overColumnIndex = columns.findIndex(
-                (column) => column.id === overId,
-            );
+            const activeColumnIndex = columns.findIndex(column => column.id === activeId);
+            const overColumnIndex = columns.findIndex(column => column.id === overId);
 
             if (isActiveATask && isOverAColumn) {
-                if (activeElement?.task.columnId === overElement?.column.id)
-                    return;
+                if (activeElement?.task.columnId === overElement?.column.id) return;
             }
 
-            dispatch(
-                setColumns(
-                    arrayMove(columns, activeColumnIndex, overColumnIndex),
-                ),
-            );
+            dispatch(setColumns(arrayMove(columns, activeColumnIndex, overColumnIndex)));
         },
         [columns, dispatch, onClearActiveElements],
     );
@@ -145,7 +124,7 @@ const KanbanBoard = () => {
         const dragEvent = initDragEvent(event);
         if (!dragEvent) return;
 
-        const { activeId, overId, activeType, overType } = dragEvent;
+        const {activeId, overId, activeType, overType} = dragEvent;
 
         const isActiveATask = activeType === CurrentDraggableType.Task;
         const isOverATask = overType === CurrentDraggableType.Task;
@@ -155,10 +134,10 @@ const KanbanBoard = () => {
 
         // dropping task over another task
         if (isActiveATask && isOverATask) {
-            const activeIndex = tasks.findIndex((task) => task.id === activeId);
-            const overIndex = tasks.findIndex((task) => task.id === overId);
+            const activeIndex = tasks.findIndex(task => task.id === activeId);
+            const overIndex = tasks.findIndex(task => task.id === overId);
 
-            const updatedTasks = tasks.map((task) => {
+            const updatedTasks = tasks.map(task => {
                 if (task.id === activeTask?.id) {
                     return {
                         ...activeTask,
@@ -169,16 +148,14 @@ const KanbanBoard = () => {
                 return task;
             });
 
-            dispatch(
-                reorderTasks(arrayMove(updatedTasks, activeIndex, overIndex)),
-            );
+            dispatch(reorderTasks(arrayMove(updatedTasks, activeIndex, overIndex)));
         }
 
         // dropping task over another column
         if (isActiveATask && isOverAColumn) {
-            const activeIndex = tasks.findIndex((task) => task.id === activeId);
+            const activeIndex = tasks.findIndex(task => task.id === activeId);
 
-            const updatedTasks = tasks.map((task) => {
+            const updatedTasks = tasks.map(task => {
                 if (task.id === activeTask?.id) {
                     return {
                         ...activeTask,
@@ -189,9 +166,7 @@ const KanbanBoard = () => {
                 return task;
             });
 
-            dispatch(
-                reorderTasks(arrayMove(updatedTasks, activeIndex, activeIndex)),
-            );
+            dispatch(reorderTasks(arrayMove(updatedTasks, activeIndex, activeIndex)));
         }
     };
 
@@ -202,14 +177,9 @@ const KanbanBoard = () => {
                 collisionDetection={pointerWithin}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
-                onDragOver={handleDragOver}
-            >
+                onDragOver={handleDragOver}>
                 <div className="flex flex-col w-full h-screen gap-8 pt-[40px] items-center">
-                    <Button
-                        icon={<AddIcon />}
-                        text="Add column"
-                        onClick={onCreateNewColumn}
-                    />
+                    <Button icon={<AddIcon />} text="Add column" onClick={onCreateNewColumn} />
                     <ColumnsList />
                 </div>
 

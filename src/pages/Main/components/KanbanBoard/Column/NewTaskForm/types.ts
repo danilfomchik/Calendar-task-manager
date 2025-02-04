@@ -1,6 +1,6 @@
-import { Dispatch } from 'react';
+import {Dispatch} from 'react';
 
-import { TId } from '@/redux/columns/types';
+import {TId} from '@/redux/columns/types';
 
 export type TNewTaskFormProps = {
     columnId: TId;

@@ -1,7 +1,7 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import {useDispatch} from 'react-redux';
 
-import { PreloadedState, SliceNames } from './types';
+import {PreloadedState, SliceNames} from './types';
 import counterSlice from './columns/columnsSlice';
 
 const combinedReducer = combineReducers({
@@ -11,7 +11,7 @@ const combinedReducer = combineReducers({
 export const setupStore = (preloadedState?: PreloadedState) => {
     return configureStore({
         reducer: combinedReducer,
-        middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+        middleware: getDefaultMiddleware => getDefaultMiddleware(),
         preloadedState,
     });
 };

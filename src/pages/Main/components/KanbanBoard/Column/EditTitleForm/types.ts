@@ -1,4 +1,4 @@
-import { TColumn } from '@/redux/columns/types';
+import {TColumn} from '@/redux/columns/types';
 
 export type TEditTitleFormProps = {
     column: TColumn;

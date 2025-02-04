@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { TIconsSizes } from '@/services/types';
+import {TIconsSizes} from '@/services/types';
 
-const EditIcon = ({ size }: { size: TIconsSizes }) => {
+const EditIcon = ({size}: {size: TIconsSizes}) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -10,8 +10,7 @@ const EditIcon = ({ size }: { size: TIconsSizes }) => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={`${size} cursor-pointer`}
-        >
+            className={`${size} cursor-pointer`}>
             <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

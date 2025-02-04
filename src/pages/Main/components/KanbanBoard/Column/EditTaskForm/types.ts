@@ -1,6 +1,6 @@
-import { Dispatch } from 'react';
+import {Dispatch} from 'react';
 
-import { TTask } from '@/redux/columns/types';
+import {TTask} from '@/redux/columns/types';
 
 export type TEditTaskFormProps = {
     task: TTask;

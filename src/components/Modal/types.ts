@@ -1,4 +1,4 @@
-import { MouseEvent, PropsWithChildren } from 'react';
+import {MouseEvent, PropsWithChildren} from 'react';
 
 export interface IOnCloseModalEvent extends MouseEvent<HTMLDivElement> {
     target: EventTarget & HTMLDivElement;

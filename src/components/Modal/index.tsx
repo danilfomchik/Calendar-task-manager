@@ -1,9 +1,9 @@
 import React from 'react';
-import { createPortal } from 'react-dom';
+import {createPortal} from 'react-dom';
 
-import { IOnCloseModalEvent, TModalProps } from './types';
+import {IOnCloseModalEvent, TModalProps} from './types';
 
-const Modal = ({ className, onClose, children }: TModalProps) => {
+const Modal = ({className, onClose, children}: TModalProps) => {
     const onCloseModal = (e: IOnCloseModalEvent) => {
         if (e.target.classList.contains('modal-wrapper')) {
             if (onClose) {
@@ -14,10 +14,7 @@ const Modal = ({ className, onClose, children }: TModalProps) => {
     return (
         <>
             {createPortal(
-                <div
-                    className={`modal-wrapper ${className ? className : ''}`}
-                    onClick={onCloseModal}
-                >
+                <div className={`modal-wrapper ${className ? className : ''}`} onClick={onCloseModal}>
                     {children}
                 </div>,
                 document.body,

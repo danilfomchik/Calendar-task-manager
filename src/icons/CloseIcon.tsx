@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { TIconsSizes } from '@/services/types';
+import {TIconsSizes} from '@/services/types';
 
-const CloseIcon = ({ size }: { size: TIconsSizes }) => {
+const CloseIcon = ({size}: {size: TIconsSizes}) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -10,13 +10,8 @@ const CloseIcon = ({ size }: { size: TIconsSizes }) => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={size}
-        >
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-            />
+            className={size}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
     );
 };

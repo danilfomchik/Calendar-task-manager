@@ -1,7 +1,7 @@
-import { UniqueIdentifier } from '@dnd-kit/core';
-import { PayloadAction } from '@reduxjs/toolkit';
+import {UniqueIdentifier} from '@dnd-kit/core';
+import {PayloadAction} from '@reduxjs/toolkit';
 
-import { Nullable } from '@/services/types';
+import {Nullable} from '@/services/types';
 
 export type TId = UniqueIdentifier;
 
