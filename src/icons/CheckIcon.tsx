@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {TIconsSizes} from '@/services/types';
 
 const CheckIcon = ({size}: {size: TIconsSizes}) => {

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import {useMemo} from 'react';
 import {SortableContext} from '@dnd-kit/sortable';
 
 import Task from './Task';
