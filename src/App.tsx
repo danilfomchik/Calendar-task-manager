@@ -1,42 +1,36 @@
-import { useSelector } from "react-redux";
+import MainPage from "./pages/Main";
 
-import reactLogo from "./assets/react.svg";
-import "./App.css";
-import { useAppDispatch } from "./redux/store";
-import { increment } from "./redux/counter/counterSlice";
-import { selectCounterValue } from "./redux/counter/selectors";
+// array for years
+// obj for 12 months (key -> name of month, value -> from 1 to 12)
+// days renders my Array.from(daysInMonth(month, year))
+//
 
 function App() {
-    const dispatch = useAppDispatch();
-    const counter = useSelector(selectCounterValue);
+  // function daysInMonth(month: number, year: number) {
+  //     // console.log(new Date(year, month, 0).getMonth());
 
-    const onCounterIncrement = () => {
-        dispatch(increment());
-    };
+  //     const date = new Date(year, month, 0);
 
-    return (
-        <>
-            <div>
-                <a href="https://react.dev" target="_blank">
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
-                    />
-                </a>
-            </div>
-            <h1 className="font-bold">Vite + React</h1>
-            <div className="card">
-                <button onClick={onCounterIncrement}>count is {counter}</button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
-        </>
-    );
+  //     // Getting full month name (e.g. "September")
+  //     // const monthName = date.toLocaleString("default", { month: "long" });
+
+  //     // console.log(monthName);
+
+  //     return date.getDate();
+  // }
+
+  // const month = 2;
+  // const year = 2025;
+
+  // const result =
+  //     "Number of days in " +
+  //     month +
+  //     " and month of the year " +
+  //     year +
+  //     " is " +
+  //     daysInMonth(month, year);
+
+  return <MainPage />;
 }
 
 export default App;

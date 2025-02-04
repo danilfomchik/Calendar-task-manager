@@ -2,7 +2,15 @@
 export default {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                mainBackgroundColor: "#0D1117",
+                columnBackgroundColor: "#161c22",
+            },
+            gridTemplateColumns: {
+                "auto-fill": "repeat(auto-fill, minmax(330px, 1fr))",
+            },
+        },
     },
     plugins: [],
 };
