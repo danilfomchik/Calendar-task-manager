@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "prettier": "prettier --ignore-path .gitignore --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "preview": "vite preview",
     "prepare": "husky"
   },

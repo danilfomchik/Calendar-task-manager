@@ -1,4 +1,4 @@
 export enum CurrentDraggableType {
-  Column = "Column",
-  Task = "Task",
+    Column = 'Column',
+    Task = 'Task',
 }

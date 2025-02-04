@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import KanbanBoard from "./components/KanbanBoard";
+import KanbanBoard from './components/KanbanBoard';
 
 const MainPage = () => {
-  return <KanbanBoard />;
+    return <KanbanBoard />;
 };
 
 export default MainPage;

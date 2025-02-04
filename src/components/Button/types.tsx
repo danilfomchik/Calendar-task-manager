@@ -1,8 +1,8 @@
-import { ButtonHTMLAttributes, ReactElement } from "react";
+import { ButtonHTMLAttributes, ReactElement } from 'react';
 
-import { Nullable } from "@/services/types";
+import { Nullable } from '@/services/types';
 
 export type TButtonProps = {
-  icon?: Nullable<ReactElement>;
-  text?: string;
+    icon?: Nullable<ReactElement>;
+    text?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;

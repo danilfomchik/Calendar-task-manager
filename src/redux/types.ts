@@ -1,7 +1,7 @@
 export interface PreloadedState {
-  [key: string]: unknown;
+    [key: string]: unknown;
 }
 
 export enum SliceNames {
-  columnsSlice = "columnsData",
+    columnsSlice = 'columnsData',
 }
