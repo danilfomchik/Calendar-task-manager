@@ -1,10 +1,10 @@
-import { TColumn } from "@/redux/columns/types";
+import {TColumn} from '@/redux/columns/types';
 
 export type TEditTitleFormProps = {
-  column: TColumn;
-  onCloseEditMode: () => void;
+    column: TColumn;
+    onCloseEditMode: () => void;
 };
 
 export type TFormValues = {
-  title: string;
+    title: string;
 };

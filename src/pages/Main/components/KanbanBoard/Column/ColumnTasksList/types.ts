@@ -1,3 +1,3 @@
-import { TTask } from "@/redux/columns/types";
+import {TTask} from '@/redux/columns/types';
 
-export type TColumnTasksListProps = { tasks: TTask[] };
+export type TColumnTasksListProps = {tasks: TTask[]};

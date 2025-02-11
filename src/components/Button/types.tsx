@@ -1,8 +1,22 @@
-import { ButtonHTMLAttributes, ReactElement } from "react";
+import {ButtonHTMLAttributes, ReactElement} from 'react';
 
-import { Nullable } from "@/services/types";
+import {Nullable} from '@/services/types';
 
-export type TButtonProps = {
-  icon?: Nullable<ReactElement>;
-  text?: string;
-} & ButtonHTMLAttributes<HTMLButtonElement>;
+export enum ButtonVariants {
+    primary = 'primary',
+    secondary = 'secondary',
+}
+
+type TButton =
+    | {
+          icon?: Nullable<ReactElement> | never;
+          text: string;
+      }
+    | {
+          icon: Nullable<ReactElement>;
+          text?: string | never;
+      };
+
+type TButtonType = {variant: `${ButtonVariants}`};
+
+export type TButtonProps = TButton & TButtonType & ButtonHTMLAttributes<HTMLButtonElement>;

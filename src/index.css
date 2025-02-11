@@ -8,6 +8,10 @@ body,
     @apply bg-black text-white box-border;
 }
 
+#root .react-calendar {
+    @apply bg-transparent;
+}
+
 ::-webkit-scrollbar {
     width: 4px;
 }

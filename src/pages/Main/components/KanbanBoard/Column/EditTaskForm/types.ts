@@ -1,9 +1,9 @@
-import { Dispatch } from "react";
+import {Dispatch} from 'react';
 
-import { TTask } from "@/redux/columns/types";
+import {TTask} from '@/redux/columns/types';
 
 export type TEditTaskFormProps = {
-  task: TTask;
-  setIsEditMode: Dispatch<React.SetStateAction<boolean>>;
-  setIsHover: Dispatch<React.SetStateAction<boolean>>;
+    task: TTask;
+    setIsEditMode: Dispatch<React.SetStateAction<boolean>>;
+    setIsHover: Dispatch<React.SetStateAction<boolean>>;
 };
