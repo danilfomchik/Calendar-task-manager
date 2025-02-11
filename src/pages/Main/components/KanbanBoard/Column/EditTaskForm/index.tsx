@@ -37,12 +37,13 @@ const EditTaskForm = ({task, setIsEditMode, setIsHover}: TEditTaskFormProps) => 
     };
 
     return (
-        <div className="modal relative bg-mainBackgroundColor border border-sky-500 rounded-lg md:min-w-96 sm:min-w-56">
-            <button
-                className="absolute right-2 top-2 text-sm cursor-pointer hover:text-sky-500"
-                onClick={() => setIsEditMode(false)}>
-                <CloseIcon size="size-5" />
-            </button>
+        <div className="modal relative bg-mainBackgroundColor border border-sky-500 rounded-lg sm:min-w-56 md:min-w-96">
+            <Button
+                variant="primary"
+                icon={<CloseIcon size="size-5" />}
+                className="absolute right-2 top-2 p-1 text-sm cursor-pointer hover:text-sky-500"
+                onClick={() => setIsEditMode(false)}
+            />
 
             <h3 className="text-lg font-bold p-3 text-center">Edit task</h3>
 
@@ -63,9 +64,10 @@ const EditTaskForm = ({task, setIsEditMode, setIsHover}: TEditTaskFormProps) => 
                     </div>
 
                     <Button
+                        variant="primary"
                         className={`${
                             isDirty && !errors.taskTitle && 'border-sky-500 text-sky-500'
-                        } text-sm p-2 disabled:hover:border-columnBackgroundColor disabled:text-columnBackgroundColor disabled:hover:text-columnBackgroundColor disabled:cursor-auto`}
+                        } text-sm p-2 disabled:hover:border-secondaryBackgroundColor disabled:text-secondaryBackgroundColor disabled:hover:text-secondaryBackgroundColor disabled:cursor-auto`}
                         disabled={!isDirty || !!errors.taskTitle}
                         text="Edit"
                         icon={<EditIcon size="size-5" />}

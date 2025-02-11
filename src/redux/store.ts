@@ -3,9 +3,11 @@ import {useDispatch} from 'react-redux';
 
 import {PreloadedState, SliceNames} from './types';
 import counterSlice from './columns/columnsSlice';
+import dateSlice from './date/dateSlice';
 
 const combinedReducer = combineReducers({
     [SliceNames.columnsSlice]: counterSlice.reducer,
+    [SliceNames.dateSlice]: dateSlice.reducer,
 });
 
 export const setupStore = (preloadedState?: PreloadedState) => {

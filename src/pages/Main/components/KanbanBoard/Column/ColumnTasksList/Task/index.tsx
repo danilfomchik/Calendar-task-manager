@@ -35,7 +35,7 @@ const Task = ({task}: TTasksProps) => {
 
     return (
         <div
-            className={`flex items-center justify-between min-h-[70px] p-3 mx-3 rounded-lg bg-columnBackgroundColor border-columnBackgroundColor border-2 cursor-grab hover:border-sky-500 ${isDraggingStyles}`}
+            className={`flex items-center justify-between min-h-[70px] p-3 mx-3 rounded-lg bg-secondaryBackgroundColor border-secondaryBackgroundColor border-2 cursor-grab hover:border-sky-500 ${isDraggingStyles}`}
             style={style}
             ref={setNodeRef}
             {...attributes}
@@ -48,11 +48,13 @@ const Task = ({task}: TTasksProps) => {
                     {isHover && (
                         <div className="flex gap-2">
                             <Button
+                                variant="primary"
                                 className="text-sm p-1.5"
                                 icon={<EditIcon size="size-4" />}
                                 onClick={() => setIsEditMode(true)}
                             />
                             <Button
+                                variant="primary"
                                 className="text-sm p-1.5"
                                 icon={<DeleteIcon size="size-4" />}
                                 onClick={onDeleteTask}
@@ -63,9 +65,7 @@ const Task = ({task}: TTasksProps) => {
             )}
 
             {isEditMode && (
-                <Modal
-                    className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-columnBackgroundColor bg-opacity-80"
-                    onClose={() => setIsEditMode(false)}>
+                <Modal onClose={() => setIsEditMode(false)}>
                     <EditTaskForm task={task} setIsEditMode={setIsEditMode} setIsHover={setIsHover} />
                 </Modal>
             )}

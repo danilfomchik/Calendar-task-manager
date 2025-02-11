@@ -1,14 +1,25 @@
-import {TButtonProps} from './types';
+import {ButtonVariants, TButtonProps} from './types';
 
-const Button = ({icon = null, text = '', className, ...restProps}: TButtonProps) => {
+const buttonVariants = {
+    [ButtonVariants.primary]:
+        'border-secondaryBackgroundColor bg-mainBackgroundColor hover:border-sky-500 hover:text-sky-500',
+    [ButtonVariants.secondary]:
+        'border-blue-600 bg-blue-600 hover:text-sky-500 hover:border-sky-500 hover:bg-mainBackgroundColor',
+};
+
+const Button = ({variant, icon = null, text = '', className, children, ...restProps}: TButtonProps) => {
     return (
         <button
-            className={`h-auto w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border border-columnBackgroundColor rounded-lg bg-mainBackgroundColor transition hover:border-sky-500 hover:text-sky-500 ${
+            className={`${buttonVariants[variant]} w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition duration-500 ease-in-out disabled:hover:border-secondaryBackgroundColor disabled:text-secondaryBackgroundColor disabled:hover:text-secondaryBackgroundColor disabled:cursor-auto ${
                 className ?? ''
             }`}
             {...restProps}>
-            {icon}
-            {text}
+            <div className={`flex items-center justify-center w-full ${icon && text ? 'gap-2' : ''}`}>
+                <span className="font-normal block truncate">{icon}</span>
+                <span className="font-normal block truncate">{text}</span>
+            </div>
+
+            {children}
         </button>
     );
 };

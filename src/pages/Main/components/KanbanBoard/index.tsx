@@ -171,7 +171,7 @@ const KanbanBoard = () => {
     };
 
     return (
-        <div className="m-auto flex min-h-screen h-screen w-full items-center overflow-x-auto px-[40px]">
+        <div className="m-auto flex flex-[4] min-h-screen h-screen w-full items-center overflow-x-auto">
             <DndContext
                 sensors={sensors}
                 collisionDetection={pointerWithin}
@@ -179,7 +179,12 @@ const KanbanBoard = () => {
                 onDragEnd={handleDragEnd}
                 onDragOver={handleDragOver}>
                 <div className="flex flex-col w-full h-screen gap-8 pt-[40px] items-center">
-                    <Button icon={<AddIcon />} text="Add column" onClick={onCreateNewColumn} />
+                    <Button
+                        variant="primary"
+                        icon={<AddIcon size="size-5" />}
+                        text="Add column"
+                        onClick={onCreateNewColumn}
+                    />
                     <ColumnsList />
                 </div>
 

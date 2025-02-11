@@ -1,6 +1,6 @@
-import {TIconsSizes} from '@/services/types';
+import {IconProps} from './types';
 
-const DeleteIcon = ({size}: {size: TIconsSizes}) => {
+const DeleteIcon = ({size, ...restProps}: IconProps) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +8,8 @@ const DeleteIcon = ({size}: {size: TIconsSizes}) => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={size}>
+            className={size}
+            {...restProps}>
             <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

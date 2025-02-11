@@ -44,12 +44,18 @@ const EditTitleForm = ({column, onCloseEditMode}: TEditTitleFormProps) => {
 
                 <div className="flex gap-2">
                     <Button
-                        className="text-sm p-2 disabled:hover:border-columnBackgroundColor disabled:text-columnBackgroundColor disabled:hover:text-columnBackgroundColor disabled:cursor-auto"
+                        variant="primary"
+                        className="text-sm p-2 disabled:hover:border-secondaryBackgroundColor disabled:text-secondaryBackgroundColor disabled:hover:text-secondaryBackgroundColor disabled:cursor-auto"
                         disabled={!isDirty}
                         icon={<CheckIcon size="size-5" />}
                         type="submit"
                     />
-                    <Button className="text-sm p-2" icon={<CloseIcon size="size-5" />} onClick={onCloseEditMode} />
+                    <Button
+                        variant="primary"
+                        className="text-sm p-2"
+                        icon={<CloseIcon size="size-5" />}
+                        onClick={onCloseEditMode}
+                    />
                 </div>
             </div>
             {errors.title && (
