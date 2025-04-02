@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import {uid} from 'uid';
 
 import {SliceNames} from '../types';
@@ -12,8 +12,8 @@ import {
     TReorderTasksAction,
     TSetActiveColumnAction,
     TSetActiveTaskAction,
-    TSetColumnsAction,
     TSetColumnTitleAction,
+    TSetColumnsAction,
 } from './types';
 
 const reducers = {

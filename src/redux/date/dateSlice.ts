@@ -1,12 +1,13 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import moment from 'moment';
 
-import {SliceNames} from '../types';
-import {TDateState, TSetFullDateAction} from './types';
 import {currentDate, formatDate} from '@/services/utils';
 
+import {SliceNames} from '../types';
+import {TDateState} from './types';
+
 const reducers = {
-    setFullDate: (state: TDateState, action: PayloadAction<TSetFullDateAction['payload']>) => {
+    setFullDate: (state: TDateState, action: PayloadAction<string>) => {
         const changedDate = action.payload;
 
         state.fullDate = changedDate;

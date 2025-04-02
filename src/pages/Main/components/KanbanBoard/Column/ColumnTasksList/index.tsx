@@ -1,5 +1,5 @@
-import {useMemo} from 'react';
 import {SortableContext} from '@dnd-kit/sortable';
+import {useMemo} from 'react';
 
 import Task from './Task';
 import {TColumnTasksListProps} from './types';

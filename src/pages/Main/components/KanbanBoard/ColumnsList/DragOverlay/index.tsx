@@ -1,9 +1,9 @@
-import {createPortal} from 'react-dom';
 import {DragOverlay as DNDragOverlay} from '@dnd-kit/core';
+import {createPortal} from 'react-dom';
 
 import Column from '../../Column';
-import {TColumnDragOverlayProps} from './types';
 import Task from '../../Column/ColumnTasksList/Task';
+import {TColumnDragOverlayProps} from './types';
 
 const DragOverlay = ({activeColumn, activeTask, onDeleteColumn}: TColumnDragOverlayProps) => {
     return (

@@ -5,5 +5,14 @@
     "bracketSameLine": true,
     "trailingComma": "all",
     "arrowParens": "avoid",
-    "printWidth": 120
+    "printWidth": 120,
+    "plugins": ["@trivago/prettier-plugin-sort-imports"],
+    "importOrder": [
+        "<THIRD_PARTY_MODULES>",
+        "@api",
+        "@(assets|components|constants|helpers|pages|providers|store|temp|utils|/)",
+        "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
 }
