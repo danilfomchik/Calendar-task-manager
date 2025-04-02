@@ -1,13 +1,15 @@
-import {useDispatch} from 'react-redux';
-import {SubmitHandler, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
+import {FormProvider, SubmitHandler, useForm} from 'react-hook-form';
+import {useDispatch} from 'react-redux';
 
 import Button from '@/components/Button';
+import InputControl from '@/components/formInputs/InputControl';
 import CheckIcon from '@/icons/CheckIcon';
 import CloseIcon from '@/icons/CloseIcon';
-import {TEditTitleFormProps, TFormValues} from './types';
-import {validation} from './form';
 import {updateColumnTitle} from '@/redux/columns/columnsSlice';
+
+import {validation} from './form';
+import {TEditTitleFormProps, TFormValues} from './types';
 
 const EditTitleForm = ({column, onCloseEditMode}: TEditTitleFormProps) => {
     const dispatch = useDispatch();
@@ -20,9 +22,9 @@ const EditTitleForm = ({column, onCloseEditMode}: TEditTitleFormProps) => {
     });
 
     const {
-        register,
+        control,
         handleSubmit,
-        formState: {errors, isDirty},
+        formState: {isDirty},
     } = methods;
 
     const onSubmit: SubmitHandler<TFormValues> = data => {
@@ -31,39 +33,29 @@ const EditTitleForm = ({column, onCloseEditMode}: TEditTitleFormProps) => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex items-center justify-between gap-[20px] w-auto">
-                <div className="flex self-stretch my-[6px]">
-                    <input
-                        {...register('title')}
-                        autoFocus
-                        aria-invalid={errors.title ? 'true' : 'false'}
-                        className="bg-black w-full focus:border-sky-500 border rounded outline-none px-2"
-                    />
-                </div>
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="flex items-center justify-between gap-[20px] w-auto">
+                    <div className="flex self-stretch my-[6px]">
+                        <InputControl autoFocus control={control} name="title" />
+                    </div>
 
-                <div className="flex gap-2">
-                    <Button
-                        variant="primary"
-                        className="text-sm p-2 disabled:hover:border-secondaryBackgroundColor disabled:text-secondaryBackgroundColor disabled:hover:text-secondaryBackgroundColor disabled:cursor-auto"
-                        disabled={!isDirty}
-                        icon={<CheckIcon size="size-5" />}
-                        type="submit"
-                    />
-                    <Button
-                        variant="primary"
-                        className="text-sm p-2"
-                        icon={<CloseIcon size="size-5" />}
-                        onClick={onCloseEditMode}
-                    />
+                    <div className="flex gap-2">
+                        <Button
+                            className="text-sm p-2 disabled:hover:border-secondaryBackgroundColor disabled:text-secondaryBackgroundColor disabled:hover:text-secondaryBackgroundColor disabled:cursor-auto"
+                            disabled={!isDirty}
+                            endIcon={<CheckIcon size="size-5" />}
+                            type="submit"
+                        />
+                        <Button
+                            className="text-sm p-2"
+                            startIcon={<CloseIcon size="size-5" />}
+                            onClick={onCloseEditMode}
+                        />
+                    </div>
                 </div>
-            </div>
-            {errors.title && (
-                <p role="alert" className="text-rose-500 text-xs">
-                    {errors.title.message}
-                </p>
-            )}
-        </form>
+            </form>
+        </FormProvider>
     );
 };
 

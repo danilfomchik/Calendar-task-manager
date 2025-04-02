@@ -1,33 +1,30 @@
 import {useEffect} from 'react';
 
-import VerticalDots from '@/icons/VerticalDots';
-import ChangeMonthControl from '../CalendarDateControls/ChangeMonthControl';
-import ChangeViewControl from '../CalendarDateControls/ChangeViewControl';
-import AddEvent from '../AddEvent';
 import Button from '@/components/Button';
-import {useBodyClick, useScreenSize} from '@/services/hooks';
+import VerticalDots from '@/icons/VerticalDots';
+import {useBodyClick, useOpen, useScreenSize} from '@/services/hooks';
+
+import AddEvent from './AddEvent';
+import ChangeMonthControl from './ChangeMonthControl';
+import ChangeViewControl from './ChangeViewControl';
 
 const Controls = () => {
     const screenSize = useScreenSize();
-    const {ref: menuRef, isOpen: isMenuOpen, setIsOpen: setIsMenuOpen} = useBodyClick();
+    const {isOpen: isMenuOpen, handleToggle, handleClose} = useOpen(false);
+    const {ref: menuRef} = useBodyClick(handleClose);
 
     const isMobileScreen = screenSize === 'xs' || screenSize === 'sm';
 
     useEffect(() => {
         if (!isMobileScreen) {
-            setIsMenuOpen(false);
+            handleClose();
         }
-    }, [isMobileScreen, setIsMenuOpen]);
+    }, [handleClose, isMobileScreen]);
 
     return (
         <div ref={menuRef} className="flex items-center gap-4 relative">
             <div className="md:hidden">
-                <Button
-                    variant="primary"
-                    icon={<VerticalDots size="size-6" />}
-                    onClick={() => setIsMenuOpen(prev => !prev)}
-                    className="text-sm p-[8px]"
-                />
+                <Button startIcon={<VerticalDots size="size-6" />} onClick={handleToggle} className="text-sm p-[8px]" />
             </div>
 
             <div

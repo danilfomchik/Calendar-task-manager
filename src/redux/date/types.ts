@@ -1,5 +1,3 @@
-import {PayloadAction} from '@reduxjs/toolkit';
-
 import {Nullable} from '@/services/types';
 
 type TMonth = Nullable<string>;
@@ -14,5 +12,3 @@ type TDate = {
 };
 
 export type TDateState = TDate;
-
-export type TSetFullDateAction = PayloadAction<string>;
