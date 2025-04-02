@@ -7,9 +7,10 @@ export type Option = {
 export type TDropdownProps = {
     field?: ControllerRenderProps<FieldValues, string>;
     selectedOption?: string;
-    changeSelectedOption: (option: string) => void;
+    onChange: (option: string) => void;
+    name?: string;
     options: string[];
-    placeholder: string;
-    value?: unknown;
+    placeholder?: string;
     className?: string;
+    setDropDownRef?: (node: HTMLDivElement | null) => void;
 };

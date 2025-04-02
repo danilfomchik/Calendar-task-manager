@@ -9,14 +9,26 @@ export enum ButtonVariants {
 
 type TButton =
     | {
-          icon?: Nullable<ReactElement> | never;
+          startIcon?: Nullable<ReactElement> | never;
           text: string;
       }
     | {
-          icon: Nullable<ReactElement>;
+          endIcon?: Nullable<ReactElement> | never;
+          text: string;
+      }
+    | {
+          endIcon: Nullable<ReactElement>;
+          text?: string | never;
+      }
+    | {
+          startIcon: Nullable<ReactElement>;
           text?: string | never;
       };
 
-type TButtonType = {variant: `${ButtonVariants}`};
+type TButtonType = {
+    variant?: `${ButtonVariants}`;
+    startIcon?: React.ReactNode;
+    endIcon?: React.ReactNode;
+};
 
 export type TButtonProps = TButton & TButtonType & ButtonHTMLAttributes<HTMLButtonElement>;

@@ -1,4 +1,3 @@
-import {useCallback} from 'react';
 import {
     DndContext,
     DragEndEvent,
@@ -10,11 +9,11 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import {arrayMove} from '@dnd-kit/sortable';
+import {useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from '@/components/Button';
 import AddIcon from '@/icons/AddIcon';
-import ColumnsList from './ColumnsList';
 import {
     createNewColumn,
     deleteColumn,
@@ -24,9 +23,11 @@ import {
     setColumns,
 } from '@/redux/columns/columnsSlice';
 import {selectActiveColumn, selectActiveTask, selectAllTasks, selectColumns} from '@/redux/columns/selectors';
-import {CurrentDraggableType} from './types';
 import {TId} from '@/redux/columns/types';
+
+import ColumnsList from './ColumnsList';
 import DragOverlay from './ColumnsList/DragOverlay';
+import {CurrentDraggableType} from './types';
 
 const KanbanBoard = () => {
     const dispatch = useDispatch();
@@ -179,12 +180,7 @@ const KanbanBoard = () => {
                 onDragEnd={handleDragEnd}
                 onDragOver={handleDragOver}>
                 <div className="flex flex-col w-full h-screen gap-8 pt-[40px] items-center">
-                    <Button
-                        variant="primary"
-                        icon={<AddIcon size="size-5" />}
-                        text="Add column"
-                        onClick={onCreateNewColumn}
-                    />
+                    <Button startIcon={<AddIcon size="size-5" />} text="Add column" onClick={onCreateNewColumn} />
                     <ColumnsList />
                 </div>
 

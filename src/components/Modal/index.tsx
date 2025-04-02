@@ -1,34 +1,18 @@
-import {useEffect} from 'react';
 import {createPortal} from 'react-dom';
 
-import {IOnCloseModalEvent, TModalProps} from './types';
+import {useBodyClick} from '@/services/hooks';
 
-const Modal = ({onClose, children}: TModalProps) => {
-    const onCloseModal = (e: IOnCloseModalEvent) => {
-        if (e.target.classList.contains('modal-wrapper')) {
-            if (onClose) {
-                onClose();
-            }
-        }
-    };
+import {TModalProps} from './types';
 
-    useEffect(() => {
-        document.body.style.overflow = 'hidden';
-
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, []);
+const Modal = ({className, onClose, children}: TModalProps) => {
+    const {ref} = useBodyClick(onClose);
 
     return (
         <>
             {createPortal(
                 <div
-                    className={
-                        'modal-wrapper fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-secondaryBackgroundColor bg-opacity-80'
-                    }
-                    onClick={onCloseModal}>
-                    {children}
+                    className={`modal-wrapper fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-secondaryBackgroundColor bg-opacity-80 ${className ? className : ''}`}>
+                    <div ref={ref}>{children}</div>
                 </div>,
                 document.body,
             )}

@@ -1,5 +1,6 @@
-import CalendarDatePicker from './CalendarDatePicker';
 import Container from '@/components/Container';
+
+import CalendarDatePicker from './CalendarDatePicker';
 import Controls from './Controls';
 
 const Header = () => {

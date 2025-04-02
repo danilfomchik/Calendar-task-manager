@@ -5,4 +5,5 @@ export interface PreloadedState {
 export enum SliceNames {
     columnsSlice = 'columnsData',
     dateSlice = 'dateData',
+    overflowSlice = 'overflowData',
 }

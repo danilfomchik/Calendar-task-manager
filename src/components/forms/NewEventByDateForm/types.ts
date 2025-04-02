@@ -1,7 +1,5 @@
-import {Dispatch} from 'react';
-
 export type TNewEventByDateFormProps = {
-    setOpen: Dispatch<React.SetStateAction<boolean>>;
+    handleModalClose: () => void;
 };
 
 export type TFormValues = {

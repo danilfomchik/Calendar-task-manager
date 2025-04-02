@@ -1,9 +1,6 @@
-import {MouseEvent, PropsWithChildren} from 'react';
-
-export interface IOnCloseModalEvent extends MouseEvent<HTMLDivElement> {
-    target: EventTarget & HTMLDivElement;
-}
+import {PropsWithChildren} from 'react';
 
 export type TModalProps = PropsWithChildren<{
-    onClose?: () => void;
+    onClose: () => void;
+    className?: string;
 }>;

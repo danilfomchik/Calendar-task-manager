@@ -1,24 +1,23 @@
-import {useState} from 'react';
-
 import Button from '@/components/Button';
 import Modal from '@/components/Modal';
-import NewEventByDateForm from '../../newEventForms/NewEventByDateForm';
+import NewEventByDateForm from '@/components/forms/NewEventByDateForm';
+import {useModal} from '@/services/hooks';
 
 const AddEvent = () => {
-    const [isAddEvent, setIsAddEvent] = useState(false);
+    const {isOpen, handleModalClose, handleModalOpen} = useModal();
 
     return (
         <>
             <Button
                 variant="secondary"
                 text="Add event"
-                onClick={() => setIsAddEvent(true)}
+                onClick={handleModalOpen}
                 className="text-sm py-[8px] px-[12px] max-md:w-full"
             />
 
-            {isAddEvent && (
-                <Modal onClose={() => setIsAddEvent(false)}>
-                    <NewEventByDateForm setOpen={setIsAddEvent} />
+            {isOpen && (
+                <Modal onClose={handleModalClose}>
+                    <NewEventByDateForm handleModalClose={handleModalClose} />
                 </Modal>
             )}
         </>

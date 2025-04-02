@@ -1,11 +1,12 @@
-import {useMemo} from 'react';
 import {SortableContext} from '@dnd-kit/sortable';
+import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import Column from '../Column';
 import {deleteColumn} from '@/redux/columns/columnsSlice';
-import {TId} from '@/redux/columns/types';
 import {selectColumns} from '@/redux/columns/selectors';
+import {TId} from '@/redux/columns/types';
+
+import Column from '../Column';
 
 const ColumnsList = () => {
     const dispatch = useDispatch();
