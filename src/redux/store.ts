@@ -1,28 +1,28 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { useDispatch } from "react-redux";
+import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import {useDispatch} from 'react-redux';
 
-import { SliceNames } from "./types";
-import counterSlice from "./counter/counterSlice";
+import counterSlice from './columns/columnsSlice';
+import dateSlice from './date/dateSlice';
+import overflowSlice from './overflow/overflowSlice';
+import {PreloadedState, SliceNames} from './types';
 
 const combinedReducer = combineReducers({
-    [SliceNames.counterSlice]: counterSlice.reducer,
+    [SliceNames.columnsSlice]: counterSlice.reducer,
+    [SliceNames.dateSlice]: dateSlice.reducer,
+    [SliceNames.overflowSlice]: overflowSlice.reducer,
 });
 
-const store = configureStore({
-    reducer: combinedReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
-});
-
-export type AppStoreState = ReturnType<typeof store.getState>;
-
-export const setupStore = (preloadedState?: AppStoreState) => {
+export const setupStore = (preloadedState?: PreloadedState) => {
     return configureStore({
         reducer: combinedReducer,
-        middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+        middleware: getDefaultMiddleware => getDefaultMiddleware(),
         preloadedState,
     });
 };
 
+const store = setupStore();
+
+export type AppStoreState = ReturnType<typeof store.getState>;
 export type RootState = ReturnType<typeof combinedReducer>;
 export type AppStore = ReturnType<typeof setupStore>;
 export type AppDispatch = typeof store.dispatch;
