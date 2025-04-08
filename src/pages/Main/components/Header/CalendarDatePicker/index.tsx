@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import Dropdown from '@/components/inputs/Dropdown';
@@ -17,21 +17,27 @@ const CalendarDatePicker = () => {
     const monthsOptions = useMemo(() => getMonthsOptions(), []);
     const yearsOptions = useMemo(() => getYearsOptions(), []);
 
-    const onMonthChange = (newMonth: string) => {
-        const newMonthIndex = formatDate(moment(currentFullDate).month(newMonth), 'M');
+    const onMonthChange = useCallback(
+        (newMonth: string) => {
+            const newMonthIndex = formatDate(moment(currentFullDate).month(newMonth), 'M');
 
-        const changedDate = moment(currentFullDate).month(+newMonthIndex - 1);
-        const changedFullDate = formatDate(changedDate, 'YYYY-MM-DD');
+            const changedDate = moment(currentFullDate).month(+newMonthIndex - 1);
+            const changedFullDate = formatDate(changedDate, 'YYYY-MM-DD');
 
-        dispatch(setFullDate(changedFullDate));
-    };
+            dispatch(setFullDate(changedFullDate));
+        },
+        [currentFullDate, dispatch],
+    );
 
-    const onYearChange = (newYear: string) => {
-        const changedDate = moment(currentFullDate).year(+newYear);
-        const changedFullDate = formatDate(changedDate, 'YYYY-MM-DD');
+    const onYearChange = useCallback(
+        (newYear: string) => {
+            const changedDate = moment(currentFullDate).year(+newYear);
+            const changedFullDate = formatDate(changedDate, 'YYYY-MM-DD');
 
-        dispatch(setFullDate(changedFullDate));
-    };
+            dispatch(setFullDate(changedFullDate));
+        },
+        [currentFullDate, dispatch],
+    );
 
     return (
         <div className="flex gap-2 relative self-stretch">

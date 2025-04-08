@@ -1,6 +1,8 @@
-import {PropsWithChildren} from 'react';
+import {PropsWithChildren, RefObject} from 'react';
 
 export type TModalProps = PropsWithChildren<{
-    onClose: () => void;
+    refId: string;
+    refItem: RefObject<HTMLDivElement>;
+    onClose: (refId: string) => void;
     className?: string;
 }>;
