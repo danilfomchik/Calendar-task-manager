@@ -1,23 +1,75 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 import {SliceNames} from '../types';
 import {TOverflowState} from './types';
 
 const reducers = {
-    increaseOpenedItems: (state: TOverflowState) => {
-        state.openedItems += 1;
-    },
-    decreaseOpenedItems: (state: TOverflowState) => {
-        const openedItems = state.openedItems;
+    onOpenItem: (state: TOverflowState, action: PayloadAction<string>) => {
+        const {payload} = action;
 
-        if (openedItems > 0) {
-            state.openedItems -= 1;
+        state.currentlyOpened.push(payload);
+
+        state.itemsToOpen = state.itemsToOpen.map(item => {
+            if (item.id === payload) {
+                return {
+                    ...item,
+                    isOpen: true,
+                };
+            }
+
+            return item;
+        });
+    },
+    onCloseItem: (state: TOverflowState, action: PayloadAction<string | null>) => {
+        const {payload} = action;
+
+        state.currentlyOpened = state.currentlyOpened.filter(item => item !== payload);
+        state.itemsToOpen = state.itemsToOpen.map(item => {
+            if (item.id === payload) {
+                return {
+                    ...item,
+                    isOpen: false,
+                };
+            }
+
+            return item;
+        });
+    },
+    addItemToOpen: (
+        state: TOverflowState,
+        action: PayloadAction<
+            | {
+                  id: string;
+                  isOpen: boolean;
+              }
+            | string
+        >,
+    ) => {
+        const {payload} = action;
+
+        const refId = typeof payload === 'string' ? payload : payload.id;
+        const isOpen = typeof payload === 'string' ? false : payload.isOpen;
+
+        const newItem = {
+            id: refId,
+            isOpen: isOpen,
+        };
+
+        if (payload && !state.itemsToOpen.some(item => item.id === refId)) {
+            state.itemsToOpen.push(newItem);
         }
+    },
+    removeItemFromOpen: (state: TOverflowState, action: PayloadAction<string | null>) => {
+        const {payload} = action;
+
+        state.currentlyOpened = state.currentlyOpened.filter(item => item !== payload);
+        state.itemsToOpen = state.itemsToOpen.filter(item => item.id !== payload);
     },
 };
 
 const initialState: TOverflowState = {
-    openedItems: 0,
+    currentlyOpened: [],
+    itemsToOpen: [],
 };
 
 const overflowSlice = createSlice({
@@ -26,5 +78,5 @@ const overflowSlice = createSlice({
     reducers,
 });
 
-export const {increaseOpenedItems, decreaseOpenedItems} = overflowSlice.actions;
+export const {addItemToOpen, removeItemFromOpen, onOpenItem, onCloseItem} = overflowSlice.actions;
 export default overflowSlice;

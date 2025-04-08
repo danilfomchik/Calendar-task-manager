@@ -1,3 +1,9 @@
+type TItemTOOpen = {
+    id: string;
+    isOpen: boolean;
+};
+
 export type TOverflowState = {
-    openedItems: number;
+    currentlyOpened: string[];
+    itemsToOpen: TItemTOOpen[];
 };
