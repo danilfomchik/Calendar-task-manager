@@ -10,7 +10,7 @@ import AddIcon from '@/icons/AddIcon';
 import DeleteIcon from '@/icons/DeleteIcon';
 import EditIcon from '@/icons/EditIcon';
 import {selectTasksByColumn} from '@/redux/columns/selectors';
-import {useModal} from '@/services/hooks';
+import {useOverflow} from '@/services/hooks';
 
 import ColumnTasksList from './ColumnTasksList';
 import EditTitleForm from './EditTitleForm';
@@ -20,7 +20,7 @@ const Column = ({column, onDeleteColumn}: TColumnProps) => {
     const [isTitleHover, setIsTitleHover] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
 
-    const {isOpen, handleModalClose, handleModalOpen} = useModal();
+    const {ref, refId, isOpen, handleClose: handleModalClose, handleOpen: handleModalOpen} = useOverflow();
     const tasks = useSelector(selectTasksByColumn(column.id), shallowEqual);
     const {setNodeRef, attributes, listeners, transform, transition, isDragging} = useSortable({
         id: column.id,
@@ -102,7 +102,7 @@ const Column = ({column, onDeleteColumn}: TColumnProps) => {
             )}
 
             {isOpen && (
-                <Modal onClose={handleModalClose}>
+                <Modal refItem={ref} refId={refId} onClose={handleModalClose}>
                     <BoardItemForm
                         actionType="add"
                         formTitle="Create new task"

@@ -9,7 +9,7 @@ import BoardItemForm from '@/components/forms/BoardItemForm';
 import DeleteIcon from '@/icons/DeleteIcon';
 import EditIcon from '@/icons/EditIcon';
 import {deleteTask} from '@/redux/columns/columnsSlice';
-import {useModal} from '@/services/hooks';
+import {useOverflow} from '@/services/hooks';
 
 import {TTasksProps} from './types';
 
@@ -17,7 +17,7 @@ const Task = ({task}: TTasksProps) => {
     const [isHover, setIsHover] = useState(false);
 
     const dispatch = useDispatch();
-    const {isOpen, handleModalClose, handleModalOpen} = useModal();
+    const {ref, refId, isOpen, handleClose: handleModalClose, handleOpen: handleModalOpen} = useOverflow();
     const {setNodeRef, attributes, listeners, transform, transition, isDragging} = useSortable({
         id: task.id,
         data: {type: 'Task', task},
@@ -65,7 +65,7 @@ const Task = ({task}: TTasksProps) => {
             )}
 
             {isOpen && (
-                <Modal onClose={handleModalClose}>
+                <Modal refId={refId} refItem={ref} onClose={handleModalClose}>
                     <BoardItemForm
                         actionType="edit"
                         formTitle="Edit task"

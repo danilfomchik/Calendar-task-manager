@@ -1,6 +1,9 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
+import {useSelector} from 'react-redux';
+import {uid} from 'uid';
 
-import {decreaseOpenedItems, increaseOpenedItems} from '@/redux/overflow/overflowSlice';
+import {addItemToOpen, onCloseItem, onOpenItem, removeItemFromOpen} from '@/redux/overflow/overflowSlice';
+import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
 import {useAppDispatch} from '@/redux/store';
 
 export const useScreenSize = () => {
@@ -32,8 +35,10 @@ export const useScreenSize = () => {
     return screenSize;
 };
 
-export const useBodyClick = (onClose: () => void) => {
+export const useBodyClick = (refId: string, onClose: (refId: string) => void) => {
     const ref = useRef<HTMLDivElement>(null);
+
+    const isItemOpened = useSelector(selectIsItemCurrentlyOpened(refId));
 
     const onBodyClick = useCallback(
         (event: MouseEvent) => {
@@ -41,9 +46,11 @@ export const useBodyClick = (onClose: () => void) => {
                 return;
             }
 
-            onClose();
+            if (isItemOpened) {
+                onClose(refId);
+            }
         },
-        [onClose],
+        [onClose, refId, isItemOpened],
     );
 
     useEffect(() => {
@@ -60,47 +67,52 @@ export const useBodyClick = (onClose: () => void) => {
     return {ref};
 };
 
-export const useOpen = (initialValue: boolean) => {
-    const [isOpen, setIsOpen] = useState(initialValue);
+export const useRegisteredItem = ({refId, defaultIsOpen}: {refId: string; defaultIsOpen?: boolean}) => {
+    const defaultIsOpenValue = defaultIsOpen ?? false;
+
+    const dispatch = useAppDispatch();
+    const isOpen = useSelector(selectIsItemCurrentlyOpened(refId));
+
+    useEffect(() => {
+        dispatch(addItemToOpen({id: refId, isOpen: defaultIsOpenValue}));
+
+        return () => {
+            dispatch(removeItemFromOpen(refId));
+        };
+    }, [dispatch, refId, defaultIsOpenValue]);
+
+    return isOpen;
+};
+
+export const useOverflow = () => {
+    const dispatch = useAppDispatch();
+    const refId = useRef<string>(uid()).current;
+    const isOpen = useSelector(selectIsItemCurrentlyOpened(refId));
 
     const handleClose = useCallback(() => {
-        setIsOpen(false);
-    }, []);
+        dispatch(onCloseItem(refId));
+    }, [dispatch, refId]);
+
+    const {ref} = useBodyClick(refId, handleClose);
 
     const handleOpen = useCallback(() => {
-        setIsOpen(true);
-    }, []);
+        dispatch(onOpenItem(refId));
+    }, [dispatch, refId]);
 
     const handleToggle = useCallback(() => {
-        setIsOpen(prev => !prev);
-    }, []);
+        if (isOpen) {
+            handleClose();
+        } else {
+            handleOpen();
+        }
+    }, [handleOpen, handleClose, isOpen]);
 
     return {
+        ref,
+        refId,
         isOpen,
         handleClose,
         handleOpen,
         handleToggle,
-    };
-};
-
-export const useModal = () => {
-    const {isOpen, handleClose, handleOpen} = useOpen(false);
-
-    const dispatch = useAppDispatch();
-
-    const handleModalClose = useCallback(() => {
-        handleClose();
-        dispatch(decreaseOpenedItems());
-    }, [handleClose, dispatch]);
-
-    const handleModalOpen = useCallback(() => {
-        handleOpen();
-        dispatch(increaseOpenedItems());
-    }, [handleOpen, dispatch]);
-
-    return {
-        isOpen,
-        handleModalClose,
-        handleModalOpen,
     };
 };

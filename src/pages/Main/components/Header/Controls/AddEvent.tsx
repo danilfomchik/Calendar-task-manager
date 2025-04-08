@@ -1,23 +1,23 @@
 import Button from '@/components/Button';
 import Modal from '@/components/Modal';
 import NewEventByDateForm from '@/components/forms/NewEventByDateForm';
-import {useModal} from '@/services/hooks';
+import {useOverflow} from '@/services/hooks';
 
 const AddEvent = () => {
-    const {isOpen, handleModalClose, handleModalOpen} = useModal();
+    const {ref, isOpen, refId, handleClose, handleOpen} = useOverflow();
 
     return (
         <>
             <Button
                 variant="secondary"
                 text="Add event"
-                onClick={handleModalOpen}
+                onClick={handleOpen}
                 className="text-sm py-[8px] px-[12px] max-md:w-full"
             />
 
             {isOpen && (
-                <Modal onClose={handleModalClose}>
-                    <NewEventByDateForm handleModalClose={handleModalClose} />
+                <Modal refId={refId} refItem={ref} onClose={handleClose}>
+                    <NewEventByDateForm handleModalClose={handleClose} />
                 </Modal>
             )}
         </>
