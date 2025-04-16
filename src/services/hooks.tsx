@@ -35,38 +35,6 @@ export const useScreenSize = () => {
     return screenSize;
 };
 
-export const useBodyClick = (refId: string, onClose: (refId: string) => void) => {
-    const ref = useRef<HTMLDivElement>(null);
-
-    const isItemOpened = useSelector(selectIsItemCurrentlyOpened(refId));
-
-    const onBodyClick = useCallback(
-        (event: MouseEvent) => {
-            if (ref.current?.contains(event.target as Node)) {
-                return;
-            }
-
-            if (isItemOpened) {
-                onClose(refId);
-            }
-        },
-        [onClose, refId, isItemOpened],
-    );
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            document.body.addEventListener('click', onBodyClick);
-        }, 0);
-
-        return () => {
-            clearTimeout(timeout);
-            document.body.removeEventListener('click', onBodyClick);
-        };
-    }, [onBodyClick]);
-
-    return {ref};
-};
-
 export const useRegisteredItem = ({refId, defaultIsOpen}: {refId: string; defaultIsOpen?: boolean}) => {
     const defaultIsOpenValue = defaultIsOpen ?? false;
 
@@ -84,16 +52,54 @@ export const useRegisteredItem = ({refId, defaultIsOpen}: {refId: string; defaul
     return isOpen;
 };
 
-export const useOverflow = () => {
+export const useBodyClick = ({
+    refId,
+    isOpen,
+    onClose,
+}: {
+    refId: string;
+    isOpen: boolean;
+    onClose: (refId: string) => void;
+}) => {
+    const ref = useRef<HTMLDivElement>(null);
+
+    const onBodyClick = useCallback(
+        (event: MouseEvent) => {
+            if (ref.current?.contains(event.target as Node)) {
+                return;
+            }
+
+            if (isOpen) {
+                onClose(refId);
+            }
+        },
+        [onClose, refId, isOpen],
+    );
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            document.body.addEventListener('click', onBodyClick);
+        }, 0);
+
+        return () => {
+            clearTimeout(timeout);
+            document.body.removeEventListener('click', onBodyClick);
+        };
+    }, [onBodyClick]);
+
+    return {ref};
+};
+
+export const useOpeningItem = () => {
     const dispatch = useAppDispatch();
     const refId = useRef<string>(uid()).current;
-    const isOpen = useSelector(selectIsItemCurrentlyOpened(refId));
+    const isOpen = useRegisteredItem({refId});
 
     const handleClose = useCallback(() => {
         dispatch(onCloseItem(refId));
     }, [dispatch, refId]);
 
-    const {ref} = useBodyClick(refId, handleClose);
+    const {ref} = useBodyClick({refId, isOpen, onClose: handleClose});
 
     const handleOpen = useCallback(() => {
         dispatch(onOpenItem(refId));

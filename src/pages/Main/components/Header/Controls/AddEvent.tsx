@@ -1,10 +1,10 @@
 import Button from '@/components/Button';
 import Modal from '@/components/Modal';
 import NewEventByDateForm from '@/components/forms/NewEventByDateForm';
-import {useOverflow} from '@/services/hooks';
+import {useOpeningItem} from '@/services/hooks';
 
 const AddEvent = () => {
-    const {ref, isOpen, refId, handleClose, handleOpen} = useOverflow();
+    const {ref, isOpen, handleClose, handleOpen} = useOpeningItem();
 
     return (
         <>
@@ -16,7 +16,7 @@ const AddEvent = () => {
             />
 
             {isOpen && (
-                <Modal refId={refId} refItem={ref} onClose={handleClose}>
+                <Modal refItem={ref} onClose={handleClose}>
                     <NewEventByDateForm handleModalClose={handleClose} />
                 </Modal>
             )}
