@@ -1,61 +1,31 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 import {SliceNames} from '../types';
-import {TOverflowState} from './types';
+import {TOpeningItem, TOverflowState} from './types';
+import {toggleOverflowItem} from './utils';
 
 const reducers = {
     onOpenItem: (state: TOverflowState, action: PayloadAction<string>) => {
         const {payload} = action;
 
         state.currentlyOpened.push(payload);
-
-        state.itemsToOpen = state.itemsToOpen.map(item => {
-            if (item.id === payload) {
-                return {
-                    ...item,
-                    isOpen: true,
-                };
-            }
-
-            return item;
-        });
+        state.itemsToOpen = toggleOverflowItem(state.itemsToOpen, payload, true);
     },
-    onCloseItem: (state: TOverflowState, action: PayloadAction<string | null>) => {
+    onCloseItem: (state: TOverflowState, action: PayloadAction<string>) => {
         const {payload} = action;
 
         state.currentlyOpened = state.currentlyOpened.filter(item => item !== payload);
-        state.itemsToOpen = state.itemsToOpen.map(item => {
-            if (item.id === payload) {
-                return {
-                    ...item,
-                    isOpen: false,
-                };
-            }
-
-            return item;
-        });
+        state.itemsToOpen = toggleOverflowItem(state.itemsToOpen, payload, false);
     },
-    addItemToOpen: (
-        state: TOverflowState,
-        action: PayloadAction<
-            | {
-                  id: string;
-                  isOpen: boolean;
-              }
-            | string
-        >,
-    ) => {
+    addItemToOpen: (state: TOverflowState, action: PayloadAction<TOpeningItem>) => {
         const {payload} = action;
 
-        const refId = typeof payload === 'string' ? payload : payload.id;
-        const isOpen = typeof payload === 'string' ? false : payload.isOpen;
-
         const newItem = {
-            id: refId,
-            isOpen: isOpen,
+            id: payload.id,
+            isOpen: payload.isOpen,
         };
 
-        if (payload && !state.itemsToOpen.some(item => item.id === refId)) {
+        if (payload && !state.itemsToOpen.some(item => item.id === payload.id)) {
             state.itemsToOpen.push(newItem);
         }
     },
