@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import Button from '@/components/Button';
 import VerticalDots from '@/icons/VerticalDots';
 import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
-import {useOverflow, useScreenSize} from '@/services/hooks';
+import {useOpeningItem, useScreenSize} from '@/services/hooks';
 
 import AddEvent from './AddEvent';
 import ChangeMonthControl from './ChangeMonthControl';
@@ -11,7 +11,7 @@ import ChangeViewControl from './ChangeViewControl';
 
 const Controls = () => {
     const screenSize = useScreenSize();
-    const {ref: menuRef, refId, handleToggle} = useOverflow();
+    const {ref: menuRef, refId, handleToggle} = useOpeningItem();
     const isMenuOpen = useSelector(selectIsItemCurrentlyOpened(refId));
 
     const isMobileScreen = screenSize === 'xs' || screenSize === 'sm';
