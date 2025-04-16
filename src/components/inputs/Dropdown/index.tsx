@@ -2,7 +2,7 @@ import {memo, useCallback, useEffect, useState} from 'react';
 
 import ArrowDown from '@/icons/ArrowDown';
 import CheckIcon from '@/icons/CheckIcon';
-import {useOverflow, useRegisteredItem} from '@/services/hooks';
+import {useOpeningItem} from '@/services/hooks';
 
 import Button from '../../Button';
 import {TDropdownProps} from './types';
@@ -17,8 +17,7 @@ const Dropdown = ({
 }: TDropdownProps) => {
     const [currentValue, setCurrentValue] = useState(selectedOption);
 
-    const {ref, refId, handleClose, handleToggle} = useOverflow();
-    const isOpen = useRegisteredItem({refId});
+    const {ref, isOpen, handleClose, handleToggle} = useOpeningItem();
 
     const handleChange = useCallback(
         (option: string) => {
