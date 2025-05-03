@@ -1,3 +1,3 @@
-export type TColumnProps = {
+export type TDayProps = {
     date: string;
 };
