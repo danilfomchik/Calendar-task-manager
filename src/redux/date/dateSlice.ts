@@ -1,7 +1,7 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import moment from 'moment';
 
-import {currentDate, formatDate} from '@/services/utils';
+import {formatDate, getDate} from '@/services/utils';
 
 import {SliceNames} from '../types';
 import {TDateState} from './types';
@@ -15,6 +15,8 @@ const reducers = {
         state.month = formatDate(moment(changedDate), 'MMMM');
     },
 };
+
+const currentDate = getDate(new Date());
 
 const initialState: TDateState = {
     fullDate: formatDate(currentDate, 'YYYY-MM-DD'),

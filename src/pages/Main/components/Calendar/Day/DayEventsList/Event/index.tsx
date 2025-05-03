@@ -13,7 +13,7 @@ import {useOpeningItem} from '@/services/hooks';
 
 import {TTasksProps} from './types';
 
-const Task = ({task}: TTasksProps) => {
+const Event = ({task}: TTasksProps) => {
     const [isHover, setIsHover] = useState(false);
 
     const dispatch = useDispatch();
@@ -78,4 +78,4 @@ const Task = ({task}: TTasksProps) => {
     );
 };
 
-export default Task;
+export default Event;

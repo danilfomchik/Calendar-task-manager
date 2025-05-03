@@ -8,6 +8,7 @@ export default {
             colors: {
                 mainBackgroundColor: '#0D1117',
                 secondaryBackgroundColor: '#161c22',
+                secondaryBackgroundColorHover: '#161c22a3',
             },
             gridTemplateColumns: {
                 'auto-fill': 'repeat(auto-fill, minmax(330px, 1fr))',

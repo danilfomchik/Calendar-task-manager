@@ -9,7 +9,7 @@ import InputControl from '@/components/formInputs/InputControl';
 import CheckIcon from '@/icons/CheckIcon';
 import CloseIcon from '@/icons/CloseIcon';
 import {selectDay, selectMonth, selectYear} from '@/redux/date/selectors';
-import {getDaysOptions, getMonthsOptions, getYearsOptions} from '@/services/utils';
+import {getDays, getMonthsOptions, getYearsOptions} from '@/services/utils';
 
 import {validation} from './form';
 import {TFormValues, TNewEventByDateFormProps} from './types';
@@ -44,7 +44,7 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
     const yearsOptions = useMemo(() => getYearsOptions(), []);
     const monthsOptions = useMemo(() => getMonthsOptions(), []);
     const daysOptions = useMemo(
-        () => getDaysOptions(formYearValue || '', formMonthValue || ''),
+        () => getDays(formYearValue || '', formMonthValue || ''),
         [formYearValue, formMonthValue],
     );
 
