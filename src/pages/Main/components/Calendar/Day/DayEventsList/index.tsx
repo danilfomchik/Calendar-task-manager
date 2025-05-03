@@ -1,7 +1,7 @@
 import {SortableContext} from '@dnd-kit/sortable';
 import {useMemo} from 'react';
 
-import Task from './Task';
+import Task from './Event';
 import {TColumnTasksListProps} from './types';
 
 const ColumnTasksList = ({tasks}: TColumnTasksListProps) => {

@@ -1,15 +1,15 @@
 import Container from '@/components/Container';
 
+import Calendar from './components/Calendar';
 import Header from './components/Header';
-import KanbanBoard from './components/KanbanBoard';
 
 const MainPage = () => {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full">
             <Header />
 
             <Container className="w-full file:flex flex-row gap-10">
-                <KanbanBoard />
+                <Calendar />
             </Container>
         </div>
     );
