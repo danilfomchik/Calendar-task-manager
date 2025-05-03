@@ -7,16 +7,21 @@ import ArrowRight from '@/icons/ArrowRight';
 import {setFullDate} from '@/redux/date/dateSlice';
 import {selectFullDate} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
-import {currentDate, formatDate} from '@/services/utils';
+import {formatDate, getDate} from '@/services/utils';
+
+enum MonthDirection {
+    NEXT = 'next',
+    PREV = 'prev',
+}
 
 const ChangeMonthControl = () => {
     const dispatch = useAppDispatch();
     const fullDate = useSelector(selectFullDate);
 
-    const onChangeMonth = (type: 'next' | 'prev') => {
+    const onChangeMonth = (type: MonthDirection) => {
         let monthIndex = 0;
 
-        if (type === 'next') {
+        if (type === MonthDirection.NEXT) {
             monthIndex = 1;
         } else {
             monthIndex = -1;
@@ -29,7 +34,7 @@ const ChangeMonthControl = () => {
     };
 
     const onSwithToToday = () => {
-        const currentFullDate = formatDate(currentDate, 'YYYY-MM-DD');
+        const currentFullDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
 
         dispatch(setFullDate(currentFullDate));
     };
@@ -39,13 +44,13 @@ const ChangeMonthControl = () => {
             <Button
                 startIcon={<ArrowLeft size="size-4" />}
                 className="rounded-none p-[8px] rounded-s-lg"
-                onClick={() => onChangeMonth('prev')}
+                onClick={() => onChangeMonth(MonthDirection.PREV)}
             />
             <Button text="today" className="rounded-none text-sm py-[8px] px-[10px]" onClick={onSwithToToday} />
             <Button
                 endIcon={<ArrowRight size="size-4" />}
                 className="rounded-none p-[8px] rounded-e-lg"
-                onClick={() => onChangeMonth('next')}
+                onClick={() => onChangeMonth(MonthDirection.NEXT)}
             />
         </div>
     );

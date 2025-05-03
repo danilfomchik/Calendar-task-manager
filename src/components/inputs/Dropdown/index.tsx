@@ -1,8 +1,8 @@
-import {useCallback, useEffect, useState} from 'react';
+import {memo, useCallback, useEffect, useState} from 'react';
 
 import ArrowDown from '@/icons/ArrowDown';
 import CheckIcon from '@/icons/CheckIcon';
-import {useBodyClick, useOpen} from '@/services/hooks';
+import {useOpeningItem} from '@/services/hooks';
 
 import Button from '../../Button';
 import {TDropdownProps} from './types';
@@ -17,8 +17,7 @@ const Dropdown = ({
 }: TDropdownProps) => {
     const [currentValue, setCurrentValue] = useState(selectedOption);
 
-    const {isOpen, handleToggle, handleClose} = useOpen(false);
-    const {ref} = useBodyClick(handleClose);
+    const {ref, isOpen, handleClose, handleToggle} = useOpeningItem();
 
     const handleChange = useCallback(
         (option: string) => {
@@ -28,10 +27,10 @@ const Dropdown = ({
             setCurrentValue(option);
 
             setTimeout(() => {
-                handleClose(); // close dropdown by microtask
+                handleClose();
             }, 0);
         },
-        [field, onChange, handleClose],
+        [field, handleClose, onChange],
     );
 
     const initValue = useCallback(() => {
@@ -73,4 +72,4 @@ const Dropdown = ({
     );
 };
 
-export default Dropdown;
+export default memo(Dropdown);

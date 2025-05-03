@@ -1,8 +1,9 @@
-import {useEffect} from 'react';
+import {useSelector} from 'react-redux';
 
 import Button from '@/components/Button';
 import VerticalDots from '@/icons/VerticalDots';
-import {useBodyClick, useOpen, useScreenSize} from '@/services/hooks';
+import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
+import {useOpeningItem, useScreenSize} from '@/services/hooks';
 
 import AddEvent from './AddEvent';
 import ChangeMonthControl from './ChangeMonthControl';
@@ -10,16 +11,10 @@ import ChangeViewControl from './ChangeViewControl';
 
 const Controls = () => {
     const screenSize = useScreenSize();
-    const {isOpen: isMenuOpen, handleToggle, handleClose} = useOpen(false);
-    const {ref: menuRef} = useBodyClick(handleClose);
+    const {ref: menuRef, refId, handleToggle} = useOpeningItem();
+    const isMenuOpen = useSelector(selectIsItemCurrentlyOpened(refId));
 
     const isMobileScreen = screenSize === 'xs' || screenSize === 'sm';
-
-    useEffect(() => {
-        if (!isMobileScreen) {
-            handleClose();
-        }
-    }, [handleClose, isMobileScreen]);
 
     return (
         <div ref={menuRef} className="flex items-center gap-4 relative">

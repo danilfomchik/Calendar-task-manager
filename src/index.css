@@ -9,6 +9,8 @@ body {
 html,
 body,
 #root {
+    height: 100vh;
+    width: 100vw;
     @apply bg-black text-white box-border;
 }
 

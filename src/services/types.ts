@@ -18,4 +18,7 @@ export enum Months {
     Dec = 'December',
 }
 
-export type TMonthsNames = `${Months}`;
+export enum MonthParts {
+    START = 'start',
+    END = 'end',
+}
