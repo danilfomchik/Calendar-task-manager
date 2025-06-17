@@ -4,7 +4,8 @@ export type TNewEventByDateFormProps = {
 
 export type TFormValues = {
     eventName: string;
-    eventYear?: string;
-    eventMonth?: string;
-    eventDay?: string;
+    eventYear: string;
+    eventMonth: string;
+    eventDay: string;
+    eventDescription?: string;
 };

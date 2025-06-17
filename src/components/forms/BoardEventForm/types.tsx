@@ -1,13 +1,12 @@
-import {SubmitHandler} from 'react-hook-form';
-
 export type TFormFields = {
-    field: string;
+    eventName: string;
+    eventDescription?: string;
 };
 
-export type TEditFormProps = {
+export type TBoardEventFormProps = {
     actionType?: 'edit' | 'add';
     formTitle: string;
     defaultValues?: TFormFields;
-    onSubmit: SubmitHandler<TFormFields>;
+    date: string;
     handleModalClose: () => void;
 };

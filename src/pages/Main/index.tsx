@@ -1,4 +1,5 @@
 import Container from '@/components/Container';
+import CalendarProvider from '@/providers/calendar-provider';
 
 import Calendar from './components/Calendar';
 import Header from './components/Header';
@@ -9,7 +10,9 @@ const MainPage = () => {
             <Header />
 
             <Container className="w-full file:flex flex-row gap-10">
-                <Calendar />
+                <CalendarProvider>
+                    <Calendar />
+                </CalendarProvider>
             </Container>
         </div>
     );

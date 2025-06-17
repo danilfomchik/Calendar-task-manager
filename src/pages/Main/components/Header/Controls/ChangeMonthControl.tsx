@@ -7,7 +7,7 @@ import ArrowRight from '@/icons/ArrowRight';
 import {setFullDate} from '@/redux/date/dateSlice';
 import {selectFullDate} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
-import {formatDate, getDate} from '@/services/utils';
+import {formatDate, getDate} from '@/services/dateUtils';
 
 enum MonthDirection {
     NEXT = 'next',

@@ -6,7 +6,7 @@ import Dropdown from '@/components/inputs/Dropdown';
 import {setFullDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectMonth, selectYear} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
-import {formatDate, getMonthsOptions, getYearsOptions} from '@/services/utils';
+import {formatDate, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
 
 const CalendarDatePicker = () => {
     const dispatch = useAppDispatch();

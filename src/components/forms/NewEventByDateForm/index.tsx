@@ -6,15 +6,20 @@ import {useSelector} from 'react-redux';
 import Button from '@/components/Button';
 import DropdownControl from '@/components/formInputs/DropdownControl';
 import InputControl from '@/components/formInputs/InputControl';
+import TextareaControl from '@/components/formInputs/TextareaControl';
 import CheckIcon from '@/icons/CheckIcon';
 import CloseIcon from '@/icons/CloseIcon';
 import {selectDay, selectMonth, selectYear} from '@/redux/date/selectors';
-import {getDays, getMonthsOptions, getYearsOptions} from '@/services/utils';
+import {addEvent} from '@/redux/events/eventsSlice';
+import {useAppDispatch} from '@/redux/store';
+import {createDate, getDays, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
+import {createEvent} from '@/services/utils';
 
 import {validation} from './form';
 import {TFormValues, TNewEventByDateFormProps} from './types';
 
 const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
+    const dispatch = useAppDispatch();
     const year = useSelector(selectYear);
     const month = useSelector(selectMonth);
     const day = useSelector(selectDay);
@@ -26,6 +31,7 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
             eventYear: year || '',
             eventMonth: month || '',
             eventDay: day || '',
+            eventDescription: '',
         },
         mode: 'onSubmit',
         shouldUnregister: false,
@@ -48,12 +54,18 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
         [formYearValue, formMonthValue],
     );
 
-    const onSubmit: SubmitHandler<TFormValues> = newEvent => {
+    const onSubmit: SubmitHandler<TFormValues> = eventData => {
+        const {eventName, eventYear, eventMonth, eventDay, eventDescription} = eventData;
+
         handleModalClose();
 
-        // TODO: trim eventName value
-        // eslint-disable-next-line no-console
-        console.log(newEvent);
+        const newEvent = createEvent({
+            eventName,
+            date: createDate(+eventYear, eventMonth, +eventDay),
+            description: eventDescription,
+        });
+
+        dispatch(addEvent(newEvent));
     };
 
     return (
@@ -76,7 +88,17 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
                         </div>
 
                         <div className="w-full flex flex-col gap-2">
-                            <InputControl autoFocus control={control} name="eventName" />
+                            <InputControl
+                                autoFocus
+                                control={control}
+                                name="eventName"
+                                placeholder="Enter required name"
+                            />
+                            <TextareaControl
+                                control={control}
+                                name="eventDescription"
+                                placeholder="Enter optional description"
+                            />
                         </div>
 
                         <Button

@@ -1,7 +1,7 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import moment from 'moment';
 
-import {formatDate, getDate} from '@/services/utils';
+import {formatDate, getDate} from '@/services/dateUtils';
 
 import {SliceNames} from '../types';
 import {TDateState} from './types';
