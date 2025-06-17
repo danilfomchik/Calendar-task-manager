@@ -3,7 +3,7 @@ export interface PreloadedState {
 }
 
 export enum SliceNames {
-    columnsSlice = 'columnsData',
+    eventsSlice = 'eventsData',
     dateSlice = 'dateData',
     overflowSlice = 'overflowData',
 }
