@@ -22,3 +22,7 @@ export enum MonthParts {
     START = 'start',
     END = 'end',
 }
+
+export enum StorageKeys {
+    events = 'events',
+}
