@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux';
 import Button from '@/components/Button';
 import DropdownControl from '@/components/formInputs/DropdownControl';
 import InputControl from '@/components/formInputs/InputControl';
+import TextareaControl from '@/components/formInputs/TextareaControl';
 import CheckIcon from '@/icons/CheckIcon';
 import CloseIcon from '@/icons/CloseIcon';
 import {selectDay, selectMonth, selectYear} from '@/redux/date/selectors';
@@ -93,8 +94,7 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
                                 name="eventName"
                                 placeholder="Enter required name"
                             />
-
-                            <InputControl
+                            <TextareaControl
                                 control={control}
                                 name="eventDescription"
                                 placeholder="Enter optional description"

@@ -4,6 +4,7 @@ import {FormProvider, useForm} from 'react-hook-form';
 
 import Button from '@/components/Button';
 import InputControl from '@/components/formInputs/InputControl';
+import TextareaControl from '@/components/formInputs/TextareaControl';
 import CheckIcon from '@/icons/CheckIcon';
 import CloseIcon from '@/icons/CloseIcon';
 import EditIcon from '@/icons/EditIcon';
@@ -73,9 +74,7 @@ const BoardEventForm = ({
                                 name="eventName"
                                 placeholder="Enter required name"
                             />
-
-                            {/* TODO: create Textarea input control */}
-                            <InputControl
+                            <TextareaControl
                                 control={control}
                                 name="eventDescription"
                                 placeholder="Enter optional description"
