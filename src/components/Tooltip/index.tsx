@@ -56,7 +56,7 @@ const Tooltip = ({triggerElement, children, triggerElementClassName = '', toolti
                 <div
                     ref={tooltipRef}
                     className={cn(
-                        `max-w-[100px] absolute bottom-[calc(100%+6px)] transition-all duration-200 ease-in-out px-3 py-1 rounded-md border bg-black text-sm z-10 opacity-100`,
+                        `max-w-[100px] max-h-[200px] overflow-auto absolute bottom-[calc(100%+6px)] transition-all duration-200 ease-in-out px-3 py-1 rounded-md border bg-black text-sm z-10 opacity-100`,
                         {
                             'right-[1px]': !isFitsContainer,
                             'left-0': isFitsContainer,
