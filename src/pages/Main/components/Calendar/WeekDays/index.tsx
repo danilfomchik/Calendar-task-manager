@@ -1,5 +1,5 @@
+import {getWeekDays} from '@/services/dateUtils';
 import {useScreenSize} from '@/services/hooks';
-import {getWeekDays} from '@/services/utils';
 
 const WeekDays = () => {
     const weekDays = getWeekDays();

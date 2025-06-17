@@ -1,7 +1,7 @@
 import {useSelector} from 'react-redux';
 
 import {selectMonth, selectYear} from '@/redux/date/selectors';
-import {generateDatesArray} from '@/services/utils';
+import {generateDatesArray} from '@/services/dateUtils';
 
 import Day from '../Day';
 
