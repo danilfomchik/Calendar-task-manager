@@ -1,63 +1,65 @@
 import {motion} from 'framer-motion';
 import moment from 'moment';
-import {useCallback} from 'react';
+import {useState} from 'react';
 import {useSelector} from 'react-redux';
 
-// import Button from '@/components/Button';
+import Button from '@/components/Button';
 import Modal from '@/components/Modal';
-import BoardItemForm from '@/components/forms/BoardItemForm';
-// import AddIcon from '@/icons/AddIcon';
+import BoardEventForm from '@/components/forms/BoardEventForm';
+import AddIcon from '@/icons/AddIcon';
 import {selectFullDate} from '@/redux/date/selectors';
+import {selectEventsByDate} from '@/redux/events/selectors';
+import {formatDate, getDate} from '@/services/dateUtils';
 import {useOpeningItem} from '@/services/hooks';
-import {formatDate, getDate} from '@/services/utils';
 
+import DayEventsList from './DayEventsList';
 import {TDayProps} from './types';
 
 const Day = ({date}: TDayProps) => {
-    const {ref, isOpen, handleClose: handleModalClose /*handleOpen: handleModalOpen*/} = useOpeningItem();
+    const [isHover, setIsHover] = useState(false);
+    const {ref, isOpen, handleClose: handleModalClose, handleOpen: handleModalOpen} = useOpeningItem();
 
-    const curentDate = useSelector(selectFullDate);
-    const curentMonth = formatDate(moment(curentDate), 'M');
+    const events = useSelector(selectEventsByDate(date));
+    const fullDate = useSelector(selectFullDate);
+    const currentMonth = formatDate(moment(fullDate), 'M');
     const dateMonth = formatDate(moment(date), 'M');
 
     const currentDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
     const day = formatDate(getDate(date), 'DD');
 
-    const onAddNewTaskSubmit = useCallback(
-        (data: unknown) => {
-            handleModalClose();
-
-            // eslint-disable-next-line no-console
-            console.log(data);
-        },
-        [handleModalClose],
-    );
-
     return (
         <motion.div
+            onMouseEnter={() => setIsHover(true)}
+            onMouseLeave={() => setIsHover(false)}
             initial={{opacity: 0}}
             animate={{opacity: 1}}
             transition={{duration: 0.5, ease: 'easeOut'}}
-            className={`border border-secondaryBackgroundColor rounded-md p-1 md:p-3 ${dateMonth !== curentMonth ? 'bg-secondaryBackgroundColor' : ''} cursor-pointer hover:bg-secondaryBackgroundColorHover`}>
-            <div className="text-xs sm:text-base">
-                <span
-                    className={`${currentDate === date ? 'bg-blue-600' : ''} ${dateMonth !== curentMonth ? 'text-black' : ''} rounded-full p-1 w-5 h-5 sm:w-8 sm:h-8 flex items-center justify-center text-white`}>
-                    <time dateTime={date}>{day}</time>
-                </span>
+            className={`flex flex-col relative justify-between border border-secondaryBackgroundColor rounded-md p-1 md:p-3 ${dateMonth !== currentMonth ? 'bg-secondaryBackgroundColor' : ''} cursor-pointer hover:bg-secondaryBackgroundColorHover`}>
+            <div className="flex items-center justify-between">
+                <div className="text-xs sm:text-base">
+                    <span
+                        className={`${currentDate === date ? 'bg-blue-600' : ''} ${dateMonth !== currentMonth ? 'text-black' : ''} rounded-full p-1 w-5 h-5 sm:w-8 sm:h-8 flex items-center justify-center text-white`}>
+                        <time dateTime={date}>{day}</time>
+                    </span>
+                </div>
+
+                {isHover && (
+                    <Button
+                        className="p-0 bg-transparent border-none"
+                        startIcon={<AddIcon size="size-5" />}
+                        onClick={handleModalOpen}
+                    />
+                )}
             </div>
 
-            {/* <DayEventsList tasks={tasks} /> */}
-
-            {/* <div className="flex justify-start gap-3 p-3">
-                <Button startIcon={<AddIcon size="size-5" />} text="Add task" onClick={handleModalOpen} />
-            </div> */}
+            {events?.length && <DayEventsList events={events || []} />}
 
             {isOpen && (
                 <Modal refItem={ref} onClose={handleModalClose}>
-                    <BoardItemForm
+                    <BoardEventForm
                         actionType="add"
                         formTitle="Create new event"
-                        onSubmit={onAddNewTaskSubmit}
+                        date={date}
                         handleModalClose={handleModalClose}
                     />
                 </Modal>

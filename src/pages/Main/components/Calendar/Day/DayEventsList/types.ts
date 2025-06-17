@@ -1,3 +1,3 @@
-import {TTask} from '@/redux/columns/types';
+import {TEvent} from '@/redux/events/types';
 
-export type TColumnTasksListProps = {tasks: TTask[]};
+export type TDayEventsListProps = {events: TEvent[]};
