@@ -1,4 +1,6 @@
+import cn from 'classnames';
 import {memo, useCallback, useEffect, useState} from 'react';
+import {twMerge} from 'tailwind-merge';
 
 import ArrowDown from '@/icons/ArrowDown';
 import CheckIcon from '@/icons/CheckIcon';
@@ -42,12 +44,19 @@ const Dropdown = ({
     }, [initValue]);
 
     return (
-        <div ref={ref} className={`w-full relative ${className}`}>
+        <div ref={ref} className={cn('w-full relative', className)}>
             <Button
-                className={`py-2 w-full h-full text-left ${isOpen ? 'border-sky-500 text-sky-500' : 'border-secondaryBackgroundColor'}`}
+                className={twMerge(
+                    cn('py-2 w-full h-full text-left border-secondaryBackgroundColor', {
+                        'border-sky-500 text-sky-500': isOpen,
+                    }),
+                )}
                 text={currentValue ? currentValue : placeholder}
                 endIcon={
-                    <div className={`transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+                    <div
+                        className={cn('transition-transform', {
+                            'rotate-180': isOpen,
+                        })}>
                         <ArrowDown size="size-4" />
                     </div>
                 }
@@ -60,7 +69,12 @@ const Dropdown = ({
                     {options.map(option => (
                         <li
                             key={option}
-                            className={`${currentValue === option && 'bg-secondaryBackgroundColor'} transition-all flex items-center justify-between gap-1 cursor-pointer text-white select-none relative py-2 px-3 hover:bg-secondaryBackgroundColor`}
+                            className={cn(
+                                {
+                                    'bg-secondaryBackgroundColor': currentValue === option,
+                                },
+                                'transition-all flex items-center justify-between gap-1 cursor-pointer text-white select-none relative py-2 px-3 hover:bg-secondaryBackgroundColor',
+                            )}
                             onClick={() => handleChange(option)}>
                             <span className="font-normal block truncate">{option}</span>
                             {currentValue === option && <CheckIcon size="size-3" />}

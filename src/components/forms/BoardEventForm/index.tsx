@@ -1,4 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
+import cn from 'classnames';
 import {useCallback} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 
@@ -82,7 +83,12 @@ const BoardEventForm = ({
                         </div>
 
                         <Button
-                            className={`${isDirty && !errors.eventName && 'border-sky-500 text-sky-500'} text-sm p-2 `}
+                            className={cn(
+                                {
+                                    'border-sky-500 text-sky-500': isDirty && !errors.eventName,
+                                },
+                                'text-sm p-2',
+                            )}
                             disabled={!isDirty || !!errors.eventName}
                             text={actionType === 'edit' ? 'Edit' : 'Add'}
                             endIcon={actionType === 'edit' ? <EditIcon size="size-5" /> : <CheckIcon size="size-5" />}

@@ -1,4 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
+import cn from 'classnames';
 import {useMemo} from 'react';
 import {FormProvider, SubmitHandler, useForm} from 'react-hook-form';
 import {useSelector} from 'react-redux';
@@ -102,7 +103,12 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
                         </div>
 
                         <Button
-                            className={`${isDirty && 'border-sky-500 text-sky-500'} text-sm p-2`}
+                            className={cn(
+                                {
+                                    'border-sky-500 text-sky-500': isDirty,
+                                },
+                                'text-sm p-2',
+                            )}
                             disabled={!isDirty}
                             text="Create event"
                             startIcon={<CheckIcon size="size-5" />}
