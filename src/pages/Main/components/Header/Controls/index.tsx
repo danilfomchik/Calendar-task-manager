@@ -1,4 +1,6 @@
+import cn from 'classnames';
 import {useSelector} from 'react-redux';
+import {twMerge} from 'tailwind-merge';
 
 import Button from '@/components/Button';
 import VerticalDots from '@/icons/VerticalDots';
@@ -23,8 +25,16 @@ const Controls = () => {
             </div>
 
             <div
-                className={`${isMenuOpen && isMobileScreen ? 'flex flex-col border border-secondaryBackgroundColor bg-mainBackgroundColor p-4 mt-2 rounded' : 'hidden'} top-10 right-0 items-center gap-2 md:flex max-md:absolute md:gap-4`}>
-                <div className={`flex ${isMenuOpen && isMobileScreen ? 'flex-col' : 'flex-row'} gap-[10px]`}>
+                className={twMerge(
+                    cn('top-10 right-0 items-center gap-2 md:flex max-md:absolute md:gap-4 hidden z-10', {
+                        'flex flex-col border border-secondaryBackgroundColor bg-mainBackgroundColor p-4 mt-2 rounded visible':
+                            isMenuOpen && isMobileScreen,
+                    }),
+                )}>
+                <div
+                    className={cn('flex flex-row gap-[10px]', {
+                        'flex-col': isMenuOpen && isMobileScreen,
+                    })}>
                     <ChangeMonthControl />
                     <ChangeViewControl />
                 </div>

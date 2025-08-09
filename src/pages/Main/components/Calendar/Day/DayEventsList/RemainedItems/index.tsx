@@ -6,7 +6,7 @@ const RemainedItems = ({items}: TRemainedItemsProps) => {
     return (
         <Tooltip
             triggerElement={<span className="text-xs max-sm:text-[10px]">+{items.length}</span>}
-            triggerElementClassName="w-auto flex justify-end">
+            className="w-auto flex justify-end">
             <div className="flex flex-col">
                 {items.map(item => (
                     <div key={item.id} className="whitespace-nowrap text-ellipsis overflow-hidden">

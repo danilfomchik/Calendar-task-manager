@@ -1,3 +1,5 @@
+import cn from 'classnames';
+
 import {IconProps} from './types';
 
 const EditIcon = ({size, ...restProps}: IconProps) => {
@@ -8,7 +10,7 @@ const EditIcon = ({size, ...restProps}: IconProps) => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={`${size} cursor-pointer`}
+            className={cn('cursor-pointer', size)}
             {...restProps}>
             <path
                 strokeLinecap="round"

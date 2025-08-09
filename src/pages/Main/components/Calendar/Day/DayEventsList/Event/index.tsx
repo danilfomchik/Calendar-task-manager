@@ -11,8 +11,8 @@ const Event = ({event, eventRef}: TEventProps) => {
                     className="h-[8px] w-[8px] flex-none rounded-full"
                     style={{backgroundColor: event.color}}></div>
             }
-            triggerElementClassName="w-auto h-auto"
-            tooltipClassnames="whitespace-nowrap text-ellipsis overflow-hidden">
+            className="w-auto h-auto"
+            contentClassName="whitespace-nowrap text-ellipsis overflow-hidden">
             {event.title}
         </Tooltip>
     );

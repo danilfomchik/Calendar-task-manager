@@ -1,5 +1,4 @@
 import cn from 'classnames';
-import classNames from 'classnames';
 import {cloneElement, memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import {useCalendarContext} from '@/context/hooks';
@@ -8,7 +7,7 @@ import {TooltipProps} from './types';
 
 // Tooltip component gets triggerElement as rendered element for hover
 // Tooltip component gets children as tooltip content
-const Tooltip = ({triggerElement, children, triggerElementClassName = '', tooltipClassnames = ''}: TooltipProps) => {
+const Tooltip = ({triggerElement, children, className = '', contentClassName = ''}: TooltipProps) => {
     const [isFitsContainer, setIsFitsContainer] = useState(true);
     const [isOpened, setIsOpened] = useState(false);
 
@@ -49,7 +48,7 @@ const Tooltip = ({triggerElement, children, triggerElementClassName = '', toolti
     });
 
     return (
-        <div className={classNames('relative', triggerElementClassName)}>
+        <div className={cn('relative', className)}>
             {triggerWithHandlers}
 
             {isOpened && (
@@ -61,7 +60,7 @@ const Tooltip = ({triggerElement, children, triggerElementClassName = '', toolti
                             'right-[1px]': !isFitsContainer,
                             'left-0': isFitsContainer,
                         },
-                        tooltipClassnames,
+                        contentClassName,
                     )}>
                     {children}
                 </div>

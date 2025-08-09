@@ -1,7 +1,9 @@
+import cn from 'classnames';
 import {motion} from 'framer-motion';
 import moment from 'moment';
 import {useState} from 'react';
 import {useSelector} from 'react-redux';
+import {twMerge} from 'tailwind-merge';
 
 import Button from '@/components/Button';
 import Modal from '@/components/Modal';
@@ -34,11 +36,22 @@ const Day = ({date}: TDayProps) => {
             initial={{opacity: 0}}
             animate={{opacity: 1}}
             transition={{duration: 0.5, ease: 'easeOut'}}
-            className={`flex flex-col relative justify-between border border-secondaryBackgroundColor rounded-md p-1 md:p-3 ${dateMonth !== currentMonth ? 'bg-secondaryBackgroundColor' : ''} cursor-pointer hover:bg-secondaryBackgroundColorHover`}>
+            className={twMerge(
+                cn(
+                    'flex flex-col relative justify-between border border-secondaryBackgroundColor rounded-md p-1 md:p-3 cursor-pointer hover:bg-secondaryBackgroundColorHover',
+                    {
+                        'bg-secondaryBackgroundColor': dateMonth !== currentMonth,
+                    },
+                ),
+            )}>
             <div className="flex items-center justify-between">
                 <div className="text-xs sm:text-base">
                     <span
-                        className={`${currentDate === date ? 'bg-blue-600' : ''} ${dateMonth !== currentMonth ? 'text-black' : ''} rounded-full p-1 w-5 h-5 sm:w-8 sm:h-8 flex items-center justify-center text-white`}>
+                        className={twMerge(
+                            cn('rounded-full p-1 w-5 h-5 sm:w-8 sm:h-8 flex items-center justify-center text-white', {
+                                'bg-blue-600': currentDate === date,
+                            }),
+                        )}>
                         <time dateTime={date}>{day}</time>
                     </span>
                 </div>
