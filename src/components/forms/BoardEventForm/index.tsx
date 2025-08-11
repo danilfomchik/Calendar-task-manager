@@ -56,7 +56,7 @@ const BoardEventForm = ({
     );
 
     return (
-        <div className="modal relative bg-mainBackgroundColor border border-sky-500 rounded-lg md:min-w-96 sm:min-w-56">
+        <div>
             <Button
                 startIcon={<CloseIcon size="size-5" />}
                 className="absolute right-2 top-2 p-1 text-sm cursor-pointer hover:text-sky-500"
