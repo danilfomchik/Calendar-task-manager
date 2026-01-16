@@ -6,7 +6,7 @@ import './moment.config';
 import ReduxProvider from './providers/redux-provider';
 
 createRoot(document.getElementById('root')!).render(
-    <ReduxProvider>
-        <App />
-    </ReduxProvider>,
+  <ReduxProvider>
+    <App />
+  </ReduxProvider>,
 );

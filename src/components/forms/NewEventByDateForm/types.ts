@@ -1,11 +1,11 @@
 export type TNewEventByDateFormProps = {
-    handleModalClose: () => void;
+  handleModalClose: () => void;
 };
 
 export type TFormValues = {
-    eventName: string;
-    eventYear: string;
-    eventMonth: string;
-    eventDay: string;
-    eventDescription?: string;
+  eventName: string;
+  eventYear: string;
+  eventMonth: string;
+  eventDay: string;
+  eventDescription?: string;
 };

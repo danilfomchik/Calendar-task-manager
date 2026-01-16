@@ -7,30 +7,30 @@ import {SliceNames} from '../types';
 import {TEvent, TEventsState} from './types';
 
 const reducers = {
-    addEvent: (state: TEventsState, action: PayloadAction<TEvent>) => {
-        const {date} = action.payload;
-        const events = state.events || {};
+  addEvent: (state: TEventsState, action: PayloadAction<TEvent>) => {
+    const {date} = action.payload;
+    const events = state.events || {};
 
-        const updatedEvents = {
-            ...events,
-            [date]: [...(events[date] || []), action.payload],
-        };
+    const updatedEvents = {
+      ...events,
+      [date]: [...(events[date] || []), action.payload],
+    };
 
-        state.events = updatedEvents;
-        localStorage.setItem(StorageKeys.events, JSON.stringify(updatedEvents));
-    },
+    state.events = updatedEvents;
+    localStorage.setItem(StorageKeys.events, JSON.stringify(updatedEvents));
+  },
 };
 
 const initialEvents = getLocalStoredValues(StorageKeys.events, null);
 
 const initialState: TEventsState = {
-    events: initialEvents,
+  events: initialEvents,
 };
 
 const eventsSlice = createSlice({
-    name: SliceNames.eventsSlice,
-    initialState,
-    reducers,
+  name: SliceNames.eventsSlice,
+  initialState,
+  reducers,
 });
 
 export const {addEvent} = eventsSlice.actions;

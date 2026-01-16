@@ -5,10 +5,10 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vite.dev/config/
 export default defineConfig({
-    resolve: {
-        alias: {
-            '@': resolve(__dirname, 'src/'),
-        },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src/'),
     },
-    plugins: [tsconfigPaths(), react()],
+  },
+  plugins: [tsconfigPaths(), react()],
 });
