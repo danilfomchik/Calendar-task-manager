@@ -1,6 +1,6 @@
 import Button from '@/components/Button';
+import EventForm from '@/components/EventForm';
 import Modal from '@/components/Modal';
-import NewEventByDateForm from '@/components/forms/NewEventByDateForm';
 import {useOpeningItem} from '@/services/hooks';
 
 const AddEvent = () => {
@@ -17,7 +17,7 @@ const AddEvent = () => {
 
       {isOpen && (
         <Modal refItem={ref} onClose={handleClose}>
-          <NewEventByDateForm handleModalClose={handleClose} />
+          <EventForm formTitle="Create event form" handleModalClose={handleClose} />
         </Modal>
       )}
     </>

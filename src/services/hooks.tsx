@@ -35,6 +35,7 @@ export const useScreenSize = () => {
   return screenSize;
 };
 
+// TODO: investigate and optimize it
 export const useRegisteredItem = ({refId, defaultIsOpen}: {refId: string; defaultIsOpen?: boolean}) => {
   const defaultIsOpenValue = defaultIsOpen ?? false;
 

@@ -9,7 +9,7 @@ const ChangeViewControl = () => {
 
   return (
     <Dropdown
-      selectedOption={viewOptions[1]}
+      selectedOption={viewOptions[2]}
       onChange={handleChange}
       options={viewOptions}
       placeholder="Pick view"

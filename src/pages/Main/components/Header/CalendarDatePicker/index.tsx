@@ -41,6 +41,7 @@ const CalendarDatePicker = () => {
 
   return (
     <div className="flex gap-2 relative self-stretch">
+      {/* TODO: scroll to selected option when dropdown opens */}
       <Dropdown
         selectedOption={month || ''}
         onChange={onMonthChange}
