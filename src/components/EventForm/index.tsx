@@ -1,5 +1,6 @@
 import {yupResolver} from '@hookform/resolvers/yup';
 import cn from 'classnames';
+import moment from 'moment';
 import {useMemo} from 'react';
 import {FormProvider, SubmitHandler, useForm} from 'react-hook-form';
 import {useSelector} from 'react-redux';
@@ -10,30 +11,41 @@ import InputControl from '@/components/formInputs/InputControl';
 import TextareaControl from '@/components/formInputs/TextareaControl';
 import CheckIcon from '@/icons/CheckIcon';
 import CloseIcon from '@/icons/CloseIcon';
+import EditIcon from '@/icons/EditIcon';
 import {selectDay, selectMonth, selectYear} from '@/redux/date/selectors';
-import {addEvent} from '@/redux/events/eventsSlice';
+import {addEvent, editEvent} from '@/redux/events/eventsSlice';
 import {useAppDispatch} from '@/redux/store';
-import {createDate, getDays, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
-import {createEvent} from '@/services/utils';
+import {createDate, formatDate, getDays, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
+import {createEventObj, editEventObj} from '@/services/utils';
 
 import {validation} from './form';
-import {TFormValues, TNewEventByDateFormProps} from './types';
+import {FormActionType, TEventFormProps, TFormValues} from './types';
 
-const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
+const EventForm = ({actionType = FormActionType.create, formTitle, event, date, handleModalClose}: TEventFormProps) => {
   const dispatch = useAppDispatch();
   const year = useSelector(selectYear);
   const month = useSelector(selectMonth);
   const day = useSelector(selectDay);
 
+  const defaultValues = event
+    ? {
+        eventName: event.title,
+        eventDescription: event.description,
+        eventYear: formatDate(moment(event.date), 'YYYY'),
+        eventMonth: formatDate(moment(event.date), 'MMMM'),
+        eventDay: formatDate(moment(event.date), 'DD'),
+      }
+    : {
+        eventName: '',
+        eventYear: formatDate(moment(date), 'YYYY') || year || '',
+        eventMonth: formatDate(moment(date), 'MMMM') || month || '',
+        eventDay: formatDate(moment(date), 'DD') || day || '',
+        eventDescription: '',
+      };
+
   const methods = useForm<TFormValues>({
     resolver: yupResolver(validation),
-    defaultValues: {
-      eventName: '',
-      eventYear: year || '',
-      eventMonth: month || '',
-      eventDay: day || '',
-      eventDescription: '',
-    },
+    defaultValues,
     mode: 'onSubmit',
     shouldUnregister: false,
   });
@@ -42,7 +54,7 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
     control,
     handleSubmit,
     watch,
-    formState: {isDirty},
+    formState: {errors, isDirty},
   } = methods;
 
   const formYearValue = watch('eventYear');
@@ -55,18 +67,41 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
     [formYearValue, formMonthValue],
   );
 
-  const onSubmit: SubmitHandler<TFormValues> = eventData => {
+  const handleCreateEvent = (eventData: TFormValues) => {
     const {eventName, eventYear, eventMonth, eventDay, eventDescription} = eventData;
 
-    handleModalClose();
-
-    const newEvent = createEvent({
+    const newEvent = createEventObj({
       eventName,
       date: createDate(+eventYear, eventMonth, +eventDay),
       description: eventDescription,
     });
 
     dispatch(addEvent(newEvent));
+  };
+
+  const handleEditEvent = (eventData: TFormValues) => {
+    const {eventName, eventYear, eventMonth, eventDay, eventDescription} = eventData;
+
+    const editedEvent = editEventObj({
+      event,
+      updatedEvent: {
+        eventName,
+        date: createDate(+eventYear, eventMonth, +eventDay),
+        description: eventDescription,
+      },
+    });
+
+    dispatch(editEvent(editedEvent));
+  };
+
+  const onSubmit: SubmitHandler<TFormValues> = eventData => {
+    if (actionType === 'create') {
+      handleCreateEvent(eventData);
+    } else {
+      handleEditEvent(eventData);
+    }
+
+    handleModalClose();
   };
 
   return (
@@ -77,16 +112,18 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
         onClick={handleModalClose}
       />
 
-      <h3 className="text-lg font-bold p-3 text-center">Create new event</h3>
+      <h3 className="text-lg font-bold p-3 text-center">{formTitle}</h3>
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center justify-between gap-[20px] w-auto px-[30px] py-[20px]">
-            <div className="flex gap-2 relative self-stretch max-md:flex-col">
-              <DropdownControl control={control} options={monthsOptions} name="eventMonth" />
-              <DropdownControl control={control} options={yearsOptions} name="eventYear" />
-              <DropdownControl control={control} options={daysOptions} name="eventDay" />
-            </div>
+            {!date && (
+              <div className="flex gap-2 relative self-stretch max-md:flex-col">
+                <DropdownControl control={control} options={monthsOptions} name="eventMonth" />
+                <DropdownControl control={control} options={yearsOptions} name="eventYear" />
+                <DropdownControl control={control} options={daysOptions} name="eventDay" />
+              </div>
+            )}
 
             <div className="w-full flex flex-col gap-2">
               <InputControl autoFocus control={control} name="eventName" placeholder="Enter required name" />
@@ -100,9 +137,9 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
                 },
                 'text-sm p-2 max-md:w-full',
               )}
-              disabled={!isDirty}
-              text="Create event"
-              startIcon={<CheckIcon size="size-5" />}
+              disabled={!isDirty || !!errors.eventName}
+              text={actionType === FormActionType.edit ? 'Edit' : 'Create'}
+              endIcon={actionType === FormActionType.edit ? <EditIcon size="size-5" /> : <CheckIcon size="size-5" />}
               type="submit"
             />
           </div>
@@ -112,4 +149,4 @@ const NewEventByDateForm = ({handleModalClose}: TNewEventByDateFormProps) => {
   );
 };
 
-export default NewEventByDateForm;
+export default EventForm;
