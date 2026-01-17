@@ -24,5 +24,6 @@ export enum MonthParts {
 }
 
 export enum StorageKeys {
-  events = 'events',
+  eventsById = 'eventsById',
+  eventsByDate = 'eventsByDate',
 }

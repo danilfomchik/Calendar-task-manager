@@ -9,7 +9,10 @@ export type TEvent = {
 };
 
 export type TEventsState = {
-  events: {
-    [key: string]: TEvent[];
-  } | null;
+  eventsById: {
+    [key: string]: TEvent;
+  };
+  eventsByDate: {
+    [key: string]: string[] | undefined;
+  };
 };
