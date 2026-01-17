@@ -7,17 +7,17 @@ import overflowSlice from './overflow/overflowSlice';
 import {PreloadedState, SliceNames} from './types';
 
 const combinedReducer = combineReducers({
-    [SliceNames.eventsSlice]: counterSlice.reducer,
-    [SliceNames.dateSlice]: dateSlice.reducer,
-    [SliceNames.overflowSlice]: overflowSlice.reducer,
+  [SliceNames.eventsSlice]: counterSlice.reducer,
+  [SliceNames.dateSlice]: dateSlice.reducer,
+  [SliceNames.overflowSlice]: overflowSlice.reducer,
 });
 
 export const setupStore = (preloadedState?: PreloadedState) => {
-    return configureStore({
-        reducer: combinedReducer,
-        middleware: getDefaultMiddleware => getDefaultMiddleware(),
-        preloadedState,
-    });
+  return configureStore({
+    reducer: combinedReducer,
+    middleware: getDefaultMiddleware => getDefaultMiddleware(),
+    preloadedState,
+  });
 };
 
 const store = setupStore();
