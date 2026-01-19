@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import {memo, useCallback, useEffect, useState} from 'react';
+import {memo, useCallback, useEffect, useRef, useState} from 'react';
 import {twMerge} from 'tailwind-merge';
 
 import {useOpeningItem} from '@/hooks/useOpeningItem';
@@ -20,6 +20,7 @@ const Dropdown = ({
   const [currentValue, setCurrentValue] = useState(selectedOption);
 
   const {ref, isOpen, handleClose, handleToggle} = useOpeningItem();
+  const activeOptionRef = useRef<HTMLLIElement>(null);
 
   const handleChange = useCallback(
     (option: string) => {
@@ -42,6 +43,15 @@ const Dropdown = ({
   useEffect(() => {
     initValue();
   }, [initValue]);
+
+  useEffect(() => {
+    if (isOpen && activeOptionRef.current) {
+      activeOptionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [isOpen, activeOptionRef]);
 
   return (
     <div ref={ref} className={cn('w-full relative', className)}>
@@ -68,6 +78,7 @@ const Dropdown = ({
         <ul className="absolute z-10 mt-1 w-full bg-mainBackgroundColor border border-secondaryBackgroundColor shadow-lg max-h-[220px] rounded-md text-sm ring-opacity-5 overflow-auto focus:outline-none">
           {options.map(option => (
             <li
+              ref={currentValue === option ? activeOptionRef : null}
               key={option}
               className={cn(
                 {
