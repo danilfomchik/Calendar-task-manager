@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import {cloneElement, memo, useCallback, useEffect, useRef, useState} from 'react';
 
-import {useCalendarContext} from '@/context/hooks';
+import {useCalendarContext} from '@/hooks/useCalendarContext';
 
 import {TooltipProps} from './types';
 

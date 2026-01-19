@@ -1,4 +1,4 @@
-import {useCalendarContext} from '@/context/hooks';
+import {useCalendarContext} from '@/hooks/useCalendarContext';
 
 import DaysList from './DaysList';
 import WeekDays from './WeekDays';

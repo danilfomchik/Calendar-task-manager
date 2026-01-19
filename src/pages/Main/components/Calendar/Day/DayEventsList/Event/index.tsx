@@ -2,7 +2,7 @@ import EventForm from '@/components/EventForm';
 import {FormActionType} from '@/components/EventForm/types';
 import Modal from '@/components/Modal';
 import Tooltip from '@/components/Tooltip';
-import {useOpeningItem} from '@/services/hooks';
+import {useOpeningItem} from '@/hooks/useOpeningItem';
 
 import {TEventProps} from './types';
 
