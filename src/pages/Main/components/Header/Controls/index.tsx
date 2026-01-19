@@ -3,9 +3,10 @@ import {useSelector} from 'react-redux';
 import {twMerge} from 'tailwind-merge';
 
 import Button from '@/components/Button';
+import {useOpeningItem} from '@/hooks/useOpeningItem';
+import {useScreenSize} from '@/hooks/useScreenSize';
 import VerticalDots from '@/icons/VerticalDots';
 import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
-import {useOpeningItem, useScreenSize} from '@/services/hooks';
 
 import AddEvent from './AddEvent';
 import ChangeMonthControl from './ChangeMonthControl';

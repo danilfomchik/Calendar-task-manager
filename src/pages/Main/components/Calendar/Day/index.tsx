@@ -8,11 +8,11 @@ import {twMerge} from 'tailwind-merge';
 import Button from '@/components/Button';
 import EventForm from '@/components/EventForm';
 import Modal from '@/components/Modal';
+import {useOpeningItem} from '@/hooks/useOpeningItem';
 import AddIcon from '@/icons/AddIcon';
 import {selectFullDate} from '@/redux/date/selectors';
 import {selectEventsByDate, selectEventsById} from '@/redux/events/selectors';
 import {formatDate, getDate} from '@/services/dateUtils';
-import {useOpeningItem} from '@/services/hooks';
 
 import DayEventsList from './DayEventsList';
 import {TDayProps} from './types';

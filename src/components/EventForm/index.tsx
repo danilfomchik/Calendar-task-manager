@@ -16,7 +16,7 @@ import {selectDay, selectMonth, selectYear} from '@/redux/date/selectors';
 import {addEvent, editEvent} from '@/redux/events/eventsSlice';
 import {useAppDispatch} from '@/redux/store';
 import {createDate, formatDate, getDays, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
-import {createEventObj, editEventObj} from '@/services/utils';
+import {createEventObj, editEventObj} from '@/services/eventUtils';
 
 import {validation} from './form';
 import {FormActionType, TEventFormProps, TFormValues} from './types';

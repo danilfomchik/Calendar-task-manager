@@ -1,7 +1,7 @@
 import Button from '@/components/Button';
 import EventForm from '@/components/EventForm';
 import Modal from '@/components/Modal';
-import {useOpeningItem} from '@/services/hooks';
+import {useOpeningItem} from '@/hooks/useOpeningItem';
 
 const AddEvent = () => {
   const {ref, isOpen, handleClose, handleOpen} = useOpeningItem();

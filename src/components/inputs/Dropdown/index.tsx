@@ -2,9 +2,9 @@ import cn from 'classnames';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {twMerge} from 'tailwind-merge';
 
+import {useOpeningItem} from '@/hooks/useOpeningItem';
 import ArrowDown from '@/icons/ArrowDown';
 import CheckIcon from '@/icons/CheckIcon';
-import {useOpeningItem} from '@/services/hooks';
 
 import Button from '../../Button';
 import {TDropdownProps} from './types';
