@@ -1,69 +1,99 @@
+import cn from 'classnames';
 import {motion} from 'framer-motion';
 import moment from 'moment';
-import {useCallback} from 'react';
+import {memo, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
+import {twMerge} from 'tailwind-merge';
 
-// import Button from '@/components/Button';
+import Button from '@/components/Button';
+import EventForm from '@/components/EventForm';
 import Modal from '@/components/Modal';
-import BoardItemForm from '@/components/forms/BoardItemForm';
-// import AddIcon from '@/icons/AddIcon';
+import {useOpeningItem} from '@/hooks/useOpeningItem';
+import AddIcon from '@/icons/AddIcon';
 import {selectFullDate} from '@/redux/date/selectors';
-import {useOpeningItem} from '@/services/hooks';
-import {formatDate, getDate} from '@/services/utils';
+import {selectEventsByDate, selectEventsById} from '@/redux/events/selectors';
+import {formatDate, getDate} from '@/services/dateUtils';
 
+import DayEventsList from './DayEventsList';
 import {TDayProps} from './types';
 
 const Day = ({date}: TDayProps) => {
-    const {ref, isOpen, handleClose: handleModalClose /*handleOpen: handleModalOpen*/} = useOpeningItem();
+  const [isHover, setIsHover] = useState(false);
+  const {ref, isOpen, handleClose: handleModalClose, handleOpen: handleModalOpen} = useOpeningItem();
 
-    const curentDate = useSelector(selectFullDate);
-    const curentMonth = formatDate(moment(curentDate), 'M');
-    const dateMonth = formatDate(moment(date), 'M');
+  const dayRef = useRef<HTMLDivElement>(null);
 
-    const currentDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
-    const day = formatDate(getDate(date), 'DD');
+  const eventsByDate = useSelector(selectEventsByDate(date));
+  const eventsById = useSelector(selectEventsById);
 
-    const onAddNewTaskSubmit = useCallback(
-        (data: unknown) => {
-            handleModalClose();
+  const events = useMemo(() => eventsByDate?.map(eventDate => eventsById[eventDate]), [eventsByDate, eventsById]);
 
-            // eslint-disable-next-line no-console
-            console.log(data);
-        },
-        [handleModalClose],
-    );
+  const fullDate = useSelector(selectFullDate);
+  const currentMonth = formatDate(moment(fullDate), 'M');
+  const dateMonth = formatDate(moment(date), 'M');
 
-    return (
-        <motion.div
-            initial={{opacity: 0}}
-            animate={{opacity: 1}}
-            transition={{duration: 0.5, ease: 'easeOut'}}
-            className={`border border-secondaryBackgroundColor rounded-md p-1 md:p-3 ${dateMonth !== curentMonth ? 'bg-secondaryBackgroundColor' : ''} cursor-pointer hover:bg-secondaryBackgroundColorHover`}>
-            <div className="text-xs sm:text-base">
-                <span
-                    className={`${currentDate === date ? 'bg-blue-600' : ''} ${dateMonth !== curentMonth ? 'text-black' : ''} rounded-full p-1 w-5 h-5 sm:w-8 sm:h-8 flex items-center justify-center text-white`}>
-                    <time dateTime={date}>{day}</time>
-                </span>
-            </div>
+  const currentDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
+  const day = formatDate(getDate(date), 'DD');
 
-            {/* <DayEventsList tasks={tasks} /> */}
+  return (
+    <motion.div
+      ref={dayRef}
+      // on hover
+      onPointerEnter={e => {
+        if (e.pointerType === 'mouse') {
+          setIsHover(true);
+        }
+      }}
+      // on blur
+      onPointerLeave={() => setIsHover(false)}
+      // on move not inside day block (ex. modal)
+      onPointerMoveCapture={e => {
+        if (!dayRef.current?.contains(e.target as Node)) {
+          setIsHover(false);
+        }
+      }}
+      initial={{opacity: 0}}
+      animate={{opacity: 1}}
+      transition={{duration: 0.5, ease: 'easeOut'}}
+      className={twMerge(
+        cn(
+          'flex flex-col relative justify-between border border-secondaryBackgroundColor rounded-md p-1 md:p-3 cursor-pointer',
+          {
+            'bg-secondaryBackgroundColor': dateMonth !== currentMonth,
+          },
+          {'bg-secondaryBackgroundColorHover': isHover},
+        ),
+      )}>
+      <div className="flex items-center justify-between">
+        <div className="text-xs sm:text-base">
+          <span
+            className={twMerge(
+              cn('rounded-full p-1 w-5 h-5 sm:w-8 sm:h-8 flex items-center justify-center text-white', {
+                'bg-blue-600': currentDate === date,
+              }),
+            )}>
+            <time dateTime={date}>{day}</time>
+          </span>
+        </div>
 
-            {/* <div className="flex justify-start gap-3 p-3">
-                <Button startIcon={<AddIcon size="size-5" />} text="Add task" onClick={handleModalOpen} />
-            </div> */}
+        {isHover && (
+          <Button
+            className="p-0 bg-transparent border-none"
+            startIcon={<AddIcon size="size-5" />}
+            onClick={handleModalOpen}
+          />
+        )}
+      </div>
 
-            {isOpen && (
-                <Modal refItem={ref} onClose={handleModalClose}>
-                    <BoardItemForm
-                        actionType="add"
-                        formTitle="Create new event"
-                        onSubmit={onAddNewTaskSubmit}
-                        handleModalClose={handleModalClose}
-                    />
-                </Modal>
-            )}
-        </motion.div>
-    );
+      {!!events?.length && <DayEventsList events={events || []} />}
+
+      {isOpen && (
+        <Modal refItem={ref} onClose={handleModalClose}>
+          <EventForm formTitle="Create event form" handleModalClose={handleModalClose} date={date} />
+        </Modal>
+      )}
+    </motion.div>
+  );
 };
 
-export default Day;
+export default memo(Day);

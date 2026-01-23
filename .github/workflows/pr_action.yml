@@ -1,29 +1,31 @@
 name: PR ACTION
 
 on:
-    pull_request:
-        types: [opened, synchronize]
-        branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    name: pr-action-build
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-            - name: Install dependencies
-              run: npm install
+      - name: Install dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
 
-            - name: Check format
-              run: npm run format:all
+      - run: npm ci
 
-            - name: Lint code
-              run: npm run lint:all
-
-            - name: Prepare
-              run: npm run prepare
-
-            - name: Build the React app
-              run: npm run build
+      - name: Check format
+        run: npm run format:all
+      - name: Lint code
+        run: npm run lint:all
+      - name: Prepare
+        run: npm run prepare
+      - name: Build the React app
+        run: npm run build
