@@ -1,24 +1,25 @@
-import {useCallback, useRef} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {uid} from 'uid';
 
-import {useRegisteredItem} from '@/hooks/useRegisteredItem';
 import {onCloseItem, onOpenItem} from '@/redux/overflow/overflowSlice';
 import {useAppDispatch} from '@/redux/store';
 
-import {useBodyClick} from './useBodyClick';
-
 export const useOpeningItem = () => {
   const dispatch = useAppDispatch();
+  const ref = useRef<HTMLDivElement>(null);
   const refId = useRef<string>(uid()).current;
-  const isOpen = useRegisteredItem({refId});
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleClose = useCallback(() => {
+    setIsOpen(false);
+
     dispatch(onCloseItem(refId));
   }, [dispatch, refId]);
 
-  const {ref} = useBodyClick({refId, isOpen, onClick: handleClose});
-
   const handleOpen = useCallback(() => {
+    setIsOpen(true);
+
     dispatch(onOpenItem(refId));
   }, [dispatch, refId]);
 

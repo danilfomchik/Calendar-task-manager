@@ -1,3 +1,5 @@
+import {memo} from 'react';
+
 import EventForm from '@/components/EventForm';
 import {FormActionType} from '@/components/EventForm/types';
 import Modal from '@/components/Modal';
@@ -38,4 +40,4 @@ const Event = ({event, eventRef}: TEventProps) => {
   );
 };
 
-export default Event;
+export default memo(Event);
