@@ -3,11 +3,22 @@ import {createPortal} from 'react-dom';
 
 import {TModalProps} from './types';
 
-const Modal = ({refItem, className, children}: TModalProps) => {
+const Modal = ({refItem, className, children, onClose}: TModalProps) => {
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (refItem?.current?.contains(e.target as Node)) {
+      return;
+    }
+
+    onClose();
+  };
+
   return (
     <>
       {createPortal(
         <div
+          onClick={handleClose}
           className={cn(
             'fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-secondaryBackgroundColor bg-opacity-80 z-20',
             className,
