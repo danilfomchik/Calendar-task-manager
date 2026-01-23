@@ -12,3 +12,9 @@ export enum StorageKeys {
   eventsById = 'eventsById',
   eventsByDate = 'eventsByDate',
 }
+
+export enum RouterPaths {
+  home = '/',
+  day = '/day/:date',
+  notFound = '*',
+}
