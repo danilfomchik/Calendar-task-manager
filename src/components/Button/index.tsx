@@ -1,11 +1,13 @@
 import cn from 'classnames';
+import {Link} from 'react-router';
 import {twMerge} from 'tailwind-merge';
 
-import {TButtonProps} from './types';
+import {TButtonProps, TLinkKindProps} from './types';
 import {buttonVariants} from './variants';
 
 const Button = ({
   variant = 'primary',
+  kind = 'button',
   startIcon = null,
   endIcon = null,
   text = '',
@@ -13,7 +15,7 @@ const Button = ({
   children,
   ...restProps
 }: TButtonProps) => {
-  return (
+  const btnContent = (
     <button
       className={twMerge(
         cn(
@@ -37,6 +39,18 @@ const Button = ({
       {children}
     </button>
   );
+
+  if (kind === 'link') {
+    const {to, ...linkProps} = restProps as TLinkKindProps;
+
+    return (
+      <Link to={to} {...linkProps}>
+        {btnContent}
+      </Link>
+    );
+  }
+
+  return btnContent;
 };
 
 export default Button;
