@@ -9,6 +9,7 @@ type TDate = {
   month: TMonth;
   year: TYear;
   day: TDay;
+  selectedDate: string;
 };
 
 export type TDateState = TDate;
