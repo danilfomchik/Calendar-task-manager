@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
+// TODO: optimize hook
 export const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState<'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | ''>('');
 

@@ -9,9 +9,13 @@ import Button from '@/components/Button';
 import EventForm from '@/components/EventForm';
 import Modal from '@/components/Modal';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
+import {useScreenSize} from '@/hooks/useScreenSize';
 import AddIcon from '@/icons/AddIcon';
-import {selectFullDate} from '@/redux/date/selectors';
+import ExternalPage from '@/icons/ExternalPage';
+import {setSelectedDate} from '@/redux/date/dateSlice';
+import {selectFullDate, selectSelectedDate} from '@/redux/date/selectors';
 import {selectEventsByDate, selectEventsById} from '@/redux/events/selectors';
+import {useAppDispatch} from '@/redux/store';
 import {formatDate, getDate} from '@/services/dateUtils';
 
 import DayEventsList from './DayEventsList';
@@ -20,11 +24,16 @@ import {TDayProps} from './types';
 const Day = ({date}: TDayProps) => {
   const [isHover, setIsHover] = useState(false);
   const {ref, isOpen, handleClose: handleModalClose, handleOpen: handleModalOpen} = useOpeningItem();
+  const dispatch = useAppDispatch();
+  const screenSize = useScreenSize();
+
+  const isMobileScreen = screenSize === 'xs' || screenSize === 'sm' || screenSize === 'md';
 
   const dayRef = useRef<HTMLDivElement>(null);
 
   const eventsByDate = useSelector(selectEventsByDate(date));
   const eventsById = useSelector(selectEventsById);
+  const selectedDate = useSelector(selectSelectedDate);
 
   const events = useMemo(() => eventsByDate?.map(eventDate => eventsById[eventDate]), [eventsByDate, eventsById]);
 
@@ -35,9 +44,16 @@ const Day = ({date}: TDayProps) => {
   const currentDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
   const day = formatDate(getDate(date), 'DD');
 
+  const handleDayClick = () => {
+    if (!isMobileScreen) return;
+
+    dispatch(setSelectedDate(date));
+  };
+
   return (
     <motion.div
       ref={dayRef}
+      onClick={handleDayClick}
       // on hover
       onPointerEnter={e => {
         if (e.pointerType === 'mouse') {
@@ -57,23 +73,33 @@ const Day = ({date}: TDayProps) => {
       transition={{duration: 0.5, ease: 'easeOut'}}
       className={twMerge(
         cn(
-          'flex flex-col relative justify-between border border-secondaryBackgroundColor rounded-md p-1 md:p-3 cursor-pointer',
+          'flex flex-col relative justify-between border border-secondaryBackgroundColor rounded-md p-1 lg:p-3 cursor-pointer transition-all',
           {
             'bg-secondaryBackgroundColor': dateMonth !== currentMonth,
           },
           {'bg-secondaryBackgroundColorHover': isHover},
+          {'border border-sky-500': date === selectedDate && isMobileScreen},
         ),
       )}>
       <div className="flex items-center justify-between">
-        <div className="text-xs sm:text-base">
+        <div className="flex items-center gap-2 text-xs sm:text-base">
           <span
             className={twMerge(
-              cn('rounded-full p-1 w-5 h-5 sm:w-8 sm:h-8 flex items-center justify-center text-white', {
+              cn('rounded-full p-1 w-5 h-5 lg:w-8 lg:h-8 flex items-center justify-center text-white', {
                 'bg-blue-600': currentDate === date,
               }),
             )}>
             <time dateTime={date}>{day}</time>
           </span>
+
+          {isHover && (
+            <Button
+              kind="link"
+              to={`/day/${date}`}
+              className="p-0 bg-transparent border-none"
+              startIcon={<ExternalPage size="size-5" />}
+            />
+          )}
         </div>
 
         {isHover && (

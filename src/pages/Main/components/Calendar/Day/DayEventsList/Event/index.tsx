@@ -5,21 +5,30 @@ import {FormActionType} from '@/components/EventForm/types';
 import Modal from '@/components/Modal';
 import Tooltip from '@/components/Tooltip';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
+import {useScreenSize} from '@/hooks/useScreenSize';
 
 import {TEventProps} from './types';
 
 const Event = ({event, eventRef}: TEventProps) => {
   const {ref, isOpen, handleClose, handleOpen} = useOpeningItem();
+  const screenSize = useScreenSize();
+
+  const isMobileScreen = screenSize === 'xs' || screenSize === 'sm' || screenSize === 'md';
 
   return (
     <>
       <Tooltip
+        disabled={isMobileScreen}
         triggerElement={
           <div
             ref={eventRef}
             className="h-[8px] w-[8px] flex-none rounded-full"
             style={{backgroundColor: event.color}}
-            onClick={handleOpen}></div>
+            onClick={() => {
+              if (isMobileScreen) return;
+
+              handleOpen();
+            }}></div>
         }
         className="w-auto h-auto"
         contentClassName="whitespace-nowrap text-ellipsis overflow-hidden">
