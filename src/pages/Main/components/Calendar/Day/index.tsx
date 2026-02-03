@@ -8,8 +8,8 @@ import {twMerge} from 'tailwind-merge';
 import Button from '@/components/Button';
 import EventForm from '@/components/EventForm';
 import Modal from '@/components/Modal';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
-import {useScreenSize} from '@/hooks/useScreenSize';
 import AddIcon from '@/icons/AddIcon';
 import ExternalPage from '@/icons/ExternalPage';
 import {setSelectedDate} from '@/redux/date/dateSlice';
@@ -25,9 +25,8 @@ const Day = ({date}: TDayProps) => {
   const [isHover, setIsHover] = useState(false);
   const {ref, isOpen, handleClose: handleModalClose, handleOpen: handleModalOpen} = useOpeningItem();
   const dispatch = useAppDispatch();
-  const screenSize = useScreenSize();
 
-  const isMobileScreen = screenSize === 'xs' || screenSize === 'sm' || screenSize === 'md';
+  const isMobileScreen = useMediaQuery({size: 'md', direction: 'to'});
 
   const dayRef = useRef<HTMLDivElement>(null);
 

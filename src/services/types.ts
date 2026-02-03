@@ -3,6 +3,8 @@ export type NonNullable<T> = T extends null | undefined ? never : T;
 
 export type Format = 'YYYY-MM-DD' | 'YYYY' | 'MMMM' | 'M' | 'DD';
 
+export type TScreenSizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '';
+
 export enum MonthParts {
   START = 'start',
   END = 'end',

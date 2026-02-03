@@ -1,12 +1,10 @@
 import Tooltip from '@/components/Tooltip';
-import {useScreenSize} from '@/hooks/useScreenSize';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 
 import {TRemainedItemsProps} from './types';
 
 const RemainedItems = ({items}: TRemainedItemsProps) => {
-  const screenSize = useScreenSize();
-
-  const isMobileScreen = screenSize === 'xs' || screenSize === 'sm' || screenSize === 'md';
+  const isMobileScreen = useMediaQuery({size: 'md', direction: 'to'});
 
   return (
     <Tooltip

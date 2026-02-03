@@ -3,8 +3,8 @@ import {useSelector} from 'react-redux';
 import {twMerge} from 'tailwind-merge';
 
 import Button from '@/components/Button';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
-import {useScreenSize} from '@/hooks/useScreenSize';
 import VerticalDots from '@/icons/VerticalDots';
 import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
 
@@ -13,12 +13,12 @@ import ChangeMonthControl from './ChangeMonthControl';
 import ChangeViewControl from './ChangeViewControl';
 
 const Controls = () => {
-  const screenSize = useScreenSize();
   const {ref: menuRef, refId, handleToggle} = useOpeningItem();
   const isMenuOpen = useSelector(selectIsItemCurrentlyOpened(refId));
 
-  const isMobileScreen = screenSize === 'xs' || screenSize === 'sm';
+  const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
+  // TODO: add close on click outside
   return (
     <div ref={menuRef} className="flex items-center gap-4 relative">
       <div className="md:hidden">
