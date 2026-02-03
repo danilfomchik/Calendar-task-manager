@@ -1,7 +1,9 @@
 import {useCallback, useEffect, useState} from 'react';
 
+import {TScreenSizes} from '@/services/types';
+
 export const useScreenSize = () => {
-  const [screenSize, setScreenSize] = useState<'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | ''>('');
+  const [screenSize, setScreenSize] = useState<TScreenSizes>('');
 
   const handleResize = useCallback(() => {
     if (window.innerWidth < 640) {

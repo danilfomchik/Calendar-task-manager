@@ -1,4 +1,5 @@
-import {ButtonHTMLAttributes, ReactElement} from 'react';
+import {ButtonHTMLAttributes, HTMLAttributes, ReactElement} from 'react';
+import {LinkProps} from 'react-router';
 
 import {Nullable} from '@/services/types';
 
@@ -25,10 +26,20 @@ type TButton =
       text?: string | never;
     };
 
+type TButtonKindProps = {
+  kind?: 'button';
+} & HTMLAttributes<HTMLButtonElement>;
+
+export type TLinkKindProps = {
+  kind: 'link';
+} & LinkProps;
+
+type TButtonKind = TButtonKindProps | TLinkKindProps;
+
 type TButtonType = {
   variant?: `${ButtonVariants}`;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
 };
 
-export type TButtonProps = TButton & TButtonType & ButtonHTMLAttributes<HTMLButtonElement>;
+export type TButtonProps = TButton & TButtonKind & TButtonType & ButtonHTMLAttributes<HTMLButtonElement>;

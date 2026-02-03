@@ -7,7 +7,7 @@ import {TooltipProps} from './types';
 
 // Tooltip component gets triggerElement as rendered element for hover
 // Tooltip component gets children as tooltip content
-const Tooltip = ({triggerElement, children, className = '', contentClassName = ''}: TooltipProps) => {
+const Tooltip = ({disabled, triggerElement, children, className = '', contentClassName = ''}: TooltipProps) => {
   const [isFitsContainer, setIsFitsContainer] = useState(true);
   const [isOpened, setIsOpened] = useState(false);
 
@@ -32,16 +32,22 @@ const Tooltip = ({triggerElement, children, className = '', contentClassName = '
   }, [containerRef, isOpened]);
 
   useEffect(() => {
+    if (disabled) return;
+
     onTooltipHover();
-  }, [onTooltipHover]);
+  }, [disabled, onTooltipHover]);
 
   // clone trigger element and add mouse events
   const triggerWithHandlers = cloneElement(triggerElement, {
     onMouseEnter: (e: MouseEvent) => {
+      if (disabled) return;
+
       triggerElement.props.onMouseEnter?.(e);
       handleMouseEnter();
     },
     onMouseLeave: (e: MouseEvent) => {
+      if (disabled) return;
+
       triggerElement.props.onMouseLeave?.(e);
       handleMouseLeave();
     },

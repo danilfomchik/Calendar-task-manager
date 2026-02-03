@@ -14,6 +14,9 @@ const reducers = {
     state.year = formatDate(moment(changedDate), 'YYYY');
     state.month = formatDate(moment(changedDate), 'MMMM');
   },
+  setSelectedDate: (state: TDateState, action: PayloadAction<string>) => {
+    state.selectedDate = action.payload;
+  },
 };
 
 const currentDate = getDate(new Date());
@@ -23,6 +26,7 @@ const initialState: TDateState = {
   year: formatDate(currentDate, 'YYYY'),
   month: formatDate(currentDate, 'MMMM'),
   day: formatDate(currentDate, 'DD'),
+  selectedDate: formatDate(currentDate, 'YYYY-MM-DD'),
 };
 
 const dateSlice = createSlice({
@@ -31,5 +35,5 @@ const dateSlice = createSlice({
   reducers,
 });
 
-export const {setFullDate} = dateSlice.actions;
+export const {setFullDate, setSelectedDate} = dateSlice.actions;
 export default dateSlice;

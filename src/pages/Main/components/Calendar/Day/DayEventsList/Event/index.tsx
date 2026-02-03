@@ -4,6 +4,7 @@ import EventForm from '@/components/EventForm';
 import {FormActionType} from '@/components/EventForm/types';
 import Modal from '@/components/Modal';
 import Tooltip from '@/components/Tooltip';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
 
 import {TEventProps} from './types';
@@ -11,15 +12,22 @@ import {TEventProps} from './types';
 const Event = ({event, eventRef}: TEventProps) => {
   const {ref, isOpen, handleClose, handleOpen} = useOpeningItem();
 
+  const isMobileScreen = useMediaQuery({size: 'md', direction: 'to'});
+
   return (
     <>
       <Tooltip
+        disabled={isMobileScreen}
         triggerElement={
           <div
             ref={eventRef}
             className="h-[8px] w-[8px] flex-none rounded-full"
             style={{backgroundColor: event.color}}
-            onClick={handleOpen}></div>
+            onClick={() => {
+              if (isMobileScreen) return;
+
+              handleOpen();
+            }}></div>
         }
         className="w-auto h-auto"
         contentClassName="whitespace-nowrap text-ellipsis overflow-hidden">
