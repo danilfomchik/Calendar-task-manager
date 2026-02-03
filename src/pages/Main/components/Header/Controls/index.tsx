@@ -13,21 +13,31 @@ import ChangeMonthControl from './ChangeMonthControl';
 import ChangeViewControl from './ChangeViewControl';
 
 const Controls = () => {
-  const {ref: menuRef, refId, handleToggle} = useOpeningItem();
+  const {ref: menuRef, refId, handleClose, handleToggle} = useOpeningItem();
   const isMenuOpen = useSelector(selectIsItemCurrentlyOpened(refId));
 
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
-  // TODO: add close on click outside
   return (
     <div ref={menuRef} className="flex items-center gap-4 relative">
+      {isMenuOpen && (
+        <div
+          onClick={e => {
+            e.stopPropagation();
+
+            handleClose();
+          }}
+          className="fixed w-full h-full inset-0 z-20"
+        />
+      )}
+
       <div className="md:hidden">
         <Button startIcon={<VerticalDots size="size-6" />} onClick={handleToggle} className="text-sm p-[8px]" />
       </div>
 
       <div
         className={twMerge(
-          cn('top-10 right-0 items-center gap-2 md:flex max-md:absolute md:gap-4 hidden z-10', {
+          cn('top-10 right-0 items-center gap-2 md:flex max-md:absolute md:gap-4 hidden z-20', {
             'flex flex-col border border-secondaryBackgroundColor bg-mainBackgroundColor p-4 mt-2 rounded visible':
               isMenuOpen && isMobileScreen,
           }),
