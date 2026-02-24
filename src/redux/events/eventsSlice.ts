@@ -6,6 +6,7 @@ import {getLocalStoredValues} from '@/services/utils';
 import {SliceNames} from '../types';
 import {TEvent, TEventsState} from './types';
 
+// TODO: replace side effects with custom middleware
 const reducers = {
   addEvent: (state: TEventsState, action: PayloadAction<TEvent>) => {
     const event = action.payload;
@@ -54,6 +55,25 @@ const reducers = {
     state.eventsById[updatedEvent.id] = updatedEvent;
     localStorage.setItem(StorageKeys.eventsById, JSON.stringify(state.eventsById));
   },
+  deleteEvent: (state: TEventsState, action: PayloadAction<string>) => {
+    const eventId = action.payload;
+    const eventsById = state.eventsById;
+    const eventToDelete = eventsById[eventId];
+
+    if (!eventToDelete) return;
+
+    const eventsByDate = state.eventsByDate;
+
+    const filteredOldDateEvents = eventsByDate[eventToDelete.date]?.filter(eId => eId !== eventId);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const {[eventToDelete.id]: _, ...restEventsById} = eventsById;
+
+    state.eventsById = restEventsById;
+    state.eventsByDate[eventToDelete.date] = filteredOldDateEvents;
+
+    localStorage.setItem(StorageKeys.eventsById, JSON.stringify(state.eventsById));
+    localStorage.setItem(StorageKeys.eventsByDate, JSON.stringify(state.eventsByDate));
+  },
 };
 
 const initialEventsById = getLocalStoredValues(StorageKeys.eventsById, {});
@@ -70,5 +90,5 @@ const eventsSlice = createSlice({
   reducers,
 });
 
-export const {addEvent, editEvent} = eventsSlice.actions;
+export const {addEvent, editEvent, deleteEvent} = eventsSlice.actions;
 export default eventsSlice;

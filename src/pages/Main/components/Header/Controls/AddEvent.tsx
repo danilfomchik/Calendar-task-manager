@@ -2,8 +2,9 @@ import Button from '@/components/Button';
 import EventForm from '@/components/EventForm';
 import Modal from '@/components/Modal';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
+import {cx} from '@/services/utils';
 
-const AddEvent = () => {
+const AddEvent = ({date, className}: {date?: string; className?: string}) => {
   const {ref, isOpen, handleClose, handleOpen} = useOpeningItem();
 
   return (
@@ -12,12 +13,12 @@ const AddEvent = () => {
         variant="secondary"
         text="Add event"
         onClick={handleOpen}
-        className="text-sm py-[8px] px-[12px] max-md:w-full"
+        className={cx('text-sm py-[8px] px-[12px] max-md:w-full', className)}
       />
 
       {isOpen && (
         <Modal refItem={ref} onClose={handleClose}>
-          <EventForm formTitle="Create event form" handleModalClose={handleClose} />
+          <EventForm formTitle="Create event form" handleModalClose={handleClose} date={date} />
         </Modal>
       )}
     </>

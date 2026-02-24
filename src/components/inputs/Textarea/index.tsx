@@ -1,6 +1,6 @@
-import cn from 'classnames';
 import {ChangeEvent, HTMLProps, useCallback, useEffect, useState} from 'react';
-import {twMerge} from 'tailwind-merge';
+
+import {cx} from '@/services/utils';
 
 import {TTextareaProps} from './types';
 
@@ -42,11 +42,9 @@ const Textarea = ({
         value={currentValue}
         onChange={handleChange}
         placeholder={placeholder}
-        className={twMerge(
-          cn(
-            'max-h-[150px]m min-h-[46px] bg-black w-full focus:border-sky-500 border rounded outline-none px-[15px] py-[10px]',
-            className,
-          ),
+        className={cx(
+          'max-h-[150px]m min-h-[46px] bg-black w-full focus:border-sky-500 border rounded outline-none px-[15px] py-[10px]',
+          className,
         )}
         {...restProps}
       />

@@ -10,8 +10,8 @@ const Calendar = () => {
   return (
     <div
       ref={containerRef}
-      className="flex flex-col flex-[4] w-full items-center overflow-x-auto max-md:pb-8 h-[calc(100vh-72px)]">
-      <div className="flex flex-col flex-1 w-full min-h-fit h-full gap-5 items-center px-0 pt-[30px] pb-[20px] overflow-hidden">
+      className="flex flex-col w-full items-center overflow-x-auto max-md:pb-8 h-[calc(100vh-72px)]">
+      <div className="flex flex-col w-full min-h-fit md:h-full gap-5 items-center px-0 pt-[30px] max-md:pt-[10px] pb-[20px] max-md:pb-[15px] overflow-hidden">
         <WeekDays />
         <DaysList />
       </div>
