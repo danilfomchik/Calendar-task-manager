@@ -1,8 +1,9 @@
-import cn from 'classnames';
 import {PropsWithChildren} from 'react';
 
+import {cx} from '@/services/utils';
+
 const Container = ({className = '', children}: PropsWithChildren<{className?: string}>) => {
-  return <div className={cn('w-full h-full max-w-[1280px] mx-auto px-[15px] md:px-[30px]', className)}>{children}</div>;
+  return <div className={cx('w-full h-full max-w-[1280px] mx-auto px-[15px] md:px-[30px]', className)}>{children}</div>;
 };
 
 export default Container;

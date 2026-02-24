@@ -1,12 +1,11 @@
-import cn from 'classnames';
 import {useSelector} from 'react-redux';
-import {twMerge} from 'tailwind-merge';
 
 import Button from '@/components/Button';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
 import VerticalDots from '@/icons/VerticalDots';
 import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
+import {cx} from '@/services/utils';
 
 import AddEvent from './AddEvent';
 import ChangeMonthControl from './ChangeMonthControl';
@@ -36,14 +35,12 @@ const Controls = () => {
       </div>
 
       <div
-        className={twMerge(
-          cn('top-10 right-0 items-center gap-2 md:flex max-md:absolute md:gap-4 hidden z-20', {
-            'flex flex-col border border-secondaryBackgroundColor bg-mainBackgroundColor p-4 mt-2 rounded visible':
-              isMenuOpen && isMobileScreen,
-          }),
-        )}>
+        className={cx('top-10 right-0 items-center gap-2 md:flex max-md:absolute md:gap-4 hidden z-20', {
+          'flex flex-col border border-secondaryBackgroundColor bg-mainBackgroundColor p-4 mt-2 rounded visible':
+            isMenuOpen && isMobileScreen,
+        })}>
         <div
-          className={cn('flex flex-row gap-[10px]', {
+          className={cx('flex flex-row gap-[10px]', {
             'flex-col': isMenuOpen && isMobileScreen,
           })}>
           <ChangeMonthControl />

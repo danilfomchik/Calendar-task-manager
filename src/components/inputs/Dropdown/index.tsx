@@ -1,10 +1,9 @@
-import cn from 'classnames';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
-import {twMerge} from 'tailwind-merge';
 
 import {useOpeningItem} from '@/hooks/useOpeningItem';
 import ArrowDown from '@/icons/ArrowDown';
 import CheckIcon from '@/icons/CheckIcon';
+import {cx} from '@/services/utils';
 
 import Button from '../../Button';
 import {TDropdownProps} from './types';
@@ -52,17 +51,15 @@ const Dropdown = ({
   }, [isOpen, activeOptionRef]);
 
   return (
-    <div className={cn('w-full relative', className)}>
+    <div className={cx('w-full relative', className)}>
       <Button
-        className={twMerge(
-          cn('py-2 w-full h-full text-left border-secondaryBackgroundColor z-30', {
-            'border-sky-500 text-sky-500': isOpen,
-          }),
-        )}
+        className={cx('py-2 w-full h-full text-left border-secondaryBackgroundColor z-30', {
+          'border-sky-500 text-sky-500': isOpen,
+        })}
         text={currentValue ? currentValue : placeholder}
         endIcon={
           <div
-            className={cn('transition-transform', {
+            className={cx('transition-transform', {
               'rotate-180': isOpen,
             })}>
             <ArrowDown size="size-4" />
@@ -88,7 +85,7 @@ const Dropdown = ({
               <li
                 ref={currentValue === option ? activeOptionRef : null}
                 key={option}
-                className={cn(
+                className={cx(
                   {
                     'bg-secondaryBackgroundColor': currentValue === option,
                   },
