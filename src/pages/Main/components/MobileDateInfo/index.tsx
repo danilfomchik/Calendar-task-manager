@@ -9,16 +9,18 @@ const MobileDateInfo = () => {
   const selectedDate = useSelector(selectSelectedDate);
 
   return (
-    <div className="md:hidden flex-1 mt-4 min-h-0 w-full flex flex-col gap-8">
-      <div className="flex items-start justify-between">
-        <h3 className="text-xl font-bold">Events for {selectedDate}</h3>
+    <div className="md:hidden flex-1 mt-1.5 min-h-0 w-full flex flex-col gap-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-bold">
+          Events for <span className="whitespace-nowrap">{selectedDate}</span>
+        </h3>
 
         <Button
           kind="link"
           to={`/day/${selectedDate}`}
-          variant="secondary"
           text="Edit events"
-          endIcon={<ExternalPage size="size-5" />}
+          className="p-2 text-[14px]"
+          endIcon={<ExternalPage size="size-4" />}
         />
       </div>
 

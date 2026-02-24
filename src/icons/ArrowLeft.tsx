@@ -1,6 +1,6 @@
 import {IconProps} from './types';
 
-const ArrowLeft = ({size, ...restProps}: IconProps) => {
+const ArrowLeft = ({size = 'size-5', ...restProps}: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

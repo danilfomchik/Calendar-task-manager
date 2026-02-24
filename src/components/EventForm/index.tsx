@@ -139,7 +139,7 @@ const EventForm = ({actionType = FormActionType.create, formTitle, event, date, 
               )}
               disabled={!isDirty || !!errors.eventName}
               text={actionType === FormActionType.edit ? 'Edit' : 'Create'}
-              endIcon={actionType === FormActionType.edit ? <EditIcon size="size-5" /> : <CheckIcon size="size-5" />}
+              endIcon={actionType === FormActionType.edit ? <EditIcon size="size-4" /> : <CheckIcon size="size-4" />}
               type="submit"
             />
           </div>
