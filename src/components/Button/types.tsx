@@ -6,6 +6,16 @@ import {Nullable} from '@/services/types';
 export enum ButtonVariants {
   primary = 'primary',
   secondary = 'secondary',
+  red = 'red',
+  primaryBordered = 'primary-bordered',
+  secondaryBordered = 'secondary-bordered',
+  redBordered = 'red-bordered',
+}
+
+export enum ButtonSizes {
+  default = 'default',
+  medium = 'medium',
+  small = 'small',
 }
 
 type TButton =
@@ -38,6 +48,7 @@ type TButtonKind = TButtonKindProps | TLinkKindProps;
 
 type TButtonType = {
   variant?: `${ButtonVariants}`;
+  size?: ButtonSizes;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
 };

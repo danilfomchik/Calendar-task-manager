@@ -1,13 +1,14 @@
-import cn from 'classnames';
 import {Link} from 'react-router';
-import {twMerge} from 'tailwind-merge';
 
-import {TButtonProps, TLinkKindProps} from './types';
-import {buttonVariants} from './variants';
+import {cx} from '@/services/utils';
+
+import {buttonSizes, buttonVariants} from './constants';
+import {ButtonSizes, TButtonProps, TLinkKindProps} from './types';
 
 const Button = ({
   variant = 'primary',
   kind = 'button',
+  size = ButtonSizes.default,
   startIcon = null,
   endIcon = null,
   text = '',
@@ -17,16 +18,15 @@ const Button = ({
 }: TButtonProps) => {
   const btnContent = (
     <button
-      className={twMerge(
-        cn(
-          buttonVariants[variant],
-          'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition duration-500 ease-in-out disabled:hover:border-secondaryBackgroundColor disabled:text-secondaryBackgroundColor disabled:hover:text-secondaryBackgroundColor disabled:cursor-auto',
-        ),
+      className={cx(
+        'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition duration-500 ease-in-out disabled:hover:border-secondaryBackgroundColor disabled:text-secondaryBackgroundColor disabled:hover:text-secondaryBackgroundColor disabled:cursor-auto',
+        buttonVariants[variant],
+        buttonSizes[size],
         className,
       )}
       {...restProps}>
       <div
-        className={cn('flex items-center justify-center w-full', {
+        className={cx('flex items-center justify-center w-full', {
           'gap-2': (startIcon || endIcon) && text,
         })}>
         {startIcon ? <span className="font-normal block truncate">{startIcon}</span> : null}
