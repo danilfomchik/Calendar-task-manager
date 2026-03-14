@@ -4,7 +4,6 @@ import Button from '@/components/Button';
 import EventForm from '@/components/EventForm';
 import {FormActionType} from '@/components/EventForm/types';
 import Modal from '@/components/Modal';
-import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
 import BarsIcon from '@/icons/BarsIcon';
 import DeleteIcon from '@/icons/DeleteIcon';
@@ -16,7 +15,6 @@ import {useAppDispatch} from '@/redux/store';
 const EventsListItem = ({event, showItemControls}: {event: TEvent; showItemControls: boolean}) => {
   const dispatch = useAppDispatch();
   const {ref, isOpen, handleClose, handleOpen} = useOpeningItem();
-  const isMobileScreen = useMediaQuery({size: 'md', direction: 'to'});
 
   const handleDeleteEvent = useCallback(() => {
     dispatch(deleteEvent(event.id));
@@ -35,12 +33,7 @@ const EventsListItem = ({event, showItemControls}: {event: TEvent; showItemContr
 
         {showItemControls && (
           <div className="flex gap-2">
-            <Button
-              text={isMobileScreen ? '' : 'Edit'}
-              onClick={handleOpen}
-              endIcon={<EditIcon size="size-4" />}
-              className="w-fit"
-            />
+            <Button onClick={handleOpen} endIcon={<EditIcon size="size-4" />} className="w-fit" />
             <Button
               variant="red-bordered"
               onClick={handleDeleteEvent}
