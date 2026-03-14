@@ -6,10 +6,10 @@ import EventsList from '@/components/EventsList';
 import ArrowLeft from '@/icons/ArrowLeft';
 
 import AddEvent from '../Main/components/Header/Controls/AddEvent';
+import AIInfo from './components/AIInfo';
 
 // separate branches TODO
 // add correct selectedDate handling (on refresh) - on separate branch
-// add elevenlabs
 
 const DayPage = () => {
   const navigate = useNavigate();
@@ -32,6 +32,8 @@ const DayPage = () => {
         </h3>
 
         <EventsList date={date || ''} showItemControls />
+
+        <AIInfo date={date} />
       </div>
     </Container>
   );
