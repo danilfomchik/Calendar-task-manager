@@ -23,7 +23,6 @@ export const holidaysApi = createApi({
         body: {
           // model: 'openai/gpt-oss-20b',
           model: 'openai/gpt-oss-120b',
-          // temperature uses for randomness of the model response (where 0 is maximally deterministic)
           temperature: 0,
           messages: [
             {
@@ -32,7 +31,13 @@ export const holidaysApi = createApi({
 Provide structured information about the requested date.
 
 Rules:
-- Return holidays for the date.
+- Return exactly ONE holiday for the date.
+- The holiday must be the most significant or widely recognized one for that date.
+- The holiday MUST NOT include or reference Russia, the Russian Federation, the Soviet Union, or any events related to these countries.
+- If the most significant holiday is related to Russia or the Soviet Union, choose the next most significant holiday that is unrelated to them.
+- Prefer holidays that are internationally recognized or celebrated in multiple countries rather than niche or local observances.
+- Do not return multiple holidays.
+
 - Return exactly ONE interesting historical fact.
 - The fact must be the most historically significant or widely known fact about that date.
 - The fact MUST NOT include or reference Russia, the Russian Federation, the Soviet Union, or any events related to these countries.
@@ -44,7 +49,7 @@ Follow the provided JSON schema strictly.
             },
             {
               role: 'user',
-              content: `Get holidays and the most significant historical fact for ${date}`,
+              content: `Get the most significant holiday and the most significant historical fact for ${date}`,
             },
           ],
           response_format: {
@@ -55,24 +60,21 @@ Follow the provided JSON schema strictly.
               schema: {
                 type: 'object',
                 properties: {
-                  holidays: {
-                    type: 'array',
-                    items: {
-                      type: 'object',
-                      properties: {
-                        name: {type: 'string'},
-                        description: {type: 'string'},
-                      },
-                      required: ['name', 'description'],
-                      additionalProperties: false,
+                  holiday: {
+                    type: 'object',
+                    properties: {
+                      name: {type: 'string'},
+                      description: {type: 'string'},
                     },
+                    required: ['name', 'description'],
+                    additionalProperties: false,
                   },
                   fact: {
                     type: 'string',
                     description: 'The single most significant historical fact for this date',
                   },
                 },
-                required: ['holidays', 'fact'],
+                required: ['holiday', 'fact'],
                 additionalProperties: false,
               },
             },

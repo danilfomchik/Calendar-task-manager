@@ -1,4 +1,4 @@
-import Tooltip from '@/components/Tooltip';
+import Tooltip from '@/components/ui/Tooltip';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 
 import {TRemainedItemsProps} from './types';

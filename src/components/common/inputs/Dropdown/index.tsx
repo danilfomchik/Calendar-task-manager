@@ -1,8 +1,8 @@
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
 
+import ArrowDown from '@/components/ui/icons/ArrowDown';
+import CheckIcon from '@/components/ui/icons/CheckIcon';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
-import ArrowDown from '@/icons/ArrowDown';
-import CheckIcon from '@/icons/CheckIcon';
 import {cx} from '@/services/utils';
 
 import Button from '../../Button';

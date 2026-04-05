@@ -1,9 +1,9 @@
 import {useSelector} from 'react-redux';
 
-import Button from '@/components/Button';
+import Button from '@/components/common/Button';
+import VerticalDots from '@/components/ui/icons/VerticalDots';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
-import VerticalDots from '@/icons/VerticalDots';
 import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
 import {cx} from '@/services/utils';
 

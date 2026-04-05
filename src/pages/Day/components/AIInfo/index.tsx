@@ -1,18 +1,9 @@
 import {useMemo} from 'react';
 
-import Loading from '@/components/Loading';
+import Loading from '@/components/ui/Loading';
 import {useGetDayHolidaysInfoQuery} from '@/redux/dateHolidaysGenerator/holidaysApi';
 
-import {IParsedContent, THoliday} from './types';
-
-const HolidayItem = ({name, description}: THoliday) => {
-  return (
-    <div className="flex flex-col gap-3">
-      <p>{name}</p>
-      <p>{description}</p>
-    </div>
-  );
-};
+import {IParsedContent} from './types';
 
 const AIInfo = ({date}: {date: string | undefined}) => {
   const {data, isLoading, error} = useGetDayHolidaysInfoQuery(date, {
@@ -27,36 +18,28 @@ const AIInfo = ({date}: {date: string | undefined}) => {
     return content ? JSON.parse(content) : null;
   }, [content, isLoading]);
 
-  const isGroqEnabled = import.meta.env.VITE_REACT_APP_IS_GROQ_ENABLED === 'true';
-
-  if (error || !isGroqEnabled) return null;
+  if (error) return null;
+  if (isLoading) return <Loading />;
 
   return (
-    <div className="flex-1 min-h-0 overflow-y-auto scroll-smooth">
-      {parsedContent?.fact && (
-        <>
-          <p>Fun fact</p>
-          <div className="border border-violet-500 px-4 py-3 rounded-md mb-4">
-            {isLoading ? <Loading /> : parsedContent.fact}
+    <>
+      {parsedContent?.holiday && (
+        <div className="flex flex-col gap-3 bg-[#100d18] px-3 py-2.5 rounded-[10px] border border-[#1e1640]">
+          <div className="flex flex-col gap-3 text-sm text-[#9d77f5]">
+            <p>{parsedContent.holiday.name}</p>
+            {/* TODO: add tooltip with description */}
+            {/* <p>{parsedContent.holiday.description}</p> */}
           </div>
-        </>
+        </div>
       )}
 
-      {parsedContent?.holidays && (
-        <>
-          <p>Holidays</p>
-          {isLoading ? (
-            <Loading />
-          ) : (
-            <div className="flex flex-col gap-3 divide-y-2 not-first:pt-3">
-              {parsedContent?.holidays?.map(holiday => (
-                <HolidayItem key={holiday.name} name={holiday.name} description={holiday.description} />
-              ))}
-            </div>
-          )}
-        </>
+      {parsedContent?.fact && (
+        <div className="flex flex-col gap-2 border-l-2 border-[#1a1a1a] bg-[#0c0c0c] rounded-r-[6px] px-3 py-2.5">
+          <p className="text-sm text-[#444444] uppercase">Did you know</p>
+          <p className="text-sm text-gray-400">{parsedContent.fact}</p>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

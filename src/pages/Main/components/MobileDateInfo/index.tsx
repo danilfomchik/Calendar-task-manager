@@ -1,8 +1,8 @@
 import {useSelector} from 'react-redux';
 
-import Button from '@/components/Button';
-import EventsList from '@/components/EventsList';
-import ExternalPage from '@/icons/ExternalPage';
+import Button from '@/components/common/Button';
+import EventsList from '@/components/common/EventsList';
+import ExternalPage from '@/components/ui/icons/ExternalPage';
 import {selectSelectedDate} from '@/redux/date/selectors';
 
 const MobileDateInfo = () => {

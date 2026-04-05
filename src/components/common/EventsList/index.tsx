@@ -6,11 +6,11 @@ const EventsList = ({date, showItemControls = false}: {date: string; showItemCon
   const events = useEventsList(date);
 
   return (
-    <div className="flex-1 min-h-0 overflow-y-auto scroll-smooth">
+    <div className="flex-1 min-h-screen overflow-y-auto scroll-smooth">
       {!events?.length ? (
         <p>no events</p>
       ) : (
-        <div className="flex flex-col gap-4 pr-3">
+        <div className="flex flex-col gap-4">
           {events?.map(event => <EventsListItem key={event.id} event={event} showItemControls={showItemControls} />)}
         </div>
       )}

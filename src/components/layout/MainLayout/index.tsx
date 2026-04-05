@@ -2,8 +2,10 @@ import {Suspense, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {Outlet} from 'react-router';
 
-import Loading from '@/components/Loading';
+import Loading from '@/components/ui/Loading';
 import {selectOpenedItems} from '@/redux/overflow/selectors';
+
+import Aside from '../Aside';
 
 const MainLayout = () => {
   const openedItems = useSelector(selectOpenedItems);
@@ -21,11 +23,14 @@ const MainLayout = () => {
   }, [openedItems]);
 
   return (
-    <main className="h-full">
-      <Suspense fallback={<Loading />}>
-        <Outlet />
-      </Suspense>
-    </main>
+    <>
+      <Aside />
+      <main className="h-full flex-1 overflow-y-auto">
+        <Suspense fallback={<Loading />}>
+          <Outlet />
+        </Suspense>
+      </main>
+    </>
   );
 };
 

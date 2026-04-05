@@ -1,4 +1,4 @@
-import {ButtonSizes, ButtonVariants} from './types';
+import {ButtonVariants} from './types';
 
 export const buttonVariants = {
   [ButtonVariants.primary]:
@@ -11,10 +11,11 @@ export const buttonVariants = {
     'border-secondaryBackgroundColor bg-transparent text-secondaryBackgroundColor hover:bg-secondaryBackgroundColor hover:text-white',
   [ButtonVariants.secondaryBordered]: 'border-sky-500 text-sky-500 bg-transparent hover:bg-sky-500 hover:text-white',
   [ButtonVariants.redBordered]: 'border-red-400 text-red-400 bg-transparent hover:bg-red-400 hover:text-white',
+  [ButtonVariants.transparent]: 'border-none text-[#3a3a3a] bg-transparent hover:text-white',
 };
 
-export const buttonSizes = {
-  [ButtonSizes.default]: 'text-sm px-3 py-2',
-  [ButtonSizes.medium]: 'text-base px-4 py-3',
-  [ButtonSizes.small]: 'text-xs px-2 py-1',
-};
+// export const buttonSizes = {
+//   [ButtonSizes.default]: 'text-sm px-3 py-2',
+//   [ButtonSizes.medium]: 'text-base px-4 py-3',
+//   [ButtonSizes.small]: 'text-xs px-2 py-1',
+// };

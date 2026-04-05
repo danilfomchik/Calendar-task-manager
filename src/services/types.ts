@@ -1,8 +1,6 @@
 export type Nullable<T> = T | null;
 export type NonNullable<T> = T extends null | undefined ? never : T;
 
-export type Format = 'YYYY-MM-DD' | 'YYYY' | 'MMMM' | 'M' | 'DD';
-
 export type TScreenSizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '';
 
 export enum MonthParts {
@@ -20,3 +18,16 @@ export enum RouterPaths {
   day = '/day/:date',
   notFound = '*',
 }
+
+export enum CalendarsNames {
+  work = 'Work',
+  personal = 'Personal',
+  health = 'Health',
+  holidays = 'Holidays',
+}
+
+export type TCalendarsList = {
+  name: CalendarsNames;
+  count: number;
+  itemColor: string;
+}[];

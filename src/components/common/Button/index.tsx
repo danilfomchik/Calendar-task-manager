@@ -2,13 +2,12 @@ import {Link} from 'react-router';
 
 import {cx} from '@/services/utils';
 
-import {buttonSizes, buttonVariants} from './constants';
-import {ButtonSizes, TButtonProps, TLinkKindProps} from './types';
+import {buttonVariants} from './constants';
+import {TButtonProps, TLinkKindProps} from './types';
 
 const Button = ({
   variant = 'primary',
   kind = 'button',
-  size = ButtonSizes.default,
   startIcon = null,
   endIcon = null,
   text = '',
@@ -21,7 +20,6 @@ const Button = ({
       className={cx(
         'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition duration-500 ease-in-out disabled:hover:border-secondaryBackgroundColor disabled:text-secondaryBackgroundColor disabled:hover:text-secondaryBackgroundColor disabled:cursor-auto',
         buttonVariants[variant],
-        buttonSizes[size],
         className,
       )}
       {...restProps}>
@@ -29,11 +27,11 @@ const Button = ({
         className={cx('flex items-center justify-center w-full', {
           'gap-2': (startIcon || endIcon) && text,
         })}>
-        {startIcon ? <span className="font-normal block truncate">{startIcon}</span> : null}
+        {startIcon ? <span className="font-medium block truncate">{startIcon}</span> : null}
 
-        <span className="font-normal block truncate">{text}</span>
+        <span className="font-medium block truncate">{text}</span>
 
-        {endIcon ? <span className="font-normal block truncate">{endIcon}</span> : null}
+        {endIcon ? <span className="font-medium block truncate">{endIcon}</span> : null}
       </div>
 
       {children}

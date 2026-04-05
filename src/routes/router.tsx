@@ -1,8 +1,8 @@
 import moment from 'moment';
 import {createBrowserRouter} from 'react-router';
 
-import Error from '@/components/Error';
-import MainLayout from '@/components/MainLayout';
+import Error from '@/components/layout/Error';
+import MainLayout from '@/components/layout/MainLayout';
 import {DayPage, MainPage} from '@/pages';
 import NotFound from '@/pages/NotFound';
 import {RouterPaths} from '@/services/types';

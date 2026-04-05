@@ -2,7 +2,7 @@ import moment from 'moment';
 import {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
-import Dropdown from '@/components/inputs/Dropdown';
+import Dropdown from '@/components/common/inputs/Dropdown';
 import {setFullDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectMonth, selectYear} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
