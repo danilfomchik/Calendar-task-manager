@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --header-height: 77px;
+  --secondary-bg-color: #1a1a1a;
+  --overlay-color: #1a1a1aba;
+
+  @media (width <= 768px) {
+    --header-height: 57px;
+  }
+}
+
 body {
   min-height: 100vh;
 }
@@ -34,6 +44,34 @@ body,
 
 ::-webkit-scrollbar-thumb {
   @apply bg-sky-500 rounded-xl;
+}
+
+.horizontal-divider {
+  p {
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  &:not(.text) {
+    height: 1px;
+    background: var(--secondary-bg-color);
+  }
+
+  &:is(.text) {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    color: #2e2e2e;
+
+    &::after,
+    &::before {
+      content: '';
+      align-self: center;
+      background: var(--secondary-bg-color);
+      height: 1px;
+      width: 100%;
+    }
+  }
 }
 
 @keyframes pulse {

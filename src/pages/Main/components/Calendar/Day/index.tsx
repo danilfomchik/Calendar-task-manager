@@ -71,9 +71,9 @@ const Day = ({date}: TDayProps) => {
       animate={{opacity: 1}}
       transition={{duration: 0.5, ease: 'easeOut'}}
       className={cx(
-        'flex flex-col relative justify-between border border-secondaryBackgroundColor rounded-md p-1 lg:p-3 cursor-pointer transition-all',
+        'flex flex-col relative justify-between border border-secondary-background-color rounded-md p-1 lg:p-3 cursor-pointer transition-all',
         {
-          'bg-secondaryBackgroundColor': dateMonth !== currentMonth,
+          'bg-secondary-background-color': dateMonth !== currentMonth,
         },
         {'bg-secondaryBackgroundColorHover': isHover},
         {'border border-sky-500': date === selectedDate && isMobileScreen},

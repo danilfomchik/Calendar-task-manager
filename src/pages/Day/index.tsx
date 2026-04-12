@@ -3,8 +3,9 @@ import {useNavigate, useParams} from 'react-router';
 
 import Button from '@/components/common/Button';
 import EventsList from '@/components/common/EventsList';
-import Container from '@/components/layout/Container';
+import Divider from '@/components/ui/Divider';
 import ArrowLeft from '@/components/ui/icons/ArrowLeft';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {formatDate} from '@/services/dateUtils';
 
 import AddEvent from '../Main/components/Header/Controls/AddEvent';
@@ -16,6 +17,7 @@ import AIInfo from './components/AIInfo';
 const DayPage = () => {
   const navigate = useNavigate();
   const {date} = useParams<{date: string}>();
+  const showEventsCount = useMediaQuery({size: 'sm', direction: 'to'});
 
   const handleReturn = () => {
     navigate(-1);
@@ -25,37 +27,58 @@ const DayPage = () => {
 
   return (
     <>
-      <header className="h-[77px] sticky top-0 z-50 px-6 py-5 bg-[#0a0a0a] border-b border-secondaryBackgroundColor">
+      <header className="h-header-height sticky top-0 z-50 px-3 md:px-6 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color">
         <div className="flex items-center justify-between gap-4 h-full">
-          <div className="flex items-center gap-4 divide-x-[1px] divide-[#1e1e1e]">
+          <div className="flex items-center gap-4 md:divide-x-[1px] divide-[#1e1e1e]">
             <Button
               text="Back"
               onClick={handleReturn}
               startIcon={<ArrowLeft size="size-4" />}
-              className="w-fit p-0"
+              className="w-fit p-0 hidden md:flex"
               variant="transparent"
             />
 
-            <time dateTime={date} className="text-[17px] text-[#444444] pl-4">
-              {formatDate(moment(date), 'dddd, MMMM Do')}
+            <Button
+              text={formatDate(moment(date), 'MMMM YYYY')}
+              onClick={handleReturn}
+              startIcon={<ArrowLeft size="size-4" />}
+              className="w-fit p-0 max-md:flex hidden"
+              variant="transparent"
+            />
+
+            <time dateTime={date} className="max-md:hidden text-base md:text-[17px]/[1] text-[#444444] md:pl-4">
+              {formatDate(moment(date), 'MMMM YYYY')}
             </time>
           </div>
 
-          <AddEvent date={date} className="max-md:w-fit px-4" />
+          <AddEvent date={date} className="max-md:hidden px-4" />
         </div>
       </header>
 
-      <Container className="flex w-full max-h-[calc(100vh-77px)] px-0 py-0 overflow-x-hidden">
-        <div className="flex flex-col gap-4 flex-[0_0_230px] py-[22px] px-[18px] divide-y-[1px] divide-secondaryBackgroundColor border-r border-secondaryBackgroundColor">
-          <time dateTime={date} className="flex flex-col gap-2 text-[76px]/[1] font-extralight text-white">
-            {formatDate(moment(date), 'Do')}
-            <span className="text-base text-[#444444] uppercase tracking-[0.08em]">
+      <div className="flex max-md:flex-col w-full h-full max-h-[calc(100vh-var(--header-height))] px-0 py-0 overflow-x-hidden">
+        <div className="flex flex-col gap-4 md:flex-[0_0_230px] py-[22px] px-[18px] md:divide-y-[1px] divide-secondary-background-color border-r border-secondary-background-color">
+          <time dateTime={date} className="flex md:flex-col max-md:items-center justify-between gap-2">
+            <div className="max-md:flex items-center justify-center max-md:bg-blue-600 max-md:w-20 max-md:h-20 rounded-full">
+              <span className="text-white font-normal text-6xl/[1] md:text-[76px]/[1]">
+                {formatDate(moment(date), 'Do')}
+              </span>
+            </div>
+            {/* desktop weekday */}
+            <span className="hidden md:block text-base text-[#444444] uppercase tracking-[0.08em] font-extralight">
               {formatDate(moment(date), 'dddd')}
             </span>
+            {/* mobile weekday */}
+            <div className="hidden max-md:flex flex-col items-end">
+              <p className="text-xl font-normal">{formatDate(moment(date), 'dddd')}</p>
+              <div className="flex items-center gap-1 text-sm text-[#444444]">
+                <span className="uppercase">{formatDate(moment(date), 'MMMM')}</span>·
+                <span>{formatDate(moment(date), 'YYYY')}</span>
+              </div>
+            </div>
           </time>
 
           {isGroqEnabled && (
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 max-md:hidden">
               <div className="flex items-center gap-2 pt-4">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#4A6CF7] animate-pulse"></div>
                 <p className="text-xs text-[#444444] uppercase">ai insights</p>
@@ -66,10 +89,30 @@ const DayPage = () => {
           )}
         </div>
 
-        <div className="flex flex-col gap-8 flex-1 max-h-[calc(100vh-77px)] overflow-scroll px-4 py-5">
-          <EventsList date={date || ''} showItemControls />
+        <div className="flex flex-col flex-1 overflow-scroll px-4 py-5">
+          <EventsList date={date || ''} showItemControls showEventsCount={showEventsCount} />
         </div>
-      </Container>
+
+        <div className="flex-col gap-8 overflow-scroll px-4 pb-5 hidden max-md:flex">
+          {isGroqEnabled && (
+            <div className="flex flex-col gap-3">
+              <Divider>
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#4A6CF7] animate-pulse"></div>
+                  <p className="text-xs text-[#444444] uppercase">ai insights</p>
+                </div>
+              </Divider>
+
+              <AIInfo date={date} />
+            </div>
+          )}
+        </div>
+
+        <AddEvent
+          date={date}
+          className="hidden max-md:flex self-center max-md:w-[min(50%,250px)] rounded-[100px] h-11 py-3 px-9 mb-6"
+        />
+      </div>
     </>
   );
 };

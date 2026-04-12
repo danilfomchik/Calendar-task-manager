@@ -53,7 +53,7 @@ const Dropdown = ({
   return (
     <div className={cx('w-full relative', className)}>
       <Button
-        className={cx('py-2 w-full h-full text-left border-secondaryBackgroundColor z-30', {
+        className={cx('py-2 w-full h-full text-left border-secondary-background-color z-30', {
           'border-sky-500 text-sky-500': isOpen,
         })}
         text={currentValue ? currentValue : placeholder}
@@ -80,16 +80,16 @@ const Dropdown = ({
             className="fixed w-full h-full inset-0 z-20"
           />
 
-          <ul className="absolute mt-1 w-full bg-mainBackgroundColor border border-secondaryBackgroundColor shadow-lg max-h-[220px] rounded-md text-sm ring-opacity-5 overflow-auto focus:outline-none z-30">
+          <ul className="absolute mt-1 w-full bg-mainBackgroundColor border border-secondary-background-color shadow-lg max-h-[220px] rounded-md text-sm ring-opacity-5 overflow-auto focus:outline-none z-30">
             {options.map(option => (
               <li
                 ref={currentValue === option ? activeOptionRef : null}
                 key={option}
                 className={cx(
                   {
-                    'bg-secondaryBackgroundColor': currentValue === option,
+                    'bg-secondary-background-color': currentValue === option,
                   },
-                  'transition-all flex items-center justify-between gap-1 cursor-pointer text-white select-none relative py-2 px-3 hover:bg-secondaryBackgroundColor',
+                  'transition-all flex items-center justify-between gap-1 cursor-pointer text-white select-none relative py-2 px-3 hover:bg-secondary-background-color',
                 )}
                 onClick={() => handleChange(option)}>
                 <span className="font-normal block truncate">{option}</span>

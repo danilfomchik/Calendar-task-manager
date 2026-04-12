@@ -1,4 +1,4 @@
-import {useCallback} from 'react';
+import {memo, useCallback} from 'react';
 
 import Button from '@/components/common/Button';
 import EventForm from '@/components/common/EventForm';
@@ -68,4 +68,4 @@ const EventsListItem = ({event, showItemControls}: {event: TEvent; showItemContr
   );
 };
 
-export default EventsListItem;
+export default memo(EventsListItem);

@@ -18,7 +18,7 @@ const Button = ({
   const btnContent = (
     <button
       className={cx(
-        'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition duration-500 ease-in-out disabled:hover:border-secondaryBackgroundColor disabled:text-secondaryBackgroundColor disabled:hover:text-secondaryBackgroundColor disabled:cursor-auto',
+        'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition duration-500 ease-in-out disabled:hover:border-secondary-background-color disabled:text-secondary-background-color disabled:hover:text-secondary-background-color disabled:cursor-auto',
         buttonVariants[variant],
         className,
       )}
