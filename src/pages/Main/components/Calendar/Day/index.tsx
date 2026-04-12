@@ -4,14 +4,14 @@ import {memo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useSearchParams} from 'react-router';
 
-import Button from '@/components/Button';
-import EventForm from '@/components/EventForm';
-import Modal from '@/components/Modal';
+import Button from '@/components/common/Button';
+import EventForm from '@/components/common/EventForm';
+import Modal from '@/components/common/Modal';
+import AddIcon from '@/components/ui/icons/AddIcon';
+import ExternalPage from '@/components/ui/icons/ExternalPage';
 import {useEventsList} from '@/hooks/useEventsList';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
-import AddIcon from '@/icons/AddIcon';
-import ExternalPage from '@/icons/ExternalPage';
 import {setSelectedDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectSelectedDate} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
@@ -71,9 +71,9 @@ const Day = ({date}: TDayProps) => {
       animate={{opacity: 1}}
       transition={{duration: 0.5, ease: 'easeOut'}}
       className={cx(
-        'flex flex-col relative justify-between border border-secondaryBackgroundColor rounded-md p-1 lg:p-3 cursor-pointer transition-all',
+        'flex flex-col relative justify-between border border-secondary-background-color rounded-md p-1 lg:p-3 cursor-pointer transition-all',
         {
-          'bg-secondaryBackgroundColor': dateMonth !== currentMonth,
+          'bg-secondary-background-color': dateMonth !== currentMonth,
         },
         {'bg-secondaryBackgroundColorHover': isHover},
         {'border border-sky-500': date === selectedDate && isMobileScreen},

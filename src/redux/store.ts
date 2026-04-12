@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 import dateSlice from './date/dateSlice';
 import {holidaysApi} from './dateHolidaysGenerator/holidaysApi';
 import counterSlice from './events/eventsSlice';
+import myCalendarsSlice from './myCalendars/myCalendarsSlice';
 import overflowSlice from './overflow/overflowSlice';
 import {PreloadedState, SliceNames} from './types';
 
@@ -11,6 +12,7 @@ const combinedReducer = combineReducers({
   [SliceNames.eventsSlice]: counterSlice.reducer,
   [SliceNames.dateSlice]: dateSlice.reducer,
   [SliceNames.overflowSlice]: overflowSlice.reducer,
+  [SliceNames.myCalendarsSlice]: myCalendarsSlice.reducer,
   [holidaysApi.reducerPath]: holidaysApi.reducer,
 });
 

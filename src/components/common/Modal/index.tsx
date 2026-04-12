@@ -20,12 +20,12 @@ const Modal = ({refItem, className, children, onClose}: TModalProps) => {
         <div
           onClick={handleClose}
           className={cn(
-            'fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-secondaryBackgroundColor bg-opacity-80 z-20',
+            'fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-overlay bg-opacity-80 z-[1000]',
             className,
           )}>
           <div
             ref={refItem}
-            className='relative bg-mainBackgroundColor border border-sky-500 rounded-lg md:min-w-96 sm:min-w-56"'>
+            className="relative bg-mainBackgroundColor border border-sky-500 rounded-lg md:min-w-96 sm:min-w-56">
             {children}
           </div>
         </div>,

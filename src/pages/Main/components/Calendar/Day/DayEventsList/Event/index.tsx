@@ -1,9 +1,9 @@
 import {memo} from 'react';
 
-import EventForm from '@/components/EventForm';
-import {FormActionType} from '@/components/EventForm/types';
-import Modal from '@/components/Modal';
-import Tooltip from '@/components/Tooltip';
+import EventForm from '@/components/common/EventForm';
+import {FormActionType} from '@/components/common/EventForm/types';
+import Modal from '@/components/common/Modal';
+import Tooltip from '@/components/ui/Tooltip';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
 

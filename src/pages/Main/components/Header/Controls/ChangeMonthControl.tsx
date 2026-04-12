@@ -1,9 +1,9 @@
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 
-import Button from '@/components/Button';
-import ArrowLeft from '@/icons/ArrowLeft';
-import ArrowRight from '@/icons/ArrowRight';
+import Button from '@/components/common/Button';
+import ArrowLeft from '@/components/ui/icons/ArrowLeft';
+import ArrowRight from '@/components/ui/icons/ArrowRight';
 import {setFullDate} from '@/redux/date/dateSlice';
 import {selectFullDate} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';

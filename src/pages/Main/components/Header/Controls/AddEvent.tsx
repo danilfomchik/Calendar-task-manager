@@ -1,6 +1,6 @@
-import Button from '@/components/Button';
-import EventForm from '@/components/EventForm';
-import Modal from '@/components/Modal';
+import Button from '@/components/common/Button';
+import EventForm from '@/components/common/EventForm';
+import Modal from '@/components/common/Modal';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
 import {cx} from '@/services/utils';
 
