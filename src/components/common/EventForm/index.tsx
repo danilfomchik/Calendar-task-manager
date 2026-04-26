@@ -1,7 +1,7 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import cn from 'classnames';
+import classNames from 'classnames';
 import moment from 'moment';
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import {FormProvider, SubmitHandler, useForm} from 'react-hook-form';
 import {useSelector} from 'react-redux';
 
@@ -14,9 +14,12 @@ import CloseIcon from '@/components/ui/icons/CloseIcon';
 import EditIcon from '@/components/ui/icons/EditIcon';
 import {selectDay, selectMonth, selectYear} from '@/redux/date/selectors';
 import {addEvent, editEvent} from '@/redux/events/eventsSlice';
+import {selectSelectedCalendar} from '@/redux/myCalendars/selectors';
 import {useAppDispatch} from '@/redux/store';
+import {defaultCalendars} from '@/services/constants';
 import {createDate, formatDate, getDays, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
 import {createEventObj, editEventObj} from '@/services/eventUtils';
+import {CalendarsNames} from '@/services/types';
 
 import {validation} from './form';
 import {FormActionType, TEventFormProps, TFormValues} from './types';
@@ -26,22 +29,16 @@ const EventForm = ({actionType = FormActionType.create, formTitle, event, date, 
   const year = useSelector(selectYear);
   const month = useSelector(selectMonth);
   const day = useSelector(selectDay);
+  const selectedCalendar = useSelector(selectSelectedCalendar);
 
-  const defaultValues = event
-    ? {
-        eventName: event.title,
-        eventDescription: event.description,
-        eventYear: formatDate(moment(event.date), 'YYYY'),
-        eventMonth: formatDate(moment(event.date), 'MMMM'),
-        eventDay: formatDate(moment(event.date), 'DD'),
-      }
-    : {
-        eventName: '',
-        eventYear: formatDate(moment(date), 'YYYY') || year || '',
-        eventMonth: formatDate(moment(date), 'MMMM') || month || '',
-        eventDay: formatDate(moment(date), 'DD') || day || '',
-        eventDescription: '',
-      };
+  const defaultValues = {
+    eventTitle: event?.title ?? '',
+    eventDescription: event?.description ?? '',
+    eventYear: formatDate(moment(event?.date || date), 'YYYY') || year || '',
+    eventMonth: formatDate(moment(event?.date || date), 'MMMM') || month || '',
+    eventDay: formatDate(moment(event?.date || date), 'DD') || day || '',
+    eventCalendar: event?.eventCalendar ?? CalendarsNames.personal,
+  };
 
   const methods = useForm<TFormValues>({
     resolver: yupResolver(validation),
@@ -66,32 +63,37 @@ const EventForm = ({actionType = FormActionType.create, formTitle, event, date, 
     () => getDays(formYearValue || '', formMonthValue || ''),
     [formYearValue, formMonthValue],
   );
+  const calendarOptions = Object.values(CalendarsNames);
 
   const handleCreateEvent = (eventData: TFormValues) => {
-    const {eventName, eventYear, eventMonth, eventDay, eventDescription} = eventData;
+    const {eventTitle, eventYear, eventMonth, eventDay, eventDescription, eventCalendar} = eventData;
 
     const newEvent = createEventObj({
-      eventName,
+      title: eventTitle,
       date: createDate(+eventYear, eventMonth, +eventDay),
       description: eventDescription,
+      eventCalendar,
+      isDisabled: !selectedCalendar ? false : selectedCalendar !== eventCalendar,
     });
 
     dispatch(addEvent(newEvent));
   };
 
   const handleEditEvent = (eventData: TFormValues) => {
-    const {eventName, eventYear, eventMonth, eventDay, eventDescription} = eventData;
+    const {eventTitle, eventYear, eventMonth, eventDay, eventDescription, eventCalendar} = eventData;
 
     const editedEvent = editEventObj({
       event,
       updatedEvent: {
-        eventName,
+        title: eventTitle,
         date: createDate(+eventYear, eventMonth, +eventDay),
         description: eventDescription,
+        eventCalendar,
+        isDisabled: !selectedCalendar ? event?.isDisabled || false : selectedCalendar !== eventCalendar,
       },
     });
 
-    dispatch(editEvent(editedEvent));
+    dispatch(editEvent({oldEvent: event!, newEvent: editedEvent}));
   };
 
   const onSubmit: SubmitHandler<TFormValues> = eventData => {
@@ -103,6 +105,17 @@ const EventForm = ({actionType = FormActionType.create, formTitle, event, date, 
 
     handleModalClose();
   };
+
+  const customEventCalendarOption = useCallback((option: string) => {
+    const currentCalendar = defaultCalendars.find(c => c.name === option);
+
+    return (
+      <div className="w-full flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full" style={{backgroundColor: currentCalendar?.itemColor}} />
+        <span>{option}</span>
+      </div>
+    );
+  }, []);
 
   return (
     <div>
@@ -117,27 +130,40 @@ const EventForm = ({actionType = FormActionType.create, formTitle, event, date, 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center justify-between gap-[20px] w-auto px-[30px] py-[20px]">
-            {!date && (
-              <div className="flex gap-2 relative self-stretch max-md:flex-col">
+            {!date ? (
+              <div className="grid grid-cols-2 gap-2 relative self-stretch max-md:grid-cols-1">
                 <DropdownControl control={control} options={monthsOptions} name="eventMonth" />
                 <DropdownControl control={control} options={yearsOptions} name="eventYear" />
                 <DropdownControl control={control} options={daysOptions} name="eventDay" />
+                <DropdownControl
+                  control={control}
+                  options={calendarOptions}
+                  name="eventCalendar"
+                  customOption={customEventCalendarOption}
+                />
               </div>
+            ) : (
+              <DropdownControl
+                control={control}
+                options={calendarOptions}
+                name="eventCalendar"
+                customOption={customEventCalendarOption}
+              />
             )}
 
             <div className="w-full flex flex-col gap-2">
-              <InputControl autoFocus control={control} name="eventName" placeholder="Enter required name" />
+              <InputControl autoFocus control={control} name="eventTitle" placeholder="Enter required name" />
               <TextareaControl control={control} name="eventDescription" placeholder="Enter optional description" />
             </div>
 
             <Button
-              className={cn(
+              className={classNames(
                 {
                   'border-sky-500 text-sky-500': isDirty,
                 },
                 'text-sm p-2 max-md:w-full',
               )}
-              disabled={!isDirty || !!errors.eventName}
+              disabled={!isDirty || !!errors.eventTitle}
               text={actionType === FormActionType.edit ? 'Edit' : 'Create'}
               endIcon={actionType === FormActionType.edit ? <EditIcon size="size-4" /> : <CheckIcon size="size-4" />}
               type="submit"

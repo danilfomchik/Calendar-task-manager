@@ -1,4 +1,5 @@
 import {TEvent} from '@/redux/events/types';
+import {CalendarsNames} from '@/services/types';
 
 export enum FormActionType {
   edit = 'edit',
@@ -14,9 +15,10 @@ export type TEventFormProps = {
 };
 
 export type TFormValues = {
-  eventName: string;
+  eventTitle: string;
   eventYear: string;
   eventMonth: string;
   eventDay: string;
+  eventCalendar: CalendarsNames;
   eventDescription?: string;
 };

@@ -6,6 +6,7 @@ import Loading from '@/components/ui/Loading';
 import {selectOpenedItems} from '@/redux/overflow/selectors';
 
 import Aside from '../Aside';
+import DataInitWrapper from '../DataInitWrapper';
 
 const MainLayout = () => {
   const openedItems = useSelector(selectOpenedItems);
@@ -24,6 +25,8 @@ const MainLayout = () => {
 
   return (
     <>
+      <DataInitWrapper />
+
       <Aside />
       <main className="h-full flex-1 overflow-y-auto">
         <Suspense fallback={<Loading />}>
