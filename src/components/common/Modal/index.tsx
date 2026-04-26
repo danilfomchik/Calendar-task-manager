@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import classNames from 'classnames';
 import {createPortal} from 'react-dom';
 
 import {TModalProps} from './types';
@@ -19,7 +19,7 @@ const Modal = ({refItem, className, children, onClose}: TModalProps) => {
       {createPortal(
         <div
           onClick={handleClose}
-          className={cn(
+          className={classNames(
             'fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-overlay bg-opacity-80 z-[1000]',
             className,
           )}>

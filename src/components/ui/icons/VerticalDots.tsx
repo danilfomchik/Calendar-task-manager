@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import classNames from 'classnames';
 
 import {IconProps} from './types';
 
@@ -10,7 +10,7 @@ const VerticalDots = ({size, ...restProps}: IconProps) => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={cn('cursor-pointer', size)}
+      className={classNames('cursor-pointer', size)}
       {...restProps}>
       <path
         strokeLinecap="round"
