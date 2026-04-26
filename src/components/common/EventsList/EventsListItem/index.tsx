@@ -9,48 +9,63 @@ import DeleteIcon from '@/components/ui/icons/DeleteIcon';
 import EditIcon from '@/components/ui/icons/EditIcon';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
 import {deleteEvent} from '@/redux/events/eventsSlice';
-import {TEvent} from '@/redux/events/types';
 import {useAppDispatch} from '@/redux/store';
+import {getCalendarColor} from '@/services/calendars';
+import {cx} from '@/services/utils';
 
-const EventsListItem = ({event, showItemControls}: {event: TEvent; showItemControls: boolean}) => {
+import {IEventsListItemProps} from './types';
+
+const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemProps) => {
   const dispatch = useAppDispatch();
   const {ref, isOpen, handleClose, handleOpen} = useOpeningItem();
 
+  const calendarColor = getCalendarColor(event.eventCalendar);
+
   const handleDeleteEvent = useCallback(() => {
-    dispatch(deleteEvent(event.id));
-  }, [dispatch, event.id]);
+    dispatch(deleteEvent(event));
+  }, [dispatch, event]);
 
   return (
     <>
       <div
-        className="relative flex items-center gap-6 max-md:gap-4 rounded-lg px-4 py-3"
-        style={{background: `rgb(from ${event.color} r g b / 0.15)`, borderLeft: `2px solid ${event.color}`}}>
+        className={cx(
+          'relative flex items-center gap-6 max-md:gap-4 rounded-lg px-4 py-3 transition-opacity overflow-auto',
+          {
+            'opacity-10 pointer-events-none cursor-not-allowed select-none': isDisabled,
+          },
+        )}
+        style={{background: `rgb(from ${calendarColor} r g b / 0.3)`, borderLeft: `2px solid ${calendarColor}`}}>
         <div className="flex-1">
-          <h4 className="text-lg font-semibold">{event.title}</h4>
+          <h4 className="text-lg font-semibold break-all">{event.title}</h4>
 
           {event.description && <p className="text-base text-gray-400 line-clamp-3">{event.description}</p>}
 
-          {/* TODO: add correct calendar */}
-          <div
-            className="w-fit text-xs/[1] rounded-[20px] px-1.5 py-1 mt-1.5 font-medium"
-            style={{backgroundColor: 'rgba(74, 108, 247, 0.3)', color: 'rgb(74, 108, 247)'}}>
-            Work
-          </div>
+          {event.eventCalendar && (
+            <div
+              className="w-fit text-xs/[1] rounded-[20px] px-1.5 py-1 mt-1.5 font-medium"
+              style={{background: `rgb(from ${calendarColor} r g b / 0.3)`, color: calendarColor}}>
+              {event.eventCalendar}
+            </div>
+          )}
         </div>
 
         {showItemControls && (
-          <div className="flex gap-2">
-            <Button onClick={handleOpen} endIcon={<EditIcon size="size-4" />} className="w-fit" />
+          <div className="flex gap-4">
             <Button
-              variant="red-bordered"
+              onClick={handleOpen}
+              endIcon={<EditIcon size="size-4" />}
+              className="w-fit p-0 text-white hover:text-sky-500"
+              variant="transparent"
+            />
+            <Button
+              variant="transparent"
               onClick={handleDeleteEvent}
               endIcon={<DeleteIcon size="size-4" />}
-              className="w-fit"
+              className="w-fit p-0 text-white hover:text-red-400"
             />
           </div>
         )}
 
-        {/* TODO: add d&d */}
         <BarsIcon className="size-4 text-gray-400 cursor-pointer" />
       </div>
 

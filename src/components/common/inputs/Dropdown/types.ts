@@ -1,3 +1,4 @@
+import {ReactNode} from 'react';
 import {ControllerRenderProps, FieldValues} from 'react-hook-form';
 
 export type Option = {
@@ -13,4 +14,5 @@ export type TDropdownProps = {
   placeholder?: string;
   className?: string;
   setDropDownRef?: (node: HTMLDivElement | null) => void;
+  customOption?: (option: string) => ReactNode;
 };

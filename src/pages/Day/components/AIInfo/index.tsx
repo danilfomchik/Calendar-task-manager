@@ -1,12 +1,16 @@
+import classNames from 'classnames';
 import {useMemo} from 'react';
 
 import Loading from '@/components/ui/Loading';
+import Tooltip from '@/components/ui/Tooltip';
 import InfoIcon from '@/components/ui/icons/InfoIcon';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useGetDayHolidaysInfoQuery} from '@/redux/dateHolidaysGenerator/holidaysApi';
 
 import {IParsedContent} from './types';
 
 const AIInfo = ({date}: {date: string | undefined}) => {
+  const isMobileScreen = useMediaQuery({size: 'md', direction: 'to'});
   const {data, isLoading, error} = useGetDayHolidaysInfoQuery(date, {
     skip: !date,
   });
@@ -28,11 +32,16 @@ const AIInfo = ({date}: {date: string | undefined}) => {
         <div className="flex flex-col gap-3 bg-[#100d18] px-3 py-2.5 rounded-[10px] border border-[#1e1640] w-fit">
           <div className="flex items-center justify-between gap-3 text-sm text-[#9d77f5]">
             <p className="font-medium">{parsedContent.holiday.name}</p>
-            <InfoIcon className="size-4" />
-            {/* TODO: add tooltip with description */}
-            {/* <Tooltip triggerElement={<InfoIcon className="size-4" />} className="w-auto min-w-[25px] flex justify-end">
-              <p>{parsedContent.holiday.description}</p>
-            </Tooltip> */}
+            <Tooltip
+              disabled={isMobileScreen}
+              triggerElement={
+                <div className={classNames({'cursor-help': !isMobileScreen})}>
+                  <InfoIcon className="size-4 shrink-0" />
+                </div>
+              }
+              contentClassName="w-auto min-w-[200px] max-w-none flex justify-end border-[#9d77f5]">
+              <p className="text-xs text-white">{parsedContent.holiday.description}</p>
+            </Tooltip>
           </div>
         </div>
       )}

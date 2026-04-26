@@ -66,6 +66,7 @@ const DayEventsList = ({events}: TDayEventsListProps) => {
               }
             }}
             eventIndex={i}
+            isDisabled={event.isDisabled}
           />
         ))}
       </div>

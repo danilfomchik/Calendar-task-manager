@@ -45,12 +45,18 @@ const EventsList = ({
       <div
         ref={eventsContainerRef}
         className={classNames('flex-1 overflow-y-auto scroll-smooth', {'pr-2.5': hasScroll})}>
-        {/* <div className="flex-1 min-h-screen overflow-y-auto scroll-smooth"> */}
         {!events?.length ? (
           <p>no events</p>
         ) : (
           <div className="flex flex-col gap-4">
-            {events?.map(event => <EventsListItem key={event.id} event={event} showItemControls={showItemControls} />)}
+            {events?.map(event => (
+              <EventsListItem
+                key={event.id}
+                event={event}
+                showItemControls={showItemControls}
+                isDisabled={event.isDisabled}
+              />
+            ))}
           </div>
         )}
       </div>

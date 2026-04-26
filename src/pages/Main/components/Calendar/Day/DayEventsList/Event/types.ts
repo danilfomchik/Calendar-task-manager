@@ -4,4 +4,5 @@ export type TEventProps = {
   event: TEvent;
   eventRef: (el: HTMLDivElement | null) => void;
   eventIndex: number;
+  isDisabled?: boolean;
 };

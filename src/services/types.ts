@@ -28,6 +28,5 @@ export enum CalendarsNames {
 
 export type TCalendarsList = {
   name: CalendarsNames;
-  count: number;
   itemColor: string;
 }[];

@@ -1,4 +1,4 @@
-import {memo} from 'react';
+import {ReactNode, memo} from 'react';
 import {Control, useController} from 'react-hook-form';
 
 import Dropdown from '../inputs/Dropdown';
@@ -9,6 +9,7 @@ type DropdownControlProps = {
   control: Control<any>;
   options: string[];
   selectedOption?: string;
+  customOption?: (option: string) => ReactNode;
 };
 
 const DropdownControl = ({name, control, selectedOption = '', ...restProps}: DropdownControlProps) => {

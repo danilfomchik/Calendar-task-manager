@@ -4,9 +4,8 @@ import {StorageKeys} from '@/services/types';
 import {getLocalStoredValues} from '@/services/utils';
 
 import {SliceNames} from '../types';
-import {TEvent, TEventsState} from './types';
+import {TEvent, TEventsById, TEventsState} from './types';
 
-// TODO: replace side effects with custom middleware
 const reducers = {
   addEvent: (state: TEventsState, action: PayloadAction<TEvent>) => {
     const event = action.payload;
@@ -19,28 +18,22 @@ const reducers = {
 
     state.eventsById[event.id] = event;
     state.eventsByDate = updatedEventsByDate;
-
-    localStorage.setItem(StorageKeys.eventsById, JSON.stringify(state.eventsById));
-    localStorage.setItem(StorageKeys.eventsByDate, JSON.stringify(updatedEventsByDate));
   },
-  editEvent: (state: TEventsState, action: PayloadAction<TEvent>) => {
-    // updated event value
-    const updatedEvent = action.payload;
-    // prev event value
-    const oldEvent = state.eventsById[updatedEvent.id];
+  editEvent: (state: TEventsState, action: PayloadAction<{oldEvent: TEvent; newEvent: TEvent}>) => {
+    const {oldEvent, newEvent} = action.payload;
 
     // if event date has changed
-    if (oldEvent.date !== updatedEvent.date) {
+    if (oldEvent.date !== newEvent.date) {
       const updatedEventsByDateObj = state.eventsByDate;
 
-      const filteredOldDateEvents = updatedEventsByDateObj[oldEvent.date]?.filter(eId => eId !== updatedEvent.id);
+      const filteredOldDateEvents = updatedEventsByDateObj[oldEvent.date]?.filter(eId => eId !== newEvent.id);
 
       // remove from old date
       updatedEventsByDateObj[oldEvent.date] = filteredOldDateEvents;
 
       // add to new date
-      updatedEventsByDateObj[updatedEvent.date] ??= [];
-      updatedEventsByDateObj[updatedEvent.date]?.push(updatedEvent.id);
+      updatedEventsByDateObj[newEvent.date] ??= [];
+      updatedEventsByDateObj[newEvent.date]?.push(newEvent.id);
 
       const {[oldEvent.date]: oldDate, ...rest} = updatedEventsByDateObj;
 
@@ -48,15 +41,13 @@ const reducers = {
       const resultEventsByDateObj = oldDate?.length ? updatedEventsByDateObj : rest;
 
       state.eventsByDate = resultEventsByDateObj;
-      localStorage.setItem(StorageKeys.eventsByDate, JSON.stringify(resultEventsByDateObj));
     }
 
     // update event
-    state.eventsById[updatedEvent.id] = updatedEvent;
-    localStorage.setItem(StorageKeys.eventsById, JSON.stringify(state.eventsById));
+    state.eventsById[newEvent.id] = newEvent;
   },
-  deleteEvent: (state: TEventsState, action: PayloadAction<string>) => {
-    const eventId = action.payload;
+  deleteEvent: (state: TEventsState, action: PayloadAction<TEvent>) => {
+    const eventId = action.payload.id;
     const eventsById = state.eventsById;
     const eventToDelete = eventsById[eventId];
 
@@ -69,10 +60,11 @@ const reducers = {
     const {[eventToDelete.id]: _, ...restEventsById} = eventsById;
 
     state.eventsById = restEventsById;
-    state.eventsByDate[eventToDelete.date] = filteredOldDateEvents;
-
-    localStorage.setItem(StorageKeys.eventsById, JSON.stringify(state.eventsById));
-    localStorage.setItem(StorageKeys.eventsByDate, JSON.stringify(state.eventsByDate));
+    state.eventsByDate[eventToDelete.date] =
+      filteredOldDateEvents && filteredOldDateEvents.length > 0 ? filteredOldDateEvents : undefined;
+  },
+  setEventsById: (state: TEventsState, action: PayloadAction<TEventsById>) => {
+    state.eventsById = action.payload;
   },
 };
 
@@ -90,5 +82,5 @@ const eventsSlice = createSlice({
   reducers,
 });
 
-export const {addEvent, editEvent, deleteEvent} = eventsSlice.actions;
+export const {addEvent, editEvent, deleteEvent, setEventsById} = eventsSlice.actions;
 export default eventsSlice;

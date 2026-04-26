@@ -15,6 +15,7 @@ const Dropdown = ({
   options,
   placeholder = 'Choose an option',
   className = '',
+  customOption,
 }: TDropdownProps) => {
   const [currentValue, setCurrentValue] = useState(selectedOption);
 
@@ -53,10 +54,16 @@ const Dropdown = ({
   return (
     <div className={cx('w-full relative', className)}>
       <Button
-        className={cx('py-2 w-full h-full text-left border-secondary-background-color z-30', {
-          'border-sky-500 text-sky-500': isOpen,
-        })}
-        text={currentValue ? currentValue : placeholder}
+        className={cx(
+          'py-2 w-full h-full text-left border-secondary-background-color z-30',
+          {
+            'border-sky-500 text-sky-500': isOpen,
+          },
+          {
+            'flex-row-reverse [&>div]:w-auto': customOption,
+          },
+        )}
+        text={customOption ? '' : currentValue ? currentValue : placeholder}
         endIcon={
           <div
             className={cx('transition-transform', {
@@ -66,8 +73,9 @@ const Dropdown = ({
           </div>
         }
         onClick={handleToggle}
-        type="button"
-      />
+        type="button">
+        {customOption ? customOption(currentValue || '') : null}
+      </Button>
 
       {isOpen && (
         <>
@@ -92,8 +100,9 @@ const Dropdown = ({
                   'transition-all flex items-center justify-between gap-1 cursor-pointer text-white select-none relative py-2 px-3 hover:bg-secondary-background-color',
                 )}
                 onClick={() => handleChange(option)}>
-                <span className="font-normal block truncate">{option}</span>
-                {currentValue === option && <CheckIcon size="size-3" />}
+                {customOption ? customOption(option) : <span className="font-normal block truncate">{option}</span>}
+
+                {currentValue === option && <CheckIcon className="absolute right-2 top-1/2 -translate-y-1/2 size-3" />}
               </li>
             ))}
           </ul>

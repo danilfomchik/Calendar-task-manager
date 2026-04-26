@@ -13,6 +13,7 @@ import AIInfo from './components/AIInfo';
 
 // separate branches TODO
 // add correct selectedDate handling (on refresh) - on separate branch
+// d&d for events list
 
 const DayPage = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const DayPage = () => {
 
   return (
     <>
-      <header className="h-header-height sticky top-0 z-50 px-3 md:px-6 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color">
+      <header className="h-header-height sticky top-0 z-50 px-3 md:px-5 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color">
         <div className="flex items-center justify-between gap-4 h-full">
           <div className="flex items-center gap-4 md:divide-x-[1px] divide-[#1e1e1e]">
             <Button
@@ -51,7 +52,7 @@ const DayPage = () => {
             </time>
           </div>
 
-          <AddEvent date={date} className="max-md:hidden px-4" />
+          <AddEvent date={date} className="max-md:hidden" />
         </div>
       </header>
 
@@ -89,11 +90,11 @@ const DayPage = () => {
           )}
         </div>
 
-        <div className="flex flex-col flex-1 overflow-scroll px-4 py-5">
+        <div className="flex flex-col flex-1 overflow-auto px-4 py-5 max-md:pr-0">
           <EventsList date={date || ''} showItemControls showEventsCount={showEventsCount} />
         </div>
 
-        <div className="flex-col gap-8 overflow-scroll px-4 pb-5 hidden max-md:flex">
+        <div className="flex-col gap-8 overflow-auto px-4 pb-5 hidden max-md:flex max-h-[250px]">
           {isGroqEnabled && (
             <div className="flex flex-col gap-3">
               <Divider>

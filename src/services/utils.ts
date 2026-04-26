@@ -10,10 +10,4 @@ export const getLocalStoredValues = (key: StorageKeys, defaultValues?: unknown) 
   return parsedValues;
 };
 
-export const getRandomColor = () => {
-  return `#${Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, '0')}`;
-};
-
 export const cx = (...args: ArgumentArray) => twMerge(classNames(...args));
