@@ -5,7 +5,7 @@
 :root {
   --header-height: 77px;
   --secondary-bg-color: #1a1a1a;
-  --overlay-color: #1a1a1aba;
+  --overlay-color: #1a1a1af0;
 
   @media (width <= 768px) {
     --header-height: 57px;
@@ -55,6 +55,7 @@ body,
   &:not(.text) {
     height: 1px;
     background: var(--secondary-bg-color);
+    width: 100%;
   }
 
   &:is(.text) {

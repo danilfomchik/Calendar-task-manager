@@ -48,7 +48,7 @@ const EventsList = ({
         {!events?.length ? (
           <p>no events</p>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2.5 md:gap-4">
             {events?.map(event => (
               <EventsListItem
                 key={event.id}

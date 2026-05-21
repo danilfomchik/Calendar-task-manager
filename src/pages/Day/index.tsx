@@ -12,6 +12,7 @@ import AddEvent from '../Main/components/Header/Controls/AddEvent';
 import AIInfo from './components/AIInfo';
 
 // separate branches TODO
+// replace momentjs with date-fns or dayjs
 // add correct selectedDate handling (on refresh) - on separate branch
 // d&d for events list
 
@@ -90,7 +91,7 @@ const DayPage = () => {
           )}
         </div>
 
-        <div className="flex flex-col flex-1 overflow-auto px-4 py-5 max-md:pr-0">
+        <div className="flex flex-col flex-1 overflow-auto px-4 py-5">
           <EventsList date={date || ''} showItemControls showEventsCount={showEventsCount} />
         </div>
 

@@ -1,6 +1,6 @@
 import {motion} from 'framer-motion';
 import moment from 'moment';
-import {memo, useRef, useState} from 'react';
+import {memo, useRef} from 'react';
 import {useSelector} from 'react-redux';
 import {useSearchParams} from 'react-router';
 
@@ -23,13 +23,12 @@ import DayEventsList from './DayEventsList';
 import {TDayProps} from './types';
 
 const Day = ({date}: TDayProps) => {
-  const [isHover, setIsHover] = useState(false);
   const [, setSearchParams] = useSearchParams();
 
   const {ref, isOpen, handleClose: handleModalClose, handleOpen: handleModalOpen} = useOpeningItem();
   const dispatch = useAppDispatch();
 
-  const isMobileScreen = useMediaQuery({size: 'md', direction: 'to'});
+  const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
   const dayRef = useRef<HTMLDivElement>(null);
 
@@ -53,57 +52,42 @@ const Day = ({date}: TDayProps) => {
     <motion.div
       ref={dayRef}
       onClick={handleDayClick}
-      // on hover
-      onPointerEnter={e => {
-        if (e.pointerType === 'mouse') {
-          setIsHover(true);
-        }
-      }}
-      // on blur
-      onPointerLeave={() => setIsHover(false)}
-      // on move not inside day block (ex. modal)
-      onPointerMoveCapture={e => {
-        if (!dayRef.current?.contains(e.target as Node)) {
-          setIsHover(false);
-        }
-      }}
       initial={{opacity: 0}}
       animate={{opacity: 1}}
       transition={{duration: 0.5, ease: 'easeOut'}}
       className={cx(
-        'flex flex-col relative justify-between border border-secondary-background-color rounded-md p-1 lg:p-3 cursor-pointer transition-all',
+        'group flex flex-col relative justify-between [&:not(:nth-child(7n))]:border-r border-b border-secondary-background-color p-1 lg:p-3 cursor-pointer transition-all md:hover:bg-secondaryBackgroundColorHover',
         {
-          'bg-secondary-background-color': dateMonth !== currentMonth,
+          'bg-mainBackgroundColor': dateMonth !== currentMonth,
         },
-        {'bg-secondaryBackgroundColorHover': isHover},
-        {'border border-sky-500': date === selectedDate && isMobileScreen},
+        'max-md:bg-transparent max-md:border-none max-md:items-center',
       )}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs sm:text-base">
+        <div className="flex items-center md:gap-2 text-xs sm:text-base">
           <span
-            className={cx('rounded-full p-1 w-5 h-5 lg:w-8 lg:h-8 flex items-center justify-center text-white', {
-              'bg-blue-600': currentDate === date,
-            })}>
+            className={cx(
+              'rounded-full p-1 w-8 h-8 lg:w-8 lg:h-8 flex items-center justify-center text-white border border-transparent transition-colors',
+              {
+                'bg-blue-600 border-none': currentDate === date,
+                'border-blue-500': date === selectedDate && isMobileScreen,
+              },
+            )}>
             <time dateTime={date}>{day}</time>
           </span>
 
-          {isHover && (
-            <Button
-              kind="link"
-              to={`/day/${date}`}
-              className="p-0 bg-transparent border-none"
-              startIcon={<ExternalPage size="size-5" />}
-            />
-          )}
+          <Button
+            kind="link"
+            to={`/day/${date}`}
+            className="p-0 bg-transparent border-none hidden md:group-hover:flex"
+            startIcon={<ExternalPage size="size-5" />}
+          />
         </div>
 
-        {isHover && (
-          <Button
-            className="p-0 bg-transparent border-none"
-            startIcon={<AddIcon size="size-5" />}
-            onClick={handleModalOpen}
-          />
-        )}
+        <Button
+          className="p-0 bg-transparent border-none hidden md:group-hover:flex"
+          startIcon={<AddIcon size="size-5" />}
+          onClick={handleModalOpen}
+        />
       </div>
 
       {!!events?.length && <DayEventsList events={events || []} />}

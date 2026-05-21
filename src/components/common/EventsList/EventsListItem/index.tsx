@@ -29,20 +29,21 @@ const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemPr
     <>
       <div
         className={cx(
-          'relative flex items-center gap-6 max-md:gap-4 rounded-lg px-4 py-3 transition-opacity overflow-auto',
+          'relative flex items-center gap-6 max-md:gap-4 rounded-lg px-3 md:px-4 py-2 md:py-3 transition-opacity overflow-auto',
           {
             'opacity-10 pointer-events-none cursor-not-allowed select-none': isDisabled,
           },
         )}
-        style={{background: `rgb(from ${calendarColor} r g b / 0.3)`, borderLeft: `2px solid ${calendarColor}`}}>
+        // style={{background: `rgb(from ${calendarColor} r g b / 0.1)`, borderLeft: `2px solid ${calendarColor}`}}
+        style={{background: '#111', borderLeft: `2px solid ${calendarColor}`}}>
         <div className="flex-1">
-          <h4 className="text-lg font-semibold break-all">{event.title}</h4>
+          <h4 className="text-base md:text-lg font-semibold break-all">{event.title}</h4>
 
-          {event.description && <p className="text-base text-gray-400 line-clamp-3">{event.description}</p>}
+          {event.description && <p className="text-xs md:text-base text-gray-400 line-clamp-3">{event.description}</p>}
 
           {event.eventCalendar && (
             <div
-              className="w-fit text-xs/[1] rounded-[20px] px-1.5 py-1 mt-1.5 font-medium"
+              className="w-fit text-[10px]/[1] md:text-xs/[1] rounded-[20px] px-1.5 py-1 mt-1.5 font-medium"
               style={{background: `rgb(from ${calendarColor} r g b / 0.3)`, color: calendarColor}}>
               {event.eventCalendar}
             </div>

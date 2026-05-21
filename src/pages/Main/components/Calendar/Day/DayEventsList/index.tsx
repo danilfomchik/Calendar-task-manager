@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {TEvent} from '@/redux/events/types';
+import {cx} from '@/services/utils';
 
 import Event from './Event';
 import HiddenEventsList from './HiddenEventsList';
@@ -13,6 +14,8 @@ const DayEventsList = ({events}: TDayEventsListProps) => {
 
   const eventsContainerRef = useRef<HTMLDivElement>(null);
   const eventsRefs = useRef<HTMLDivElement[]>([]);
+
+  const hasHiddenEvents = hiddenEvents.length > 0;
 
   const handleResize = useCallback(() => {
     if (!eventsContainerRef.current) return;
@@ -53,9 +56,13 @@ const DayEventsList = ({events}: TDayEventsListProps) => {
   }, [handleResize]);
 
   return (
-    <div className="flex items-center justify-between relative">
+    <div className="flex items-center justify-between relative w-full">
       <HiddenEventsList events={events} eventsContainerRef={eventsContainerRef} eventsRefs={eventsRefs} />
-      <div ref={eventsContainerRef} className="w-[80%] flex gap-[9px]">
+      <div
+        ref={eventsContainerRef}
+        className={cx('w-full flex items-center max-md:justify-center gap-[9px] max-sm:gap-1.5 h-4', {
+          'w-[80%]': hasHiddenEvents,
+        })}>
         {visibleEvents.map((event, i) => (
           <Event
             key={event.id}
@@ -71,7 +78,7 @@ const DayEventsList = ({events}: TDayEventsListProps) => {
         ))}
       </div>
 
-      {!!hiddenEvents.length && <RemainedItems items={hiddenEvents} />}
+      {hasHiddenEvents && <RemainedItems items={hiddenEvents} />}
     </div>
   );
 };

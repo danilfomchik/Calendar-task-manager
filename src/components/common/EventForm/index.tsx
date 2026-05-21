@@ -9,9 +9,9 @@ import Button from '@/components/common/Button';
 import DropdownControl from '@/components/common/formInputs/DropdownControl';
 import InputControl from '@/components/common/formInputs/InputControl';
 import TextareaControl from '@/components/common/formInputs/TextareaControl';
-import CheckIcon from '@/components/ui/icons/CheckIcon';
 import CloseIcon from '@/components/ui/icons/CloseIcon';
 import EditIcon from '@/components/ui/icons/EditIcon';
+import PlusIcon from '@/components/ui/icons/PlusIcon';
 import {selectDay, selectMonth, selectYear} from '@/redux/date/selectors';
 import {addEvent, editEvent} from '@/redux/events/eventsSlice';
 import {selectSelectedCalendar} from '@/redux/myCalendars/selectors';
@@ -23,6 +23,9 @@ import {CalendarsNames} from '@/services/types';
 
 import {validation} from './form';
 import {FormActionType, TEventFormProps, TFormValues} from './types';
+
+// TODO:
+// 1. change styles for mobile version
 
 const EventForm = ({actionType = FormActionType.create, formTitle, event, date, handleModalClose}: TEventFormProps) => {
   const dispatch = useAppDispatch();
@@ -165,7 +168,7 @@ const EventForm = ({actionType = FormActionType.create, formTitle, event, date, 
               )}
               disabled={!isDirty || !!errors.eventTitle}
               text={actionType === FormActionType.edit ? 'Edit' : 'Create'}
-              endIcon={actionType === FormActionType.edit ? <EditIcon size="size-4" /> : <CheckIcon size="size-4" />}
+              endIcon={actionType === FormActionType.edit ? <EditIcon size="size-4" /> : <PlusIcon size="size-4" />}
               type="submit"
             />
           </div>
