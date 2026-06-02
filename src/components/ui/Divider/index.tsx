@@ -14,7 +14,7 @@ const Divider = ({className = '', children}: IDividerProps) => {
       })}
       role="separator"
       aria-orientation="horizontal">
-      <p>{children}</p>
+      {children}
     </div>
   );
 };

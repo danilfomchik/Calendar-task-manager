@@ -24,9 +24,6 @@ import {CalendarsNames} from '@/services/types';
 import {validation} from './form';
 import {FormActionType, TEventFormProps, TFormValues} from './types';
 
-// TODO:
-// 1. change styles for mobile version
-
 const EventForm = ({actionType = FormActionType.create, formTitle, event, date, handleModalClose}: TEventFormProps) => {
   const dispatch = useAppDispatch();
   const year = useSelector(selectYear);

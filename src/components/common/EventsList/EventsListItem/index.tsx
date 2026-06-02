@@ -34,7 +34,6 @@ const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemPr
             'opacity-10 pointer-events-none cursor-not-allowed select-none': isDisabled,
           },
         )}
-        // style={{background: `rgb(from ${calendarColor} r g b / 0.1)`, borderLeft: `2px solid ${calendarColor}`}}
         style={{background: '#111', borderLeft: `2px solid ${calendarColor}`}}>
         <div className="flex-1">
           <h4 className="text-base md:text-lg font-semibold break-all">{event.title}</h4>

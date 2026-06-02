@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useRef, useState} from 'react';
+import {KeyboardEvent, memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import ArrowDown from '@/components/ui/icons/ArrowDown';
 import CheckIcon from '@/components/ui/icons/CheckIcon';
@@ -18,6 +18,7 @@ const Dropdown = ({
   customOption,
 }: TDropdownProps) => {
   const [currentValue, setCurrentValue] = useState(selectedOption);
+  const [focusedIndex, setFocusedIndex] = useState(0);
 
   const {isOpen, handleClose, handleToggle} = useOpeningItem();
   const activeOptionRef = useRef<HTMLLIElement>(null);
@@ -38,6 +39,28 @@ const Dropdown = ({
     setCurrentValue(selectedOption || field?.value || '');
   }, [selectedOption, field]);
 
+  const handleOptionKeyDown = (event: KeyboardEvent<HTMLLIElement>, index: number) => {
+    let newIndex = index;
+
+    if (event.key === 'ArrowDown') {
+      newIndex = (index + 1) % options.length;
+    } else if (event.key === 'ArrowUp') {
+      newIndex = (index - 1 + options.length) % options.length;
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleChange(options[index]);
+      return;
+    } else {
+      return; // Ignore other keys
+    }
+
+    event.preventDefault();
+    setFocusedIndex(newIndex);
+
+    // Shift focus to the newly active DOM element
+    document.getElementById(`list-item-${newIndex}`)?.focus();
+  };
+
   useEffect(() => {
     initValue();
   }, [initValue]);
@@ -55,7 +78,7 @@ const Dropdown = ({
     <div className={cx('w-full relative', className)}>
       <Button
         className={cx(
-          'py-2 w-full h-full text-left border-secondary-background-color z-30',
+          'py-2 w-full h-full text-left border-secondary-background-color z-30 outline-none focus:border-sky-500',
           {
             'border-sky-500 text-sky-500': isOpen,
           },
@@ -85,19 +108,27 @@ const Dropdown = ({
 
               handleClose();
             }}
-            className="fixed w-full h-full inset-0 z-20"
+            className="fixed w-full h-full inset-0 z-[100]"
           />
 
-          <ul className="absolute mt-1 w-full bg-mainBackgroundColor border border-secondary-background-color shadow-lg max-h-[220px] rounded-md text-sm ring-opacity-5 overflow-auto focus:outline-none z-30">
-            {options.map(option => (
+          <ul
+            role="listbox"
+            aria-label={field?.name ? `${field.name} dropdown list` : 'Dropdown list'}
+            className="absolute mt-1 w-full bg-mainBackgroundColor border border-secondary-background-color shadow-lg max-h-[220px] rounded-md text-sm ring-opacity-5 overflow-auto focus:outline-none z-[101]">
+            {options.map((option, index) => (
               <li
+                id={`list-item-${index}`}
                 ref={currentValue === option ? activeOptionRef : null}
                 key={option}
+                tabIndex={focusedIndex === index ? 0 : -1}
+                role="option"
+                aria-selected={focusedIndex === index}
+                onKeyDown={e => handleOptionKeyDown(e, index)}
                 className={cx(
                   {
                     'bg-secondary-background-color': currentValue === option,
                   },
-                  'transition-all flex items-center justify-between gap-1 cursor-pointer text-white select-none relative py-2 px-3 hover:bg-secondary-background-color',
+                  'transition-all flex items-center justify-between gap-1 cursor-pointer text-white select-none relative py-2 px-3 hover:bg-secondary-background-color focus:bg-secondary-background-color outline-none',
                 )}
                 onClick={() => handleChange(option)}>
                 {customOption ? customOption(option) : <span className="font-normal block truncate">{option}</span>}

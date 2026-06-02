@@ -13,7 +13,7 @@ const DayEventsList = ({events}: TDayEventsListProps) => {
   const [hiddenEvents, setHiddenEvents] = useState<TEvent[]>([]);
 
   const eventsContainerRef = useRef<HTMLDivElement>(null);
-  const eventsRefs = useRef<HTMLDivElement[]>([]);
+  const eventsRefs = useRef<HTMLButtonElement[]>([]);
 
   const hasHiddenEvents = hiddenEvents.length > 0;
 

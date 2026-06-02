@@ -44,12 +44,16 @@ const Day = ({date}: TDayProps) => {
   const handleDayClick = () => {
     if (!isMobileScreen) return;
 
-    dispatch(setSelectedDate(date));
-    setSearchParams(`?${CURRENT_DATE_PARAMS_KEY}=${date}`);
+    const isCurrentDate = date === fullDate;
+
+    dispatch(setSelectedDate(isCurrentDate ? currentDate : date));
+    setSearchParams(isCurrentDate ? '' : `?${CURRENT_DATE_PARAMS_KEY}=${date}`);
   };
 
   return (
     <motion.div
+      tabIndex={-1}
+      role="button"
       ref={dayRef}
       onClick={handleDayClick}
       initial={{opacity: 0}}
@@ -68,8 +72,9 @@ const Day = ({date}: TDayProps) => {
             className={cx(
               'rounded-full p-1 w-8 h-8 lg:w-8 lg:h-8 flex items-center justify-center text-white border border-transparent transition-colors',
               {
-                'bg-blue-600 border-none': currentDate === date,
                 'border-blue-500': date === selectedDate && isMobileScreen,
+                'text-[#444444]': dateMonth !== currentMonth,
+                'bg-blue-600 border-none text-white': currentDate === date,
               },
             )}>
             <time dateTime={date}>{day}</time>
@@ -78,13 +83,13 @@ const Day = ({date}: TDayProps) => {
           <Button
             kind="link"
             to={`/day/${date}`}
-            className="p-0 bg-transparent border-none hidden md:group-hover:flex"
+            className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
             startIcon={<ExternalPage size="size-5" />}
           />
         </div>
 
         <Button
-          className="p-0 bg-transparent border-none hidden md:group-hover:flex"
+          className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
           startIcon={<AddIcon size="size-5" />}
           onClick={handleModalOpen}
         />

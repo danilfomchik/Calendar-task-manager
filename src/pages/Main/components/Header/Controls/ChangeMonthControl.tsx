@@ -43,13 +43,17 @@ const ChangeMonthControl = () => {
     <div className="flex max-md:gap-1">
       <Button
         startIcon={<ArrowLeft size="size-4" />}
-        className="p-[8px] rounded-lg md:rounded-none md:rounded-s-lg md:border-r-0"
+        className="p-[8px] rounded-lg md:rounded-none md:rounded-s-lg md:border-r-0 outline-none focus:border-sky-500"
         onClick={() => onChangeMonth(MonthDirection.PREV)}
       />
-      <Button text="today" className="rounded-none text-sm py-[8px] px-[10px] max-md:hidden" onClick={onSwithToToday} />
+      <Button
+        text="today"
+        className="rounded-none text-sm py-[8px] px-[10px] max-md:hidden outline-none focus:border-sky-500"
+        onClick={onSwithToToday}
+      />
       <Button
         endIcon={<ArrowRight size="size-4" />}
-        className="p-[8px] rounded-lg md:rounded-none md:rounded-e-lg md:border-l-0"
+        className="p-[8px] rounded-lg md:rounded-none md:rounded-e-lg md:border-l-0 outline-none focus:border-sky-500"
         onClick={() => onChangeMonth(MonthDirection.NEXT)}
       />
     </div>

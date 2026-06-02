@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {KeyboardEvent} from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectFullDate} from '@/redux/date/selectors';
@@ -27,25 +28,39 @@ const MyCalendarsList = () => {
     }
   };
 
+  const handleOptionKeyDown = (event: KeyboardEvent<HTMLLIElement>, index: number) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      selectCalendar(calendarsList[index].name);
+      return;
+    } else {
+      return; // Ignore other keys
+    }
+  };
+
   return (
     <div className="px-4 py-5">
       <p className="uppercase text-xs text-[#444444] mb-[10px]">My calendars</p>
 
-      <div>
-        {calendarsList?.map(({name, itemColor}) => {
+      <ul role="list">
+        {calendarsList?.map(({name, itemColor}, index) => {
           const isSelected = selectedCalendar === name;
           const count = currentCalendarsData?.[name];
 
           return (
-            <div
+            <li
               key={name}
+              role="option"
+              tabIndex={0}
+              aria-selected={isSelected}
               className={cx(
-                'flex items-center gap-2 py-1 px-2 rounded-lg cursor-pointer transition-all hover:bg-[#0f0f0f] select-none',
+                'flex items-center gap-2 py-1 px-2 rounded-lg cursor-pointer transition-all hover:bg-[#0f0f0f] select-none outline-none focus:bg-[#0f0f0f]',
                 {
                   'bg-[#0f0f0f]': isSelected,
                 },
               )}
-              onClick={() => selectCalendar(name)}>
+              onClick={() => selectCalendar(name)}
+              onKeyDown={e => handleOptionKeyDown(e, index)}>
               <div
                 className="w-[7px] h-[7px] rounded-full"
                 style={{
@@ -55,10 +70,10 @@ const MyCalendarsList = () => {
               <p className="text-gray-400 text-[15px]">{name}</p>
 
               {!!count && <span className="text-[#444444] text-sm/[1] ml-auto">{count}</span>}
-            </div>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 };
