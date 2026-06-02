@@ -1,3 +1,4 @@
+import Divider from '@/components/ui/Divider';
 import {useCalendarContext} from '@/hooks/useCalendarContext';
 
 import MobileDateInfo from '../MobileDateInfo';
@@ -10,11 +11,13 @@ const Calendar = () => {
   return (
     <div
       ref={containerRef}
-      className="flex flex-col w-full items-center overflow-x-auto max-md:pb-8 h-[calc(100vh-72px)]">
-      <div className="flex flex-col w-full min-h-fit md:h-full gap-5 items-center px-0 pt-[30px] max-md:pt-[10px] pb-[20px] max-md:pb-[15px] overflow-hidden">
+      className="flex flex-col w-full items-center overflow-x-auto max-md:pb-5 h-[calc(100vh-72px)]">
+      <div className="flex flex-col w-full min-h-fit md:h-full gap-2 items-center px-3 md:px-0 pt-2 overflow-hidden">
         <WeekDays />
         <DaysList />
       </div>
+
+      <Divider className="mb-4 md:hidden" />
 
       <MobileDateInfo />
     </div>

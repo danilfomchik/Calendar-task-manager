@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        mainBackgroundColor: '#0D1117',
+        mainBackgroundColor: '#111111',
         'secondary-background-color': 'var(--secondary-bg-color)',
         secondaryBackgroundColorHover: '#161c22a3',
         overlay: 'var(--overlay-color)',

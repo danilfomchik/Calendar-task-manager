@@ -1,7 +1,5 @@
 import {useSelector} from 'react-redux';
 
-import Button from '@/components/common/Button';
-import VerticalDots from '@/components/ui/icons/VerticalDots';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
 import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
@@ -12,7 +10,7 @@ import ChangeMonthControl from './ChangeMonthControl';
 import ChangeViewControl from './ChangeViewControl';
 
 const Controls = () => {
-  const {ref: menuRef, refId, handleClose, handleToggle} = useOpeningItem();
+  const {ref: menuRef, refId, handleClose} = useOpeningItem();
   const isMenuOpen = useSelector(selectIsItemCurrentlyOpened(refId));
 
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
@@ -30,12 +28,8 @@ const Controls = () => {
         />
       )}
 
-      <div className="md:hidden">
-        <Button startIcon={<VerticalDots size="size-6" />} onClick={handleToggle} className="text-sm p-[8px]" />
-      </div>
-
       <div
-        className={cx('top-10 right-0 items-center gap-2 md:flex max-md:absolute md:gap-4 hidden z-20', {
+        className={cx('flex items-center gap-2 md:gap-4 z-20', {
           'flex flex-col border border-secondaryBackgroundColor bg-mainBackgroundColor p-4 mt-2 rounded visible':
             isMenuOpen && isMobileScreen,
         })}>
@@ -47,9 +41,14 @@ const Controls = () => {
           <ChangeViewControl />
         </div>
 
-        <div className="self-stretch my-2 border-t border-s border-gray-200 dark:border-neutral-700 max-md:w-[40%] max-md:mx-auto"></div>
+        <div className="max-md:hidden self-stretch my-2 border-t border-s border-gray-200 dark:border-neutral-700 max-md:w-[40%] max-md:mx-auto"></div>
 
-        <AddEvent />
+        <AddEvent
+          showText={!isMobileScreen}
+          className={cx({
+            'max-md:w-8 max-md:h-8 rounded-full max-md:p-0': isMobileScreen,
+          })}
+        />
       </div>
     </div>
   );

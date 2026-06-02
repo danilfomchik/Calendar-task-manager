@@ -11,7 +11,7 @@ const Aside = () => {
         <Link to="/" className="text-lg text-white font-medium">
           Calendar
         </Link>
-        <div className="w-2.5 h-2.5 bg-sky-500 rounded-full"></div>
+        <div className="w-2.5 h-2.5 bg-[#4A6CF7] rounded-full"></div>
       </div>
 
       <MonthSmallCalendar />

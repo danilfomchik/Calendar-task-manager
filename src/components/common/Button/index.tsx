@@ -17,6 +17,7 @@ const Button = ({
 }: TButtonProps) => {
   const btnContent = (
     <button
+      tabIndex={0}
       className={cx(
         'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition duration-500 ease-in-out disabled:hover:border-secondary-background-color disabled:text-secondary-background-color disabled:hover:text-secondary-background-color disabled:cursor-auto',
         buttonVariants[variant],
@@ -42,7 +43,7 @@ const Button = ({
     const {to, ...linkProps} = restProps as TLinkKindProps;
 
     return (
-      <Link to={to} {...linkProps}>
+      <Link to={to} tabIndex={-1} {...linkProps}>
         {btnContent}
       </Link>
     );

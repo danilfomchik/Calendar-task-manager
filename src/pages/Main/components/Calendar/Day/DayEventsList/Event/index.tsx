@@ -25,9 +25,9 @@ const Event = ({event, isDisabled, eventRef}: TEventProps) => {
       <Tooltip
         disabled={isMobileScreen}
         triggerElement={
-          <div
+          <button
             ref={eventRef}
-            className={cx('h-[8px] w-[8px] rounded-full transition-opacity', {
+            className={cx('h-1.5 md:h-[8px] w-1.5 md:w-[8px] rounded-full transition-opacity', {
               'opacity-10 pointer-events-none cursor-not-allowed': isDisabled,
             })}
             style={{background: calendarColor}}
@@ -35,7 +35,7 @@ const Event = ({event, isDisabled, eventRef}: TEventProps) => {
               if (isMobileScreen) return;
 
               handleOpen();
-            }}></div>
+            }}></button>
         }
         className="w-auto h-auto"
         contentClassName={classNames('whitespace-nowrap text-ellipsis overflow-hidden', {

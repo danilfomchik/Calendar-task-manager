@@ -3,7 +3,6 @@ import {useNavigate, useParams} from 'react-router';
 
 import Button from '@/components/common/Button';
 import EventsList from '@/components/common/EventsList';
-import Divider from '@/components/ui/Divider';
 import ArrowLeft from '@/components/ui/icons/ArrowLeft';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {formatDate} from '@/services/dateUtils';
@@ -12,8 +11,10 @@ import AddEvent from '../Main/components/Header/Controls/AddEvent';
 import AIInfo from './components/AIInfo';
 
 // separate branches TODO
+// replace momentjs with date-fns or dayjs
 // add correct selectedDate handling (on refresh) - on separate branch
 // d&d for events list
+// fix for mobile (vh to svh)
 
 const DayPage = () => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const DayPage = () => {
       </header>
 
       <div className="flex max-md:flex-col w-full h-full max-h-[calc(100vh-var(--header-height))] px-0 py-0 overflow-x-hidden">
-        <div className="flex flex-col gap-4 md:flex-[0_0_230px] py-[22px] px-[18px] md:divide-y-[1px] divide-secondary-background-color border-r border-secondary-background-color">
+        <div className="flex flex-col gap-4 md:flex-[0_0_230px] py-4 md:py-[22px] px-[18px] border-r border-secondary-background-color">
           <time dateTime={date} className="flex md:flex-col max-md:items-center justify-between gap-2">
             <div className="max-md:flex items-center justify-center max-md:bg-blue-600 max-md:w-20 max-md:h-20 rounded-full">
               <span className="text-white font-normal text-6xl/[1] md:text-[76px]/[1]">
@@ -78,40 +79,20 @@ const DayPage = () => {
             </div>
           </time>
 
-          {isGroqEnabled && (
-            <div className="flex flex-col gap-3 max-md:hidden">
-              <div className="flex items-center gap-2 pt-4">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#4A6CF7] animate-pulse"></div>
-                <p className="text-xs text-[#444444] uppercase">ai insights</p>
-              </div>
-
-              <AIInfo date={date} />
-            </div>
-          )}
+          {isGroqEnabled && <AIInfo date={date} className="max-md:hidden" />}
         </div>
 
-        <div className="flex flex-col flex-1 overflow-auto px-4 py-5 max-md:pr-0">
+        <div className="flex flex-col flex-1 overflow-auto px-4 py-2 md:py-5">
           <EventsList date={date || ''} showItemControls showEventsCount={showEventsCount} />
         </div>
 
         <div className="flex-col gap-8 overflow-auto px-4 pb-5 hidden max-md:flex max-h-[250px]">
-          {isGroqEnabled && (
-            <div className="flex flex-col gap-3">
-              <Divider>
-                <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#4A6CF7] animate-pulse"></div>
-                  <p className="text-xs text-[#444444] uppercase">ai insights</p>
-                </div>
-              </Divider>
-
-              <AIInfo date={date} />
-            </div>
-          )}
+          {isGroqEnabled && <AIInfo date={date} />}
         </div>
 
         <AddEvent
           date={date}
-          className="hidden max-md:flex self-center max-md:w-[min(50%,250px)] rounded-[100px] h-11 py-3 px-9 mb-6"
+          className="hidden max-md:flex self-center max-md:w-[min(50%,250px)] rounded-[100px] h-11 py-3 px-9 mb-5"
         />
       </div>
     </>
