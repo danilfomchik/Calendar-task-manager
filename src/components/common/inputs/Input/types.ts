@@ -6,5 +6,4 @@ export type TInputProps = {
   value?: string | number | readonly string[] | undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   defaultValue?: string | undefined;
-  focusOnMount?: boolean;
 };
