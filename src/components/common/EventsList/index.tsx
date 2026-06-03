@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import {useLayoutEffect, useRef, useState} from 'react';
 
+import NoEventsMessage from '@/components/ui/NoEventsMessage';
 import {useEventsList} from '@/hooks/useEventsList';
 
 import EventsListItem from './EventsListItem';
@@ -40,13 +41,15 @@ const EventsList = ({
 
   return (
     <>
-      {showEventsCount && <p className="text-sm text-[#444444] uppercase mb-2.5">Events · {events?.length}</p>}
+      {showEventsCount && !!events?.length && (
+        <p className="text-sm text-[#444444] uppercase mb-2.5">Events · {events?.length}</p>
+      )}
 
       <div
         ref={eventsContainerRef}
         className={classNames('flex-1 overflow-y-auto scroll-smooth', {'pr-2.5': hasScroll})}>
         {!events?.length ? (
-          <p>no events</p>
+          <NoEventsMessage />
         ) : (
           <div className="flex flex-col gap-2.5 md:gap-4">
             {events?.map(event => (

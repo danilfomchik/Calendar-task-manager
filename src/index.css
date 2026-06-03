@@ -6,14 +6,11 @@
   --header-height: 77px;
   --secondary-bg-color: #1a1a1a;
   --overlay-color: #1a1a1af0;
-
-  @media (width <= 768px) {
-    --header-height: 57px;
-  }
 }
 
 body {
   min-height: 100vh;
+  min-height: 100svh;
 }
 
 html,
@@ -21,7 +18,9 @@ body,
 #root {
   overflow: hidden;
   height: 100vh;
+  height: 100svh;
   max-height: 100vh;
+  max-height: 100svh;
   width: 100vw;
   @apply bg-[#0a0a0a] text-white box-border;
 }

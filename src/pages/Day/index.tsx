@@ -14,7 +14,6 @@ import AIInfo from './components/AIInfo';
 // replace momentjs with date-fns or dayjs
 // add correct selectedDate handling (on refresh) - on separate branch
 // d&d for events list
-// fix for mobile (vh to svh)
 
 const DayPage = () => {
   const navigate = useNavigate();
@@ -57,7 +56,7 @@ const DayPage = () => {
         </div>
       </header>
 
-      <div className="flex max-md:flex-col w-full h-full max-h-[calc(100vh-var(--header-height))] px-0 py-0 overflow-x-hidden">
+      <div className="flex max-md:flex-col w-full h-full max-h-[calc(100vh-var(--header-height))] max-h-[calc(100svh-var(--header-height))] px-0 py-0 overflow-x-hidden">
         <div className="flex flex-col gap-4 md:flex-[0_0_230px] py-4 md:py-[22px] px-[18px] border-r border-secondary-background-color">
           <time dateTime={date} className="flex md:flex-col max-md:items-center justify-between gap-2">
             <div className="max-md:flex items-center justify-center max-md:bg-blue-600 max-md:w-20 max-md:h-20 rounded-full">

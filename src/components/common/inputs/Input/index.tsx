@@ -1,4 +1,4 @@
-import {ChangeEvent, HTMLProps, useCallback, useEffect, useState} from 'react';
+import {ChangeEvent, HTMLProps, useCallback, useEffect, useRef, useState} from 'react';
 
 import {TInputProps} from './types';
 
@@ -9,9 +9,11 @@ const Input = ({
   onChange,
   type = 'text',
   placeholder = 'Fill in the required field',
+  focusOnMount = false,
   ...restProps
 }: TInputProps & HTMLProps<HTMLInputElement>) => {
   const [currentValue, setCurrentValue] = useState(defaultValue);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,10 +35,19 @@ const Input = ({
     initValue();
   }, [initValue]);
 
+  useEffect(() => {
+    if (focusOnMount) {
+      inputRef.current?.focus({
+        preventScroll: true,
+      });
+    }
+  }, [focusOnMount]);
+
   return (
     <>
       <input
         {...field}
+        ref={inputRef}
         value={currentValue}
         onChange={handleChange}
         type={type}
