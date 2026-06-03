@@ -23,11 +23,15 @@ const MobileDateInfo = () => {
               <span>{formatDate(moment(selectedDate), 'MMMM')}</span>
               <span>{formatDate(moment(selectedDate), 'YYYY')}</span>
             </div>
-            ·
-            <div className="flex items-center gap-1">
-              <span>{events?.length}</span>
-              <span>Events</span>
-            </div>
+            {!!events?.length && (
+              <>
+                ·
+                <div className="flex items-center gap-1">
+                  <span>{events?.length}</span>
+                  <span>Events</span>
+                </div>
+              </>
+            )}
           </div>
 
           <Button

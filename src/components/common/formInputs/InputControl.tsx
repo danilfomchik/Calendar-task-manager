@@ -9,12 +9,14 @@ type InputControlProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>;
   defaultValue?: string;
+  focusOnMount?: boolean;
 };
 
 const InputControl = ({
   name,
   control,
   defaultValue = '',
+  focusOnMount = false,
   ...restProps
 }: HTMLProps<HTMLInputElement> & InputControlProps) => {
   const {
@@ -39,6 +41,7 @@ const InputControl = ({
         onChange={field.onChange}
         value={field.value}
         aria-invalid={errorProps.error}
+        focusOnMount={focusOnMount}
         {...restProps}
       />
       {errorProps.error && (
