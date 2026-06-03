@@ -9,6 +9,7 @@ import {formatDate} from '@/services/dateUtils';
 
 import AddEvent from '../Main/components/Header/Controls/AddEvent';
 import AIInfo from './components/AIInfo';
+import './index.css';
 
 // separate branches TODO
 // replace momentjs with date-fns or dayjs
@@ -56,7 +57,7 @@ const DayPage = () => {
         </div>
       </header>
 
-      <div className="flex max-md:flex-col w-full h-[calc(100svh-var(--header-height))] h-[calc(100vh-var(--header-height))] px-0 py-0 overflow-x-hidden">
+      <div className="day-content">
         <div className="flex flex-col gap-4 md:flex-[0_0_230px] py-4 md:py-[22px] px-[18px] border-r border-secondary-background-color">
           <time dateTime={date} className="flex md:flex-col max-md:items-center justify-between gap-2">
             <div className="max-md:flex items-center justify-center max-md:bg-blue-600 max-md:w-20 max-md:h-20 rounded-full">
