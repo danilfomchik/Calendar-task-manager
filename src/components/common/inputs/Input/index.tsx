@@ -9,7 +9,6 @@ const Input = ({
   onChange,
   type = 'text',
   placeholder = 'Fill in the required field',
-  focusOnMount = false,
   ...restProps
 }: TInputProps & HTMLProps<HTMLInputElement>) => {
   const [currentValue, setCurrentValue] = useState(defaultValue);
@@ -34,14 +33,6 @@ const Input = ({
   useEffect(() => {
     initValue();
   }, [initValue]);
-
-  useEffect(() => {
-    if (focusOnMount) {
-      inputRef.current?.focus({
-        preventScroll: true,
-      });
-    }
-  }, [focusOnMount]);
 
   return (
     <>

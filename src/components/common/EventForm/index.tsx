@@ -152,7 +152,7 @@ const EventForm = ({actionType = FormActionType.create, formTitle, event, date, 
             )}
 
             <div className="w-full flex flex-col gap-2">
-              <InputControl focusOnMount={true} control={control} name="eventTitle" placeholder="Enter required name" />
+              <InputControl autoFocus control={control} name="eventTitle" placeholder="Enter required name" />
               <TextareaControl control={control} name="eventDescription" placeholder="Enter optional description" />
             </div>
 

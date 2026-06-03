@@ -47,7 +47,7 @@ const EventsList = ({
 
       <div
         ref={eventsContainerRef}
-        className={classNames('flex-1 overflow-y-auto scroll-smooth', {'pr-2.5': hasScroll})}>
+        className={classNames('flex-1 overflow-y-auto scroll-smooth', {'pr-2.5': hasScroll && !!events?.length})}>
         {!events?.length ? (
           <NoEventsMessage />
         ) : (
