@@ -57,7 +57,9 @@ const DayEventsList = ({events}: TDayEventsListProps) => {
 
   return (
     <div className="flex items-center justify-between relative w-full">
+      {/* TODO: investigate how to optimize it */}
       <HiddenEventsList events={events} eventsContainerRef={eventsContainerRef} eventsRefs={eventsRefs} />
+
       <div
         ref={eventsContainerRef}
         className={cx('w-full flex items-center max-md:justify-center gap-[9px] max-sm:gap-1.5 h-4', {

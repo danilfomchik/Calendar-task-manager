@@ -1,29 +1,32 @@
 import {memo, useCallback} from 'react';
 
 import Button from '@/components/common/Button';
-import EventForm from '@/components/common/EventForm';
-import {FormActionType} from '@/components/common/EventForm/types';
-import Modal from '@/components/common/Modal';
 import BarsIcon from '@/components/ui/icons/BarsIcon';
 import DeleteIcon from '@/components/ui/icons/DeleteIcon';
 import EditIcon from '@/components/ui/icons/EditIcon';
-import {useOpeningItem} from '@/hooks/useOpeningItem';
-import {deleteEvent} from '@/redux/events/eventsSlice';
+import {deleteEvent, setEventFormData} from '@/redux/events/eventsSlice';
+import {onOpenItem} from '@/redux/overflow/overflowSlice';
 import {useAppDispatch} from '@/redux/store';
 import {getCalendarColor} from '@/services/calendars';
+import {EVENT_FORM_ID} from '@/services/constants';
 import {cx} from '@/services/utils';
+import {FormActionType} from '@/types/eventFormTypes';
 
 import {IEventsListItemProps} from './types';
 
 const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemProps) => {
   const dispatch = useAppDispatch();
-  const {ref, isOpen, handleClose, handleOpen} = useOpeningItem();
 
   const calendarColor = getCalendarColor(event.eventCalendar);
 
   const handleDeleteEvent = useCallback(() => {
     dispatch(deleteEvent(event));
   }, [dispatch, event]);
+
+  const handleOpen = () => {
+    dispatch(onOpenItem(EVENT_FORM_ID));
+    dispatch(setEventFormData({actionType: FormActionType.edit, event}));
+  };
 
   return (
     <>
@@ -68,17 +71,6 @@ const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemPr
 
         <BarsIcon className="size-4 text-gray-400 cursor-pointer" />
       </div>
-
-      {isOpen && (
-        <Modal refItem={ref} onClose={handleClose}>
-          <EventForm
-            actionType={FormActionType.edit}
-            formTitle="Edit event form"
-            event={event}
-            handleModalClose={handleClose}
-          />
-        </Modal>
-      )}
     </>
   );
 };

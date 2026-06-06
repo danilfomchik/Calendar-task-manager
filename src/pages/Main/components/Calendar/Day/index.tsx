@@ -5,19 +5,19 @@ import {useSelector} from 'react-redux';
 import {useSearchParams} from 'react-router';
 
 import Button from '@/components/common/Button';
-import EventForm from '@/components/common/EventForm';
-import Modal from '@/components/common/Modal';
 import AddIcon from '@/components/ui/icons/AddIcon';
 import ExternalPage from '@/components/ui/icons/ExternalPage';
 import {useEventsList} from '@/hooks/useEventsList';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
-import {useOpeningItem} from '@/hooks/useOpeningItem';
 import {setSelectedDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectSelectedDate} from '@/redux/date/selectors';
+import {setEventFormData} from '@/redux/events/eventsSlice';
+import {onOpenItem} from '@/redux/overflow/overflowSlice';
 import {useAppDispatch} from '@/redux/store';
-import {CURRENT_DATE_PARAMS_KEY} from '@/services/constants';
+import {CURRENT_DATE_PARAMS_KEY, EVENT_FORM_ID} from '@/services/constants';
 import {formatDate, getDate} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
+import {FormActionType} from '@/types/eventFormTypes';
 
 import DayEventsList from './DayEventsList';
 import {TDayProps} from './types';
@@ -25,7 +25,6 @@ import {TDayProps} from './types';
 const Day = ({date}: TDayProps) => {
   const [, setSearchParams] = useSearchParams();
 
-  const {ref, isOpen, handleClose: handleModalClose, handleOpen: handleModalOpen} = useOpeningItem();
   const dispatch = useAppDispatch();
 
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
@@ -48,6 +47,11 @@ const Day = ({date}: TDayProps) => {
 
     dispatch(setSelectedDate(isCurrentDate ? currentDate : date));
     setSearchParams(isCurrentDate ? '' : `?${CURRENT_DATE_PARAMS_KEY}=${date}`);
+  };
+
+  const handleOpen = () => {
+    dispatch(onOpenItem(EVENT_FORM_ID));
+    dispatch(setEventFormData({actionType: FormActionType.create, date}));
   };
 
   return (
@@ -91,17 +95,11 @@ const Day = ({date}: TDayProps) => {
         <Button
           className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
           startIcon={<AddIcon size="size-5" />}
-          onClick={handleModalOpen}
+          onClick={handleOpen}
         />
       </div>
 
       {!!events?.length && <DayEventsList events={events || []} />}
-
-      {isOpen && (
-        <Modal refItem={ref} onClose={handleModalClose}>
-          <EventForm formTitle="Create event form" handleModalClose={handleModalClose} date={date} />
-        </Modal>
-      )}
     </motion.div>
   );
 };

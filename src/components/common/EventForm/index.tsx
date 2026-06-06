@@ -19,12 +19,13 @@ import {useAppDispatch} from '@/redux/store';
 import {defaultCalendars} from '@/services/constants';
 import {createDate, formatDate, getDays, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
 import {createEventObj, editEventObj} from '@/services/eventUtils';
-import {CalendarsNames} from '@/services/types';
+import {FormActionType} from '@/types/eventFormTypes';
+import {CalendarsNames} from '@/types/types';
 
 import {validation} from './form';
-import {FormActionType, TEventFormProps, TFormValues} from './types';
+import {TEventFormProps, TFormValues} from './types';
 
-const EventForm = ({actionType = FormActionType.create, formTitle, event, date, handleModalClose}: TEventFormProps) => {
+const EventForm = ({actionType = FormActionType.create, event, date, handleModalClose}: TEventFormProps) => {
   const dispatch = useAppDispatch();
   const year = useSelector(selectYear);
   const month = useSelector(selectMonth);
@@ -125,7 +126,9 @@ const EventForm = ({actionType = FormActionType.create, formTitle, event, date, 
         onClick={handleModalClose}
       />
 
-      <h3 className="text-lg font-bold p-3 text-center">{formTitle}</h3>
+      <h3 className="text-lg font-bold p-3 text-center">
+        {actionType === FormActionType.edit ? 'Edit Event' : 'Create event'}
+      </h3>
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
