@@ -11,11 +11,6 @@ import AddEvent from '../Main/components/Header/Controls/AddEvent';
 import AIInfo from './components/AIInfo';
 import './index.css';
 
-// separate branches TODO
-// replace momentjs with date-fns or dayjs
-// add correct selectedDate handling (on refresh) - on separate branch
-// d&d for events list
-
 const DayPage = () => {
   const navigate = useNavigate();
   const {date} = useParams<{date: string}>();
