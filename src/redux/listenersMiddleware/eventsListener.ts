@@ -1,6 +1,6 @@
 import {isAnyOf} from '@reduxjs/toolkit';
 
-import {StorageKeys} from '@/services/types';
+import {StorageKeys} from '@/types/types';
 
 import {addEvent, deleteEvent, editEvent} from '../events/eventsSlice';
 import {TEventsById} from '../events/types';

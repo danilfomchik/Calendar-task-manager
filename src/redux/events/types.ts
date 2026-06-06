@@ -1,4 +1,5 @@
-import {CalendarsNames} from '@/services/types';
+import {FormActionType} from '@/types/eventFormTypes';
+import {CalendarsNames} from '@/types/types';
 
 export type TId = string;
 
@@ -22,4 +23,9 @@ export type TEventsByDate = {
 export type TEventsState = {
   eventsById: TEventsById;
   eventsByDate: TEventsByDate;
+  eventFormData: {
+    actionType: FormActionType;
+    event?: TEvent;
+    date?: string;
+  } | null;
 };

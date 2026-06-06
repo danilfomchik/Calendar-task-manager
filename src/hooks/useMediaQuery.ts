@@ -1,4 +1,4 @@
-import {TScreenSizes} from '@/services/types';
+import {TScreenSizes} from '@/types/types';
 
 import {useScreenSize} from './useScreenSize';
 

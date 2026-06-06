@@ -1,29 +1,28 @@
 import Button from '@/components/common/Button';
-import EventForm from '@/components/common/EventForm';
-import Modal from '@/components/common/Modal';
 import PlusIcon from '@/components/ui/icons/PlusIcon';
-import {useOpeningItem} from '@/hooks/useOpeningItem';
+import {setEventFormData} from '@/redux/events/eventsSlice';
+import {onOpenItem} from '@/redux/overflow/overflowSlice';
+import {useAppDispatch} from '@/redux/store';
+import {EVENT_FORM_ID} from '@/services/constants';
 import {cx} from '@/services/utils';
+import {FormActionType} from '@/types/eventFormTypes';
 
 const AddEvent = ({date, showText = true, className}: {date?: string; showText?: boolean; className?: string}) => {
-  const {ref, isOpen, handleClose, handleOpen} = useOpeningItem();
+  const dispatch = useAppDispatch();
+
+  const handleOpen = () => {
+    dispatch(onOpenItem(EVENT_FORM_ID));
+    dispatch(setEventFormData({actionType: FormActionType.create, date}));
+  };
 
   return (
-    <>
-      <Button
-        variant="secondary"
-        text={showText ? 'Add event' : undefined}
-        startIcon={<PlusIcon size="size-4" />}
-        onClick={handleOpen}
-        className={cx('text-sm py-[8px] px-[12px] max-md:w-full', className)}
-      />
-
-      {isOpen && (
-        <Modal refItem={ref} onClose={handleClose}>
-          <EventForm formTitle="Create event form" handleModalClose={handleClose} date={date} />
-        </Modal>
-      )}
-    </>
+    <Button
+      variant="secondary"
+      text={showText ? 'Add event' : undefined}
+      startIcon={<PlusIcon size="size-4" />}
+      onClick={handleOpen}
+      className={cx('text-sm py-[8px] px-[12px] max-md:w-full', className)}
+    />
   );
 };
 

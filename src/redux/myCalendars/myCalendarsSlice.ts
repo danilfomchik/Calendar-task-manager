@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import {defaultCalendars} from '@/services/constants';
 import {formatDate} from '@/services/dateUtils';
-import {CalendarsNames, TCalendarsList} from '@/services/types';
+import {CalendarsNames, TCalendarsList} from '@/types/types';
 
 import {addEvent, deleteEvent, editEvent} from '../events/eventsSlice';
 import {SliceNames} from '../types';

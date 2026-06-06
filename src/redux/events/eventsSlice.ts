@@ -1,10 +1,10 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 
-import {StorageKeys} from '@/services/types';
 import {getLocalStoredValues} from '@/services/utils';
+import {StorageKeys} from '@/types/types';
 
 import {SliceNames} from '../types';
-import {TEvent, TEventsById, TEventsState} from './types';
+import {TEvent, TEventsState} from './types';
 
 const reducers = {
   addEvent: (state: TEventsState, action: PayloadAction<TEvent>) => {
@@ -63,8 +63,11 @@ const reducers = {
     state.eventsByDate[eventToDelete.date] =
       filteredOldDateEvents && filteredOldDateEvents.length > 0 ? filteredOldDateEvents : undefined;
   },
-  setEventsById: (state: TEventsState, action: PayloadAction<TEventsById>) => {
+  setEventsById: (state: TEventsState, action: PayloadAction<TEventsState['eventsById']>) => {
     state.eventsById = action.payload;
+  },
+  setEventFormData: (state: TEventsState, action: PayloadAction<TEventsState['eventFormData']>) => {
+    state.eventFormData = action.payload;
   },
 };
 
@@ -74,6 +77,7 @@ const initialEventsByDate = getLocalStoredValues(StorageKeys.eventsByDate, {});
 const initialState: TEventsState = {
   eventsById: initialEventsById,
   eventsByDate: initialEventsByDate,
+  eventFormData: null,
 };
 
 const eventsSlice = createSlice({
@@ -82,5 +86,5 @@ const eventsSlice = createSlice({
   reducers,
 });
 
-export const {addEvent, editEvent, deleteEvent, setEventsById} = eventsSlice.actions;
+export const {addEvent, editEvent, deleteEvent, setEventsById, setEventFormData} = eventsSlice.actions;
 export default eventsSlice;

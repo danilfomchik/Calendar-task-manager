@@ -1,5 +1,5 @@
-import {StorageKeys} from '@/services/types';
 import {getLocalStoredValues} from '@/services/utils';
+import {StorageKeys} from '@/types/types';
 
 import {setEventsById} from '../events/eventsSlice';
 import {TEventsById} from '../events/types';

@@ -7,8 +7,8 @@ import {setCalendarsMap} from '@/redux/myCalendars/myCalendarsSlice';
 import {EventsCountChangeKind} from '@/redux/myCalendars/types';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate} from '@/services/dateUtils';
-import {CalendarsNames, StorageKeys} from '@/services/types';
 import {getLocalStoredValues} from '@/services/utils';
+import {CalendarsNames, StorageKeys} from '@/types/types';
 
 const DataInitWrapper = () => {
   const dispatch = useAppDispatch();

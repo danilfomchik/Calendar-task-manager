@@ -1,6 +1,8 @@
-const Loading = () => {
+import {cx} from '@/services/utils';
+
+const Loading = ({className = ''}) => {
   return (
-    <div className="flex items-center justify-center self-center w-8 h-8">
+    <div className={cx('flex items-center justify-center self-center w-8 h-8', className)}>
       <div className="relative inline-flex items-center justify-center w-full h-full">
         {/* Background track - light blue full circle */}
         <svg className="absolute" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

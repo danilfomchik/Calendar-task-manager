@@ -1,14 +1,9 @@
 import {TEvent} from '@/redux/events/types';
-import {CalendarsNames} from '@/services/types';
-
-export enum FormActionType {
-  edit = 'edit',
-  create = 'create',
-}
+import {FormActionType} from '@/types/eventFormTypes';
+import {CalendarsNames} from '@/types/types';
 
 export type TEventFormProps = {
   actionType?: FormActionType;
-  formTitle: string;
   event?: TEvent;
   date?: string;
   handleModalClose: () => void;

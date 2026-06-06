@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import {TScreenSizes} from '@/services/types';
+import {TScreenSizes} from '@/types/types';
 
 export const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState<TScreenSizes>('');
