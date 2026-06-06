@@ -7,8 +7,8 @@ import {setSelectedCalendar} from '@/redux/myCalendars/myCalendarsSlice';
 import {selectCalendarsList, selectCalendarsMap, selectSelectedCalendar} from '@/redux/myCalendars/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate} from '@/services/dateUtils';
-import {CalendarsNames} from '@/services/types';
 import {cx} from '@/services/utils';
+import {CalendarsNames} from '@/types/types';
 
 const MyCalendarsList = () => {
   const dispatch = useAppDispatch();

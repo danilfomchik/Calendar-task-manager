@@ -2,7 +2,7 @@ import {uid} from 'uid';
 
 import {TEvent} from '@/redux/events/types';
 
-import {CalendarsNames} from './types';
+import {CalendarsNames} from '../types/types';
 
 type EventAttribs = {
   title: string;

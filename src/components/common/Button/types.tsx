@@ -1,7 +1,7 @@
 import {ButtonHTMLAttributes, HTMLAttributes, ReactElement} from 'react';
 import {LinkProps} from 'react-router';
 
-import {Nullable} from '@/services/types';
+import {Nullable} from '@/types/types';
 
 export enum ButtonVariants {
   primary = 'primary',

@@ -1,7 +1,7 @@
 import moment, {Moment, MomentInput} from 'moment';
 
+import {MonthParts} from '../types/types';
 import {TOTAL_DAYS_IN_MONTH} from './constants';
-import {MonthParts} from './types';
 
 export const getDate = (date: MomentInput) => {
   return moment(date);

@@ -1,4 +1,4 @@
-import {CalendarsNames} from '@/services/types';
+import {CalendarsNames} from '@/types/types';
 
 import {defaultCalendars} from './constants';
 

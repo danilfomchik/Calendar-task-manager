@@ -1,4 +1,4 @@
-import {CalendarsNames, Nullable, TCalendarsList} from '@/services/types';
+import {CalendarsNames, Nullable, TCalendarsList} from '@/types/types';
 
 export type TMyCalendarsState = {
   calendarsList: TCalendarsList;

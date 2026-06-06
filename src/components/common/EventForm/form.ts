@@ -1,6 +1,6 @@
 import {mixed, object, string} from 'yup';
 
-import {CalendarsNames} from '@/services/types';
+import {CalendarsNames} from '@/types/types';
 
 export const validation = object().shape({
   eventTitle: string()

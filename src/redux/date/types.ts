@@ -1,4 +1,4 @@
-import {Nullable} from '@/services/types';
+import {Nullable} from '@/types/types';
 
 type TMonth = Nullable<string>;
 type TYear = Nullable<string>;

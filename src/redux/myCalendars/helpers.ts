@@ -1,5 +1,5 @@
 import {defaultCalendars} from '@/services/constants';
-import {CalendarsNames} from '@/services/types';
+import {CalendarsNames} from '@/types/types';
 
 import {EventsCountChangeKind} from './types';
 

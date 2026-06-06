@@ -5,7 +5,7 @@ import Error from '@/components/layout/Error';
 import MainLayout from '@/components/layout/MainLayout';
 import {DayPage, MainPage} from '@/pages';
 import NotFound from '@/pages/NotFound';
-import {RouterPaths} from '@/services/types';
+import {RouterPaths} from '@/types/types';
 
 export const router = createBrowserRouter([
   {
