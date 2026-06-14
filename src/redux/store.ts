@@ -8,6 +8,7 @@ import {listenerMiddleware} from './listenerMiddleware';
 import './listenersMiddleware';
 import myCalendarsSlice from './myCalendars/myCalendarsSlice';
 import overflowSlice from './overflow/overflowSlice';
+import sidebarSlice from './sidebar/sidebarSlice';
 import {PreloadedState, SliceNames} from './types';
 
 const combinedReducer = combineReducers({
@@ -16,6 +17,7 @@ const combinedReducer = combineReducers({
   [SliceNames.overflowSlice]: overflowSlice.reducer,
   [SliceNames.myCalendarsSlice]: myCalendarsSlice.reducer,
   [holidaysApi.reducerPath]: holidaysApi.reducer,
+  [SliceNames.sidebarSlice]: sidebarSlice.reducer,
 });
 
 export const setupStore = (preloadedState?: PreloadedState) => {

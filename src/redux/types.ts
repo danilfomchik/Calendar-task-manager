@@ -7,4 +7,5 @@ export enum SliceNames {
   dateSlice = 'dateData',
   overflowSlice = 'overflowData',
   myCalendarsSlice = 'myCalendarsData',
+  sidebarSlice = 'sidebarData',
 }

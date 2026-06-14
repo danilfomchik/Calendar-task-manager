@@ -1,31 +1,44 @@
 import moment from 'moment';
+import {useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router';
 
 import Button from '@/components/common/Button';
 import EventsList from '@/components/common/EventsList';
+import OpenSidebarBtn from '@/components/common/OpenSidebarBtn';
 import ArrowLeft from '@/components/ui/icons/ArrowLeft';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
+import {selectIsSidebarOpen} from '@/redux/sidebar/selectors';
 import {formatDate} from '@/services/dateUtils';
+import {cx} from '@/services/utils';
 
 import AddEvent from '../Main/components/Header/Controls/AddEvent';
 import AIInfo from './components/AIInfo';
 import './index.css';
 
+const isGroqEnabled = import.meta.env.VITE_REACT_APP_IS_GROQ_ENABLED === 'true';
+
 const DayPage = () => {
   const navigate = useNavigate();
   const {date} = useParams<{date: string}>();
   const showEventsCount = useMediaQuery({size: 'sm', direction: 'to'});
+  const isSidebarOpen = useSelector(selectIsSidebarOpen);
 
   const handleReturn = () => {
     navigate(-1);
   };
 
-  const isGroqEnabled = import.meta.env.VITE_REACT_APP_IS_GROQ_ENABLED === 'true';
-
   return (
     <>
-      <header className="h-header-height sticky top-0 z-50 px-3 md:px-5 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color">
-        <div className="flex items-center justify-between gap-4 h-full">
+      <header
+        className={cx(
+          'flex items-center gap-0 h-header-height sticky top-0 z-50 px-3 md:px-5 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color transition-all duration-300 ease-in-out',
+          {
+            'gap-5': !isSidebarOpen,
+          },
+        )}>
+        <OpenSidebarBtn className="-translate-x-[300px] w-0" openClassName="translate-x-0 w-[20px]" />
+
+        <div className="flex items-center justify-between gap-4 flex-1 h-full">
           <div className="flex items-center gap-4 md:divide-x-[1px] divide-[#1e1e1e]">
             <Button
               text="Back"

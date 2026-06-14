@@ -7,8 +7,10 @@ import {useOpeningItem} from '@/hooks/useOpeningItem';
 import {setEventFormData} from '@/redux/events/eventsSlice';
 import {selectEventFormData} from '@/redux/events/selectors';
 import {selectOpenedItems} from '@/redux/overflow/selectors';
+import {selectIsSidebarOpen} from '@/redux/sidebar/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {EVENT_FORM_ID} from '@/services/constants';
+import {cx} from '@/services/utils';
 
 import Aside from '../Aside';
 import DataInitWrapper from '../DataInitWrapper';
@@ -32,6 +34,7 @@ const MainLayout = () => {
   const dispatch = useAppDispatch();
   const openedItems = useSelector(selectOpenedItems);
   const eventFormData = useSelector(selectEventFormData);
+  const isSidebarOpen = useSelector(selectIsSidebarOpen);
 
   const {ref, isOpen, handleClose: handleModalClose} = useOpeningItem(EVENT_FORM_ID);
 
@@ -57,7 +60,10 @@ const MainLayout = () => {
       <DataInitWrapper />
 
       <Aside />
-      <main className="h-full flex-1 overflow-y-auto">
+      <main
+        className={cx('h-full flex-1 overflow-y-auto ml-0 transition-all duration-300 ease-in-out', {
+          'md:ml-[240px]': isSidebarOpen,
+        })}>
         <Suspense fallback={<Loading />}>
           <Outlet />
         </Suspense>

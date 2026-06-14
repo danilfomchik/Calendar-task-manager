@@ -5,7 +5,7 @@ import {selectFullDate, selectMonth, selectYear} from '@/redux/date/selectors';
 import {formatDate, generateDatesArray, getDate, getWeekDays} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 
-const MonthSmallCalendar = () => {
+const MonthSmallCalendar = ({className = ''}) => {
   const fullDate = useSelector(selectFullDate);
   const year = useSelector(selectYear);
   const month = useSelector(selectMonth);
@@ -14,7 +14,7 @@ const MonthSmallCalendar = () => {
   const weekDays = getWeekDays();
 
   return (
-    <div className="px-4 py-5">
+    <div className={cx('px-4 py-5', className)}>
       <p className="text-[15px] text-[#444444] uppercase mb-[10px] pl-1.5">
         {month} {year}
       </p>
