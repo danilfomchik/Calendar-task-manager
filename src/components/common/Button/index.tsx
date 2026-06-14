@@ -1,3 +1,4 @@
+import {memo} from 'react';
 import {Link} from 'react-router';
 
 import {cx} from '@/services/utils';
@@ -52,4 +53,4 @@ const Button = ({
   return btnContent;
 };
 
-export default Button;
+export default memo(Button);

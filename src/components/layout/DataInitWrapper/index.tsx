@@ -1,10 +1,12 @@
 import moment from 'moment';
-import {useEffect, useMemo} from 'react';
+import {useEffect, useLayoutEffect, useMemo} from 'react';
 
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {TEvent} from '@/redux/events/types';
 import {handleEventsCountChangeInMap} from '@/redux/myCalendars/helpers';
 import {setCalendarsMap} from '@/redux/myCalendars/myCalendarsSlice';
 import {EventsCountChangeKind} from '@/redux/myCalendars/types';
+import {setIsOpenSidebar} from '@/redux/sidebar/sidebarSlice';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate} from '@/services/dateUtils';
 import {getLocalStoredValues} from '@/services/utils';
@@ -12,6 +14,7 @@ import {CalendarsNames, StorageKeys} from '@/types/types';
 
 const DataInitWrapper = () => {
   const dispatch = useAppDispatch();
+  const isMobileScreen = useMediaQuery({size: 'md', direction: 'to'});
 
   const calendarsMap = useMemo(() => {
     let eventsCalendarsMap = {} as Record<string, Record<CalendarsNames, number>>;
@@ -40,6 +43,10 @@ const DataInitWrapper = () => {
   useEffect(() => {
     dispatch(setCalendarsMap(calendarsMap));
   }, [calendarsMap, dispatch]);
+
+  useLayoutEffect(() => {
+    dispatch(setIsOpenSidebar(!isMobileScreen));
+  }, [dispatch, isMobileScreen]);
 
   return null;
 };
