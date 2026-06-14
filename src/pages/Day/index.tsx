@@ -31,12 +31,12 @@ const DayPage = () => {
     <>
       <header
         className={cx(
-          'flex items-center gap-0 h-header-height sticky top-0 z-50 px-3 md:px-5 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color transition-all duration-300 ease-in-out',
+          'flex items-center gap-5 md:gap-0 h-header-height sticky top-0 z-50 px-3 md:px-5 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color transition-all duration-300 ease-in-out',
           {
-            'gap-5': !isSidebarOpen,
+            'md:gap-5': !isSidebarOpen,
           },
         )}>
-        <OpenSidebarBtn className="-translate-x-[300px] w-0" openClassName="translate-x-0 w-[20px]" />
+        <OpenSidebarBtn className="md:-translate-x-[300px] md:w-0" openClassName="md:translate-x-0 md:w-[20px]" />
 
         <div className="flex items-center justify-between gap-4 flex-1 h-full">
           <div className="flex items-center gap-4 md:divide-x-[1px] divide-[#1e1e1e]">
