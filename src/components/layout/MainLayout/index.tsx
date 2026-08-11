@@ -19,8 +19,8 @@ const Modal = lazy(() => import('@/components/common/Modal'));
 const EventForm = lazy(() => import('@/components/common/EventForm'));
 
 // separate branches TODO
-// add ability to open/close sidebar (jira reference)
 // replace react.context for calendar (check right side of the body instead) -> add custom hook and use in tooltip and popover
+// check "return back" btn
 // popover for event details for desktop
 // Firebase integration for events storage and sign in/up (google, email)
 // add correct selectedDate handling (on refresh) - on separate branch

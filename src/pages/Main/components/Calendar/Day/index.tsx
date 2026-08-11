@@ -64,9 +64,9 @@ const Day = ({date}: TDayProps) => {
       animate={{opacity: 1}}
       transition={{duration: 0.5, ease: 'easeOut'}}
       className={cx(
-        'group flex flex-col relative justify-between [&:not(:nth-child(7n))]:border-r border-b border-secondary-background-color p-1 lg:p-3 cursor-pointer transition-all md:hover:bg-secondaryBackgroundColorHover',
+        'group flex flex-col relative justify-between [&:not(:nth-child(7n))]:border-r border-b border-secondary-background-color p-1 lg:p-3 cursor-pointer transition-all md:hover:bg-[#141414]',
         {
-          'bg-mainBackgroundColor': dateMonth !== currentMonth,
+          'bg-mainBackgroundColor md:hover:bg-[#1A1A1A]': dateMonth !== currentMonth,
         },
         'max-md:bg-transparent max-md:border-none max-md:items-center',
       )}>

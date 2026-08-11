@@ -2,8 +2,8 @@ import CalendarIcon from './CalendarIcon';
 
 const NoEventsMessage = () => {
   return (
-    <div className="flex flex-col items-center gap-3 pt-8">
-      <CalendarIcon className="size-24" />
+    <div className="flex flex-col items-center gap-3 sm:pt-8">
+      <CalendarIcon className="size-20 md:size-24" />
 
       <div className="text-center max-w-[80%]">
         <p className="uppercase text-xl md:text-2xl font-bold">a clear day</p>
