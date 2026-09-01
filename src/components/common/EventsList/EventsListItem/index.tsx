@@ -33,11 +33,16 @@ const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemPr
       <div
         className={cx(
           'relative flex items-center gap-6 max-md:gap-4 rounded-lg px-3 md:px-4 py-2 md:py-3 transition-opacity overflow-auto',
+          'overflow-hidden isolate bg-[linear-gradient(to_right,rgb(from_var(--calendar-color)_r_g_b/0.15),#0a0a0a)] border-l-2 border-solid border-(--calendar-color)',
           {
             'opacity-10 pointer-events-none cursor-not-allowed select-none': isDisabled,
           },
         )}
-        style={{background: '#111', borderLeft: `2px solid ${calendarColor}`}}>
+        style={
+          {
+            '--calendar-color': calendarColor,
+          } as React.CSSProperties
+        }>
         <div className="flex-1">
           <h4 className="text-base md:text-lg font-semibold break-all">{event.title}</h4>
 

@@ -21,7 +21,7 @@ const AddEvent = ({date, showText = true, className}: {date?: string; showText?:
       text={showText ? 'Add event' : undefined}
       startIcon={<PlusIcon size="size-4" />}
       onClick={handleOpen}
-      className={cx('text-sm py-[8px] px-[12px] max-md:w-full', className)}
+      className={cx('text-sm py-2 px-3 max-md:w-full', className)}
     />
   );
 };

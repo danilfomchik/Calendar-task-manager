@@ -1,11 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --header-height: 77px;
+@theme {
+  --height-header: 77px;
   --secondary-bg-color: #1a1a1a;
   --overlay-color: #1a1a1af0;
+
+  --color-mainBackgroundColor: #111111;
+  --color-secondary-background-color: var(--secondary-bg-color);
+  --color-secondaryBackgroundColorHover: #161c22a3;
+  --color-overlay: var(--overlay-color);
+
+  --height-header: 77px;
+
+  --grid-template-columns-auto-fill: repeat(auto-fill, minmax(330px, 1fr));
 }
 
 body {

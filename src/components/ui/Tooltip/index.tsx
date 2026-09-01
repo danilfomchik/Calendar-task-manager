@@ -50,7 +50,7 @@ const Tooltip = ({
         <div
           ref={tooltipRef}
           className={classNames(
-            `max-w-[100px] max-h-[200px] overflow-auto absolute bottom-[calc(100%+6px)] transition-all duration-200 ease-in-out px-3 py-1 rounded-md border bg-black text-sm z-10 opacity-100`,
+            `max-w-25 max-h-50 overflow-auto absolute bottom-[calc(100%+6px)] transition-all duration-200 ease-in-out px-3 py-1 rounded-md border bg-black text-sm z-10 opacity-100`,
             contentClassName,
           )}>
           {children}

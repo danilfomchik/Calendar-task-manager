@@ -6,7 +6,13 @@
   "trailingComma": "all",
   "arrowParens": "avoid",
   "printWidth": 120,
-  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss",
+    "prettier-plugin-tailwindcss-canonical-classes"
+  ],
+  "tailwindStylesheet": "./src/index.css",
+  "tailwindcssCanonicalStylesheet": "./src/index.css",
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
     "@api",

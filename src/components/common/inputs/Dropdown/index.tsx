@@ -108,13 +108,13 @@ const Dropdown = ({
 
               handleClose();
             }}
-            className="fixed w-full h-full inset-0 z-[100]"
+            className="fixed w-full h-full inset-0 z-100"
           />
 
           <ul
             role="listbox"
             aria-label={field?.name ? `${field.name} dropdown list` : 'Dropdown list'}
-            className="absolute mt-1 w-full bg-mainBackgroundColor border border-secondary-background-color shadow-lg max-h-[220px] rounded-md text-sm ring-opacity-5 overflow-auto focus:outline-none z-[101]">
+            className="absolute mt-1 w-full bg-mainBackgroundColor border border-secondary-background-color shadow-lg max-h-55 rounded-md text-sm ring-opacity-5 overflow-auto focus:outline-none z-101">
             {options.map((option, index) => (
               <li
                 id={`list-item-${index}`}

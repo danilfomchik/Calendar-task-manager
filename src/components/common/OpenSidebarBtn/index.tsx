@@ -19,7 +19,7 @@ const OpenSidebarBtn = ({className = '', openClassName = ''}) => {
 
   return (
     <Button
-      className={cx('p-0 bg-transparent border-none transition-all duration-300 ease-in-out z-[60]', className, {
+      className={cx('p-0 bg-transparent border-none transition-all duration-300 ease-in-out z-60', className, {
         [openClassName]: !isSidebarOpen,
       })}
       startIcon={<SidebarIcon className="size-5" />}

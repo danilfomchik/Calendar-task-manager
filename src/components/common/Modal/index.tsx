@@ -20,7 +20,7 @@ const Modal = ({refItem, className, children, onClose}: TModalProps) => {
         <div
           onClick={handleClose}
           className={classNames(
-            'fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-80 z-[1000]',
+            'fixed inset-0 flex items-center justify-center bg-overlay bg-opacity-80 z-1000',
             className,
           )}>
           <div
