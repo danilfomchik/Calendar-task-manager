@@ -59,7 +59,7 @@ const AIInfo = ({date, className = ''}: {date: string | undefined; className?: s
       )}
 
       {parsedContent?.fact && (
-        <div className="flex flex-col gap-1 md:gap-2 border-l-2 border-[#262626] bg-[#101010] rounded-r-[6px] px-2 md:px-3 py-1.5 md:py-2.5">
+        <div className="flex flex-col gap-1 md:gap-2 border-l-2 border-[#262626] bg-[#101010] rounded-r-md px-2 md:px-3 py-1.5 md:py-2.5">
           <p className="text-[11px]/[1.5] md:text-sm font-medium text-[#444444] uppercase">Did you know</p>
           <p className="text-[11px]/[1.5] md:text-sm text-gray-400">{parsedContent.fact}</p>
         </div>

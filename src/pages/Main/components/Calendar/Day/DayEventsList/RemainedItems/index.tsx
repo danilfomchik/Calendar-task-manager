@@ -15,7 +15,7 @@ const RemainedItems = ({items}: TRemainedItemsProps) => {
     <Tooltip
       disabled={isMobileScreen}
       triggerElement={<span className="text-xs max-sm:text-[8px]">+{items.length}</span>}
-      className="w-auto min-w-2.5 md:min-w-[25px] flex justify-end"
+      className="w-auto min-w-2.5 md:min-w-6.25 flex justify-end"
       contentClassName={classNames({
         'right-[1px]': !isFitsContainer,
         'left-0': isFitsContainer,
