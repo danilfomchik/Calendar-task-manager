@@ -64,7 +64,7 @@ const Day = ({date}: TDayProps) => {
       animate={{opacity: 1}}
       transition={{duration: 0.5, ease: 'easeOut'}}
       className={cx(
-        'group flex flex-col relative justify-between [&:not(:nth-child(7n))]:border-r border-b border-secondary-background-color p-1 lg:p-3 cursor-pointer transition-all md:hover:bg-secondaryBackgroundColorHover',
+        'group flex flex-col gap-2 relative justify-between not-nth-[7n]:border-r border-b border-secondary-background-color p-1 lg:p-3 transition-all cursor-default',
         {
           'bg-mainBackgroundColor': dateMonth !== currentMonth,
         },
@@ -85,6 +85,7 @@ const Day = ({date}: TDayProps) => {
           </span>
 
           <Button
+            title="Open day page"
             kind="link"
             to={`/day/${date}`}
             className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
@@ -93,13 +94,14 @@ const Day = ({date}: TDayProps) => {
         </div>
 
         <Button
+          title="Create event"
           className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
           startIcon={<AddIcon size="size-5" />}
           onClick={handleOpen}
         />
       </div>
 
-      {!!events?.length && <DayEventsList events={events || []} />}
+      <DayEventsList date={date} events={events || []} />
     </motion.div>
   );
 };
