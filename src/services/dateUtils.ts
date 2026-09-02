@@ -1,7 +1,7 @@
 import moment, {Moment, MomentInput} from 'moment';
 
+import {MonthParts} from '../types/types';
 import {TOTAL_DAYS_IN_MONTH} from './constants';
-import {Format, MonthParts} from './types';
 
 export const getDate = (date: MomentInput) => {
   return moment(date);
@@ -11,7 +11,7 @@ export const createDate = (year: number, month: string, day: number) => {
   return moment().year(year).month(month).date(day).format('YYYY-MM-DD');
 };
 
-export const formatDate = (date: Moment, format: Format) => {
+export const formatDate = (date: Moment, format: string) => {
   return date.format(format);
 };
 

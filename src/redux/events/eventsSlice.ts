@@ -1,7 +1,7 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 
-import {StorageKeys} from '@/services/types';
 import {getLocalStoredValues} from '@/services/utils';
+import {StorageKeys} from '@/types/types';
 
 import {SliceNames} from '../types';
 import {TEvent, TEventsState} from './types';
@@ -18,28 +18,22 @@ const reducers = {
 
     state.eventsById[event.id] = event;
     state.eventsByDate = updatedEventsByDate;
-
-    localStorage.setItem(StorageKeys.eventsById, JSON.stringify(state.eventsById));
-    localStorage.setItem(StorageKeys.eventsByDate, JSON.stringify(updatedEventsByDate));
   },
-  editEvent: (state: TEventsState, action: PayloadAction<TEvent>) => {
-    // updated event value
-    const updatedEvent = action.payload;
-    // prev event value
-    const oldEvent = state.eventsById[updatedEvent.id];
+  editEvent: (state: TEventsState, action: PayloadAction<{oldEvent: TEvent; newEvent: TEvent}>) => {
+    const {oldEvent, newEvent} = action.payload;
 
     // if event date has changed
-    if (oldEvent.date !== updatedEvent.date) {
+    if (oldEvent.date !== newEvent.date) {
       const updatedEventsByDateObj = state.eventsByDate;
 
-      const filteredOldDateEvents = updatedEventsByDateObj[oldEvent.date]?.filter(eId => eId !== updatedEvent.id);
+      const filteredOldDateEvents = updatedEventsByDateObj[oldEvent.date]?.filter(eId => eId !== newEvent.id);
 
       // remove from old date
       updatedEventsByDateObj[oldEvent.date] = filteredOldDateEvents;
 
       // add to new date
-      updatedEventsByDateObj[updatedEvent.date] ??= [];
-      updatedEventsByDateObj[updatedEvent.date]?.push(updatedEvent.id);
+      updatedEventsByDateObj[newEvent.date] ??= [];
+      updatedEventsByDateObj[newEvent.date]?.push(newEvent.id);
 
       const {[oldEvent.date]: oldDate, ...rest} = updatedEventsByDateObj;
 
@@ -47,12 +41,33 @@ const reducers = {
       const resultEventsByDateObj = oldDate?.length ? updatedEventsByDateObj : rest;
 
       state.eventsByDate = resultEventsByDateObj;
-      localStorage.setItem(StorageKeys.eventsByDate, JSON.stringify(resultEventsByDateObj));
     }
 
     // update event
-    state.eventsById[updatedEvent.id] = updatedEvent;
-    localStorage.setItem(StorageKeys.eventsById, JSON.stringify(state.eventsById));
+    state.eventsById[newEvent.id] = newEvent;
+  },
+  deleteEvent: (state: TEventsState, action: PayloadAction<TEvent>) => {
+    const eventId = action.payload.id;
+    const eventsById = state.eventsById;
+    const eventToDelete = eventsById[eventId];
+
+    if (!eventToDelete) return;
+
+    const eventsByDate = state.eventsByDate;
+
+    const filteredOldDateEvents = eventsByDate[eventToDelete.date]?.filter(eId => eId !== eventId);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const {[eventToDelete.id]: _, ...restEventsById} = eventsById;
+
+    state.eventsById = restEventsById;
+    state.eventsByDate[eventToDelete.date] =
+      filteredOldDateEvents && filteredOldDateEvents.length > 0 ? filteredOldDateEvents : undefined;
+  },
+  setEventsById: (state: TEventsState, action: PayloadAction<TEventsState['eventsById']>) => {
+    state.eventsById = action.payload;
+  },
+  setEventFormData: (state: TEventsState, action: PayloadAction<TEventsState['eventFormData']>) => {
+    state.eventFormData = action.payload;
   },
 };
 
@@ -62,6 +77,7 @@ const initialEventsByDate = getLocalStoredValues(StorageKeys.eventsByDate, {});
 const initialState: TEventsState = {
   eventsById: initialEventsById,
   eventsByDate: initialEventsByDate,
+  eventFormData: null,
 };
 
 const eventsSlice = createSlice({
@@ -70,5 +86,5 @@ const eventsSlice = createSlice({
   reducers,
 });
 
-export const {addEvent, editEvent} = eventsSlice.actions;
+export const {addEvent, editEvent, deleteEvent, setEventsById, setEventFormData} = eventsSlice.actions;
 export default eventsSlice;

@@ -1,76 +1,79 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import {TEvent} from '@/redux/events/types';
+import Button from '@/components/common/Button';
+import {cx} from '@/services/utils';
 
 import Event from './Event';
-import HiddenEventsList from './HiddenEventsList';
-import RemainedItems from './RemainedItems';
 import {TDayEventsListProps} from './types';
 
-const DayEventsList = ({events}: TDayEventsListProps) => {
-  const [visibleEvents, setVisibleEvents] = useState<TEvent[]>([]);
-  const [hiddenEvents, setHiddenEvents] = useState<TEvent[]>([]);
+const EVENT_HEIGHT = 24;
 
-  const eventsContainerRef = useRef<HTMLDivElement>(null);
-  const eventsRefs = useRef<HTMLDivElement[]>([]);
+const DayEventsList = ({events, date}: TDayEventsListProps) => {
+  const eventsCount = events.length;
 
-  const handleResize = useCallback(() => {
-    if (!eventsContainerRef.current) return;
+  const [visibleEventsCount, setVisibleEventsCount] = useState(eventsCount);
+  const [hiddenEventsCount, setHiddenEventsCount] = useState(0);
 
-    const eventsContainerSizes = eventsContainerRef.current.getBoundingClientRect();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const requestRef = useRef<number | null>(null);
 
-    const hiddenEvents: TEvent[] = [];
-    const visibleEvents: TEvent[] = [];
+  const onCalcEventsVisibility = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-    for (let i = 0; i < events.length; i++) {
-      const eventRef = eventsRefs.current[i];
-      const eventRefSizes = eventRef.getBoundingClientRect();
+    const containerHeight = container.getBoundingClientRect().height;
 
-      const isFits =
-        eventRefSizes.right < eventsContainerSizes.right && eventRefSizes.left < eventsContainerSizes.right;
+    // 4 - gap between events
+    const visibleEventsCount = Math.floor((containerHeight - EVENT_HEIGHT) / (EVENT_HEIGHT + 4));
 
-      if (isFits) {
-        visibleEvents.push(events[i]);
-      } else {
-        hiddenEvents.push(events[i]);
-      }
-    }
-
-    setVisibleEvents(visibleEvents);
-    setHiddenEvents(hiddenEvents);
-  }, [events]);
+    setVisibleEventsCount(visibleEventsCount);
+    setHiddenEventsCount(Math.max(eventsCount - visibleEventsCount, 0));
+  }, [eventsCount]);
 
   useEffect(() => {
-    const observer = new ResizeObserver(() => {
-      requestAnimationFrame(() => handleResize());
-    });
+    onCalcEventsVisibility();
 
-    if (eventsContainerRef.current) {
-      observer.observe(eventsContainerRef.current);
-    }
+    const handleResize = () => {
+      if (requestRef.current) return;
 
-    return () => observer.disconnect();
-  }, [handleResize]);
+      requestRef.current = requestAnimationFrame(() => {
+        onCalcEventsVisibility();
+        requestRef.current = null;
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+    };
+  }, [onCalcEventsVisibility]);
 
   return (
-    <div className="flex items-center justify-between relative">
-      <HiddenEventsList events={events} eventsContainerRef={eventsContainerRef} eventsRefs={eventsRefs} />
-      <div ref={eventsContainerRef} className="w-[80%] flex gap-[9px]">
-        {visibleEvents.map((event, i) => (
-          <Event
-            key={event.id}
-            event={event}
-            eventRef={el => {
-              if (el) {
-                eventsRefs.current[i] = el;
-              }
-            }}
-            eventIndex={i}
-          />
+    <div
+      ref={containerRef}
+      className="flex flex-col items-start justify-between relative w-full flex-1 overflow-y-auto max-md:scrollbar-none"
+      style={{'--event-height': `${EVENT_HEIGHT}px`} as React.CSSProperties}>
+      <div className={cx('w-full flex md:flex-col gap-1 max-md:gap-1.5 h-auto min-h-1.5')}>
+        {events.slice(0, visibleEventsCount).map((event, i) => (
+          <Event key={event.id} event={event} eventIndex={i} isDisabled={event.isDisabled} />
         ))}
-      </div>
 
-      {!!hiddenEvents.length && <RemainedItems items={hiddenEvents} />}
+        {/* TODO (separate branch): add popover - to shown list of events directly on the home page. reference - google calendar
+        looks like day block. but appears over the day block (in bigger size) with list and scroll*/}
+        {hiddenEventsCount > 0 && (
+          <Button
+            title="Open day page"
+            kind="link"
+            to={`/day/${date}`}
+            className="max-md:hidden w-full md:h-(--event-height) relative flex items-center gap-3 text-xs overflow-hidden hover:bg-sky-500/15 md:p-1 rounded-lg cursor-pointer"
+            text={`${hiddenEventsCount} more`}
+          />
+        )}
+      </div>
     </div>
   );
 };

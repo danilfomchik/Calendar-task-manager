@@ -1,0 +1,12 @@
+.day-content {
+  display: flex;
+  width: 100%;
+  padding: 0px;
+  overflow-x: hidden;
+  height: calc(100vh - var(--height-header));
+  height: calc(100svh - var(--height-header));
+
+  @media (width <= 768px) {
+    flex-direction: column;
+  }
+}

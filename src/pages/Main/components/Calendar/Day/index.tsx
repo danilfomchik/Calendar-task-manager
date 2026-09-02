@@ -1,33 +1,38 @@
-import cn from 'classnames';
 import {motion} from 'framer-motion';
 import moment from 'moment';
-import {memo, useMemo, useRef, useState} from 'react';
+import {memo, useRef} from 'react';
 import {useSelector} from 'react-redux';
-import {twMerge} from 'tailwind-merge';
+import {useSearchParams} from 'react-router';
 
-import Button from '@/components/Button';
-import EventForm from '@/components/EventForm';
-import Modal from '@/components/Modal';
-import {useOpeningItem} from '@/hooks/useOpeningItem';
-import AddIcon from '@/icons/AddIcon';
-import {selectFullDate} from '@/redux/date/selectors';
-import {selectEventsByDate, selectEventsById} from '@/redux/events/selectors';
+import Button from '@/components/common/Button';
+import AddIcon from '@/components/ui/icons/AddIcon';
+import ExternalPage from '@/components/ui/icons/ExternalPage';
+import {useEventsList} from '@/hooks/useEventsList';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
+import {setSelectedDate} from '@/redux/date/dateSlice';
+import {selectFullDate, selectSelectedDate} from '@/redux/date/selectors';
+import {setEventFormData} from '@/redux/events/eventsSlice';
+import {onOpenItem} from '@/redux/overflow/overflowSlice';
+import {useAppDispatch} from '@/redux/store';
+import {CURRENT_DATE_PARAMS_KEY, EVENT_FORM_ID} from '@/services/constants';
 import {formatDate, getDate} from '@/services/dateUtils';
+import {cx} from '@/services/utils';
+import {FormActionType} from '@/types/eventFormTypes';
 
 import DayEventsList from './DayEventsList';
 import {TDayProps} from './types';
 
 const Day = ({date}: TDayProps) => {
-  const [isHover, setIsHover] = useState(false);
-  const {ref, isOpen, handleClose: handleModalClose, handleOpen: handleModalOpen} = useOpeningItem();
+  const [, setSearchParams] = useSearchParams();
+
+  const dispatch = useAppDispatch();
+
+  const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
   const dayRef = useRef<HTMLDivElement>(null);
 
-  const eventsByDate = useSelector(selectEventsByDate(date));
-  const eventsById = useSelector(selectEventsById);
-
-  const events = useMemo(() => eventsByDate?.map(eventDate => eventsById[eventDate]), [eventsByDate, eventsById]);
-
+  const events = useEventsList(date);
+  const selectedDate = useSelector(selectSelectedDate);
   const fullDate = useSelector(selectFullDate);
   const currentMonth = formatDate(moment(fullDate), 'M');
   const dateMonth = formatDate(moment(date), 'M');
@@ -35,63 +40,68 @@ const Day = ({date}: TDayProps) => {
   const currentDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
   const day = formatDate(getDate(date), 'DD');
 
+  const handleDayClick = () => {
+    if (!isMobileScreen) return;
+
+    const isCurrentDate = date === fullDate;
+
+    dispatch(setSelectedDate(isCurrentDate ? currentDate : date));
+    setSearchParams(isCurrentDate ? '' : `?${CURRENT_DATE_PARAMS_KEY}=${date}`);
+  };
+
+  const handleOpen = () => {
+    dispatch(onOpenItem(EVENT_FORM_ID));
+    dispatch(setEventFormData({actionType: FormActionType.create, date}));
+  };
+
   return (
     <motion.div
+      tabIndex={-1}
+      role="button"
       ref={dayRef}
-      // on hover
-      onPointerEnter={e => {
-        if (e.pointerType === 'mouse') {
-          setIsHover(true);
-        }
-      }}
-      // on blur
-      onPointerLeave={() => setIsHover(false)}
-      // on move not inside day block (ex. modal)
-      onPointerMoveCapture={e => {
-        if (!dayRef.current?.contains(e.target as Node)) {
-          setIsHover(false);
-        }
-      }}
+      onClick={handleDayClick}
       initial={{opacity: 0}}
       animate={{opacity: 1}}
       transition={{duration: 0.5, ease: 'easeOut'}}
-      className={twMerge(
-        cn(
-          'flex flex-col relative justify-between border border-secondaryBackgroundColor rounded-md p-1 md:p-3 cursor-pointer',
-          {
-            'bg-secondaryBackgroundColor': dateMonth !== currentMonth,
-          },
-          {'bg-secondaryBackgroundColorHover': isHover},
-        ),
+      className={cx(
+        'group flex flex-col gap-2 relative justify-between not-nth-[7n]:border-r border-b border-secondary-background-color p-1 lg:p-3 transition-all cursor-default',
+        {
+          'bg-mainBackgroundColor': dateMonth !== currentMonth,
+        },
+        'max-md:bg-transparent max-md:border-none max-md:items-center',
       )}>
       <div className="flex items-center justify-between">
-        <div className="text-xs sm:text-base">
+        <div className="flex items-center md:gap-2 text-xs sm:text-base">
           <span
-            className={twMerge(
-              cn('rounded-full p-1 w-5 h-5 sm:w-8 sm:h-8 flex items-center justify-center text-white', {
-                'bg-blue-600': currentDate === date,
-              }),
+            className={cx(
+              'rounded-full p-1 w-8 h-8 lg:w-8 lg:h-8 flex items-center justify-center text-white border border-transparent transition-colors',
+              {
+                'border-blue-500': date === selectedDate && isMobileScreen,
+                'text-[#444444]': dateMonth !== currentMonth,
+                'bg-blue-600 border-none text-white': currentDate === date,
+              },
             )}>
             <time dateTime={date}>{day}</time>
           </span>
+
+          <Button
+            title="Open day page"
+            kind="link"
+            to={`/day/${date}`}
+            className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
+            startIcon={<ExternalPage size="size-5" />}
+          />
         </div>
 
-        {isHover && (
-          <Button
-            className="p-0 bg-transparent border-none"
-            startIcon={<AddIcon size="size-5" />}
-            onClick={handleModalOpen}
-          />
-        )}
+        <Button
+          title="Create event"
+          className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
+          startIcon={<AddIcon size="size-5" />}
+          onClick={handleOpen}
+        />
       </div>
 
-      {!!events?.length && <DayEventsList events={events || []} />}
-
-      {isOpen && (
-        <Modal refItem={ref} onClose={handleModalClose}>
-          <EventForm formTitle="Create event form" handleModalClose={handleModalClose} date={date} />
-        </Modal>
-      )}
+      <DayEventsList date={date} events={events || []} />
     </motion.div>
   );
 };

@@ -1,6 +1,6 @@
 import {useCallback} from 'react';
 
-import Dropdown from '@/components/inputs/Dropdown';
+import Dropdown from '@/components/common/inputs/Dropdown';
 
 const viewOptions = ['Day view', 'Week view', 'Month view', 'Year view'];
 
@@ -13,7 +13,7 @@ const ChangeViewControl = () => {
       onChange={handleChange}
       options={viewOptions}
       placeholder="Pick view"
-      className="text-sm"
+      className="text-sm max-md:hidden"
     />
   );
 };

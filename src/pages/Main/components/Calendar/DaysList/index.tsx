@@ -12,7 +12,7 @@ const DaysList = () => {
   const dates = generateDatesArray(year as string, month as string);
 
   return (
-    <div className="grid grid-rows-6 grid-cols-7 gap-[2px] w-full h-[calc(100vh-250px)] sm:h-full">
+    <div className="grid grid-rows-6 grid-cols-7 w-full min-h-71.5 h-auto md:h-full md:border-t border-secondary-background-color">
       {dates.map(date => (
         <Day key={date} date={date} />
       ))}

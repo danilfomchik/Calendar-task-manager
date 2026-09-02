@@ -1,3 +1,6 @@
+import {FormActionType} from '@/types/eventFormTypes';
+import {CalendarsNames} from '@/types/types';
+
 export type TId = string;
 
 export type TEvent = {
@@ -5,14 +8,24 @@ export type TEvent = {
   title: string;
   description?: string;
   date: string;
-  color: string;
+  eventCalendar: CalendarsNames;
+  isDisabled?: boolean;
+};
+
+export type TEventsById = {
+  [key: string]: TEvent;
+};
+
+export type TEventsByDate = {
+  [key: string]: string[] | undefined;
 };
 
 export type TEventsState = {
-  eventsById: {
-    [key: string]: TEvent;
-  };
-  eventsByDate: {
-    [key: string]: string[] | undefined;
-  };
+  eventsById: TEventsById;
+  eventsByDate: TEventsByDate;
+  eventFormData: {
+    actionType: FormActionType;
+    event?: TEvent;
+    date?: string;
+  } | null;
 };
