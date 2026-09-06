@@ -23,6 +23,7 @@ const DayEventsList = ({events, date}: TDayEventsListProps) => {
 
     const containerHeight = container.getBoundingClientRect().height;
 
+    // calculate how many events can fit in the container height of the day cell, considering the height of each event and the gap between them
     // 4 - gap between events
     const visibleEventsCount = Math.floor((containerHeight - EVENT_HEIGHT) / (EVENT_HEIGHT + 4));
 
@@ -58,12 +59,10 @@ const DayEventsList = ({events, date}: TDayEventsListProps) => {
       className="flex flex-col items-start justify-between relative w-full flex-1 overflow-y-auto max-md:scrollbar-none"
       style={{'--event-height': `${EVENT_HEIGHT}px`} as React.CSSProperties}>
       <div className={cx('w-full flex md:flex-col gap-1 max-md:gap-1.5 h-auto min-h-1.5')}>
-        {events.slice(0, visibleEventsCount).map((event, i) => (
-          <Event key={event.id} event={event} eventIndex={i} isDisabled={event.isDisabled} />
+        {events.slice(0, visibleEventsCount).map(event => (
+          <Event key={event.id} event={event} isDisabled={event.isDisabled} />
         ))}
 
-        {/* TODO (separate branch): add popover - to shown list of events directly on the home page. reference - google calendar
-        looks like day block. but appears over the day block (in bigger size) with list and scroll*/}
         {hiddenEventsCount > 0 && (
           <Button
             title="Open day page"

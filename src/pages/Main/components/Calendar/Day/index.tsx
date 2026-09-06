@@ -5,6 +5,7 @@ import {useSelector} from 'react-redux';
 import {useSearchParams} from 'react-router';
 
 import Button from '@/components/common/Button';
+import DottedEventsList from '@/components/common/DottedEventsList';
 import AddIcon from '@/components/ui/icons/AddIcon';
 import ExternalPage from '@/components/ui/icons/ExternalPage';
 import {useEventsList} from '@/hooks/useEventsList';
@@ -31,7 +32,7 @@ const Day = ({date}: TDayProps) => {
 
   const dayRef = useRef<HTMLDivElement>(null);
 
-  const events = useEventsList(date);
+  const events = useEventsList(date) || [];
   const selectedDate = useSelector(selectSelectedDate);
   const fullDate = useSelector(selectFullDate);
   const currentMonth = formatDate(moment(fullDate), 'M');
@@ -64,7 +65,7 @@ const Day = ({date}: TDayProps) => {
       animate={{opacity: 1}}
       transition={{duration: 0.5, ease: 'easeOut'}}
       className={cx(
-        'group flex flex-col gap-2 relative justify-between not-nth-[7n]:border-r border-b border-secondary-background-color p-1 lg:p-3 transition-all cursor-default',
+        'group flex flex-col gap-1.5 relative justify-between not-nth-[7n]:border-r border-b border-secondary-background-color p-1 lg:p-3 transition-all cursor-default',
         {
           'bg-mainBackgroundColor': dateMonth !== currentMonth,
         },
@@ -101,7 +102,7 @@ const Day = ({date}: TDayProps) => {
         />
       </div>
 
-      <DayEventsList date={date} events={events || []} />
+      {isMobileScreen ? <DottedEventsList events={events} /> : <DayEventsList date={date} events={events} />}
     </motion.div>
   );
 };
