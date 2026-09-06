@@ -4,7 +4,6 @@ export const TOTAL_DAYS_IN_MONTH = 42;
 export const CURRENT_DATE_PARAMS_KEY = 'selectedDate';
 export const EVENT_FORM_ID = 'event-form';
 
-// TODO: add abillity to customize (CRUD)
 export const defaultCalendars = [
   {
     name: CalendarsNames.work,
