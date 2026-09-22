@@ -4,7 +4,12 @@ import {TRemainedItemsProps} from './types';
 
 const RemainedItems = ({items}: TRemainedItemsProps) => {
   return (
-    <Tooltip triggerElement={<span className="text-xs max-sm:text-[8px]">+{items.length}</span>}>
+    <Tooltip
+      triggerElement={(onMouseEnter, onMouseLeave) => (
+        <span onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className="text-xs max-sm:text-[8px]">
+          +{items.length}
+        </span>
+      )}>
       <div className="flex flex-col">
         {items.map(item => (
           <div key={item.id} className="whitespace-nowrap text-ellipsis overflow-hidden">

@@ -24,9 +24,11 @@ const Event = ({event, isDisabled, eventRef}: TEventProps) => {
   return (
     <Tooltip
       // className="h-1.5 md:h-[8px] w-1.5 md:w-[8px]"
-      style={{color: calendarColor}}
-      triggerElement={
+      // style={{color: calendarColor}}
+      triggerElement={(onMouseEnter, onMouseLeave) => (
         <button
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
           ref={eventRef}
           className={cx(
             'h-1.5 md:h-[8px] w-1.5 md:w-[8px] rounded-full transition-opacity max-md:pointer-events-none',
@@ -36,7 +38,7 @@ const Event = ({event, isDisabled, eventRef}: TEventProps) => {
           )}
           style={{background: calendarColor}}
           onClick={handleOpen}></button>
-      }>
+      )}>
       <div className="bg-[#0a0a0a] rounded-[4px]">
         <div
           className="text-white text-sm px-3 py-2 rounded-[4px]"

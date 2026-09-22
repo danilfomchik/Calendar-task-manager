@@ -21,10 +21,6 @@ export const useTooltipTimers = (delayMs: number) => {
     timers.current.clear();
   }, []);
 
-  useEffect(() => {
-    return () => clearAll();
-  }, [clearAll]);
-
   const open = useCallback(
     (e: ReactPointerEvent<Element>) => {
       if (isTouchOrPen(e)) return;
@@ -46,6 +42,10 @@ export const useTooltipTimers = (delayMs: number) => {
     },
     [clearAll, delayMs, schedule],
   );
+
+  useEffect(() => {
+    return () => clearAll();
+  }, [clearAll]);
 
   return {isHovered, isOpened, open, close};
 };
