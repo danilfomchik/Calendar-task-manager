@@ -18,6 +18,17 @@ import DataInitWrapper from '../DataInitWrapper';
 const Modal = lazy(() => import('@/components/common/Modal'));
 const EventForm = lazy(() => import('@/components/common/EventForm'));
 
+// separate branches TODO
+// check "return back" btn
+// popover for event details for desktop
+// Firebase integration for events storage and sign in/up (google, email)
+// add correct selectedDate handling (on refresh) - on separate branch
+// replace momentjs with date-fns or dayjs
+// d&d for events list
+// update ci/cd pipelne to call lint, prettier, build after merge to develop/main and before deploy
+// layout switch
+// theme switch (https://chatgpt.com/share/699c086a-5894-800e-b965-4532a24a7fc5)
+
 const MainLayout = () => {
   const dispatch = useAppDispatch();
   const openedItems = useSelector(selectOpenedItems);

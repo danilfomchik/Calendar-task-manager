@@ -67,7 +67,7 @@ const Day = ({date}: TDayProps) => {
       className={cx(
         'group flex flex-col gap-1.5 relative justify-between not-nth-[7n]:border-r border-b border-secondary-background-color p-1 lg:p-3 transition-all cursor-default',
         {
-          'bg-mainBackgroundColor': dateMonth !== currentMonth,
+          'bg-mainBackgroundColor md:hover:bg-secondary-background-color': dateMonth !== currentMonth,
         },
         'max-md:bg-transparent max-md:border-none max-md:items-center',
       )}>
