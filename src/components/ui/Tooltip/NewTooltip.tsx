@@ -157,7 +157,7 @@ const getTooltipPosition = (
   const overflowsTop = expected.top < viewport.top;
   const overflowsBottom = expected.bottom > viewport.bottom;
 
-  // за замовчуванням зберігаємо ОРИГІНАЛЬНУ вісь — не центровану
+  // by default keep original axis - not centered
   let h: H = originalH;
   let v: V = originalV;
 
@@ -220,8 +220,6 @@ const NewTooltip = ({
     if (!anchorRect || !tooltipRect) return;
 
     const tooltipPosition = getTooltipPosition(defaultPosition, anchorRect, tooltipRect, containerSizes);
-
-    // console.log('tooltipPosition-->', tooltipPosition);
 
     setPosition(tooltipPosition);
   }, [defaultPosition, isHovered]);

@@ -5,10 +5,9 @@ import {useSelector} from 'react-redux';
 import {useSearchParams} from 'react-router';
 
 import Button from '@/components/common/Button';
-import NewTooltip from '@/components/ui/Tooltip/NewTooltip';
 import AddIcon from '@/components/ui/icons/AddIcon';
 import ExternalPage from '@/components/ui/icons/ExternalPage';
-// import {useEventsList} from '@/hooks/useEventsList';
+import {useEventsList} from '@/hooks/useEventsList';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {setSelectedDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectSelectedDate} from '@/redux/date/selectors';
@@ -20,7 +19,7 @@ import {formatDate, getDate} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 import {FormActionType} from '@/types/eventFormTypes';
 
-// import DayEventsList from './DayEventsList';
+import DayEventsList from './DayEventsList';
 import {TDayProps} from './types';
 
 const Day = ({date}: TDayProps) => {
@@ -32,7 +31,7 @@ const Day = ({date}: TDayProps) => {
 
   const dayRef = useRef<HTMLDivElement>(null);
 
-  // const events = useEventsList(date);
+  const events = useEventsList(date);
   const selectedDate = useSelector(selectSelectedDate);
   const fullDate = useSelector(selectFullDate);
   const currentMonth = formatDate(moment(fullDate), 'M');
@@ -100,16 +99,7 @@ const Day = ({date}: TDayProps) => {
         />
       </div>
 
-      {/* {!!events?.length && <DayEventsList events={events || []} />} */}
-      {(date === '2026-09-06' || date === '2026-07-27' || date === '2026-08-31') && (
-        <NewTooltip className="w-fit" triggerElement={<div>trigger</div>}>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta vel aliquam, eos provident assumenda esse
-            consequatur doloribus impedit expedita, eligendi veniam inventore dolore voluptate quod voluptatibus!
-            Temporibus pariatur quibusdam unde!
-          </p>
-        </NewTooltip>
-      )}
+      {!!events?.length && <DayEventsList events={events || []} />}
     </motion.div>
   );
 };
