@@ -15,11 +15,11 @@ const MonthSmallCalendar = ({className = ''}) => {
 
   return (
     <div className={cx('px-4 py-5', className)}>
-      <p className="text-[15px] text-[#444444] uppercase mb-[10px] pl-1.5">
+      <p className="text-[15px] text-[#444444] uppercase mb-2.5 pl-1.5">
         {month} {year}
       </p>
 
-      <div className="grid grid-cols-7 gap-[1px]">
+      <div className="grid grid-cols-7 gap-px">
         {weekDays.map(weekday => (
           <span key={weekday} className="flex flex-1 justify-center px-2 text-sm text-gray-400">
             {weekday.slice(0, 1)}
@@ -35,7 +35,7 @@ const MonthSmallCalendar = ({className = ''}) => {
           return (
             <div
               key={date}
-              className={cx('text-gray-400 text-sm py-[3px] text-center rounded-full', {
+              className={cx('text-gray-400 text-sm py-0.75 text-center rounded-full', {
                 'text-[#444444]': currentMonth !== dateMonth,
                 'text-white bg-blue-600': currentDate === date,
               })}>

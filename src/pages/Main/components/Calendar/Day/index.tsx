@@ -5,6 +5,7 @@ import {useSelector} from 'react-redux';
 import {useSearchParams} from 'react-router';
 
 import Button from '@/components/common/Button';
+import DottedEventsList from '@/components/common/DottedEventsList';
 import AddIcon from '@/components/ui/icons/AddIcon';
 import ExternalPage from '@/components/ui/icons/ExternalPage';
 import {useEventsList} from '@/hooks/useEventsList';
@@ -31,7 +32,7 @@ const Day = ({date}: TDayProps) => {
 
   const dayRef = useRef<HTMLDivElement>(null);
 
-  const events = useEventsList(date);
+  const events = useEventsList(date) || [];
   const selectedDate = useSelector(selectSelectedDate);
   const fullDate = useSelector(selectFullDate);
   const currentMonth = formatDate(moment(fullDate), 'M');
@@ -64,9 +65,9 @@ const Day = ({date}: TDayProps) => {
       animate={{opacity: 1}}
       transition={{duration: 0.5, ease: 'easeOut'}}
       className={cx(
-        'group flex flex-col relative justify-between [&:not(:nth-child(7n))]:border-r border-b border-secondary-background-color p-1 lg:p-3 cursor-pointer transition-all md:hover:bg-[#141414]',
+        'group flex flex-col gap-1.5 relative justify-between not-nth-[7n]:border-r border-b border-secondary-background-color p-1 lg:p-3 transition-all cursor-default',
         {
-          'bg-mainBackgroundColor md:hover:bg-[#1A1A1A]': dateMonth !== currentMonth,
+          'bg-mainBackgroundColor md:hover:bg-secondary-background-color': dateMonth !== currentMonth,
         },
         'max-md:bg-transparent max-md:border-none max-md:items-center',
       )}>
@@ -85,6 +86,7 @@ const Day = ({date}: TDayProps) => {
           </span>
 
           <Button
+            title="Open day page"
             kind="link"
             to={`/day/${date}`}
             className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
@@ -93,13 +95,14 @@ const Day = ({date}: TDayProps) => {
         </div>
 
         <Button
+          title="Create event"
           className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
           startIcon={<AddIcon size="size-5" />}
           onClick={handleOpen}
         />
       </div>
 
-      {!!events?.length && <DayEventsList events={events || []} />}
+      {isMobileScreen ? <DottedEventsList events={events} /> : <DayEventsList date={date} events={events} />}
     </motion.div>
   );
 };

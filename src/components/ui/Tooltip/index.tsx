@@ -31,9 +31,9 @@ const Tooltip = ({disabled, triggerElement, children, className = '', contentCla
       <div
         ref={tooltipRef}
         className={cx(
-          `max-w-[100px] max-h-[200px] overflow-auto absolute bottom-[calc(100%+6px)] transition-all duration-200 ease-in-out px-3 py-1 rounded-md border bg-black text-sm z-10 opacity-0 invisible`,
+          `max-w-25 max-h-50 overflow-auto absolute bottom-[calc(100%+6px)] transition-all duration-200 ease-in-out px-3 py-1 rounded-md border bg-black text-sm z-10 opacity-0 invisible`,
           {
-            'right-[1px]': !isFitsContainer,
+            'right-px': !isFitsContainer,
             'left-0': isFitsContainer,
           },
           contentClassName,

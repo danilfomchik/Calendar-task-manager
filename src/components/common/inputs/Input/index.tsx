@@ -43,7 +43,7 @@ const Input = ({
         onChange={handleChange}
         type={type}
         placeholder={placeholder}
-        className="bg-black w-full focus:border-sky-500 border rounded outline-none px-[15px] py-[10px]"
+        className="bg-black w-full focus:border-sky-500 border rounded outline-none px-3.75 py-2.5"
         {...restProps}
       />
     </>

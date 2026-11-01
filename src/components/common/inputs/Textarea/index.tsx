@@ -43,7 +43,7 @@ const Textarea = ({
         onChange={handleChange}
         placeholder={placeholder}
         className={cx(
-          'max-h-[150px]m min-h-[46px] bg-black w-full focus:border-sky-500 border rounded outline-none px-[15px] py-[10px]',
+          'max-h-[150px]m min-h-11.5 bg-black w-full focus:border-sky-500 border rounded outline-none px-3.75 py-2.5',
           className,
         )}
         {...restProps}

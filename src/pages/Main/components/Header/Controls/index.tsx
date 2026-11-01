@@ -34,7 +34,7 @@ const Controls = () => {
             isMenuOpen && isMobileScreen,
         })}>
         <div
-          className={cx('flex flex-row gap-[10px]', {
+          className={cx('flex flex-row gap-2.5', {
             'flex-col': isMenuOpen && isMobileScreen,
           })}>
           <ChangeMonthControl />

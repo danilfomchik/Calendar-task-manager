@@ -40,7 +40,7 @@ const MyCalendarsList = () => {
 
   return (
     <div className="px-4 py-5">
-      <p className="uppercase text-xs text-[#444444] mb-[10px]">My calendars</p>
+      <p className="uppercase text-xs text-[#444444] mb-2.5">My calendars</p>
 
       <ul role="list">
         {calendarsList?.map(({name, itemColor}, index) => {
@@ -62,7 +62,7 @@ const MyCalendarsList = () => {
               onClick={() => selectCalendar(name)}
               onKeyDown={e => handleOptionKeyDown(e, index)}>
               <div
-                className="w-[7px] h-[7px] rounded-full"
+                className="w-1.75 h-1.75 rounded-full"
                 style={{
                   backgroundColor: itemColor,
                   boxShadow: isSelected ? `0 0 0 2px #0a0a0a, 0 0 0 3px ${itemColor}` : '',

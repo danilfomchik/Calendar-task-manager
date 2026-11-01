@@ -132,7 +132,7 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col items-center justify-between gap-[20px] w-auto px-[30px] py-[20px]">
+          <div className="flex flex-col items-center justify-between gap-5 w-auto px-7.5 py-5">
             {!date ? (
               <div className="grid grid-cols-2 gap-2 relative self-stretch max-md:grid-cols-1">
                 <DropdownControl control={control} options={monthsOptions} name="eventMonth" />
