@@ -1,5 +1,6 @@
-import classNames from 'classnames';
 import {ReactNode} from 'react';
+
+import {cx} from '@/services/utils';
 
 interface IDividerProps {
   children?: ReactNode;
@@ -9,9 +10,13 @@ interface IDividerProps {
 const Divider = ({className = '', children}: IDividerProps) => {
   return (
     <div
-      className={classNames('horizontal-divider', className, {
-        text: children,
-      })}
+      className={cx(
+        'horizontal-divider',
+        {
+          text: children,
+        },
+        className,
+      )}
       role="separator"
       aria-orientation="horizontal">
       {children}

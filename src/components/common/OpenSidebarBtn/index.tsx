@@ -22,7 +22,7 @@ const OpenSidebarBtn = ({className = '', openClassName = ''}) => {
       className={cx('p-0 bg-transparent border-none transition-all duration-300 ease-in-out z-60', className, {
         [openClassName]: !isSidebarOpen,
       })}
-      startIcon={<SidebarIcon className="size-5" />}
+      startIcon={<SidebarIcon className="size-4" />}
       onClick={handleToggle}
     />
   );

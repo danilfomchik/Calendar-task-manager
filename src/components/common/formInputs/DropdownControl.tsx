@@ -1,16 +1,14 @@
-import {ReactNode, memo} from 'react';
+import {memo} from 'react';
 import {Control, useController} from 'react-hook-form';
 
 import Dropdown from '../inputs/Dropdown';
+import {TDropdownBaseProps} from '../inputs/Dropdown/types';
 
 type DropdownControlProps = {
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>;
-  options: string[];
-  selectedOption?: string;
-  customOption?: (option: string) => ReactNode;
-};
+} & TDropdownBaseProps;
 
 const DropdownControl = ({name, control, selectedOption = '', ...restProps}: DropdownControlProps) => {
   const {field} = useController({

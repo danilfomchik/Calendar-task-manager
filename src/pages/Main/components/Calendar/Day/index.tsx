@@ -1,4 +1,3 @@
-import {motion} from 'framer-motion';
 import moment from 'moment';
 import {memo, useRef} from 'react';
 import {useSelector} from 'react-redux';
@@ -56,14 +55,11 @@ const Day = ({date}: TDayProps) => {
   };
 
   return (
-    <motion.div
+    <div
       tabIndex={-1}
       role="button"
       ref={dayRef}
       onClick={handleDayClick}
-      initial={{opacity: 0}}
-      animate={{opacity: 1}}
-      transition={{duration: 0.5, ease: 'easeOut'}}
       className={cx(
         'group flex flex-col gap-1.5 relative justify-between not-nth-[7n]:border-r border-b border-secondary-background-color p-1 lg:p-3 transition-all cursor-default',
         {
@@ -79,7 +75,7 @@ const Day = ({date}: TDayProps) => {
               {
                 'border-blue-500': date === selectedDate && isMobileScreen,
                 'text-[#444444]': dateMonth !== currentMonth,
-                'bg-blue-600 border-none text-white': currentDate === date,
+                'bg-[#3b5bfd] border-none text-white': currentDate === date,
               },
             )}>
             <time dateTime={date}>{day}</time>
@@ -103,7 +99,7 @@ const Day = ({date}: TDayProps) => {
       </div>
 
       {isMobileScreen ? <DottedEventsList events={events} /> : <DayEventsList date={date} events={events} />}
-    </motion.div>
+    </div>
   );
 };
 

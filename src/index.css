@@ -49,7 +49,7 @@ body,
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-sky-500 rounded-xl;
+  @apply bg-[#3b5bfd] rounded-xl;
 }
 
 .horizontal-divider {
@@ -69,6 +69,7 @@ body,
     justify-content: center;
     gap: 20px;
     color: #2e2e2e;
+    width: 100%;
 
     &::after,
     &::before {

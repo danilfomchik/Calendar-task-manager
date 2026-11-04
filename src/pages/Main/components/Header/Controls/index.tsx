@@ -45,8 +45,8 @@ const Controls = () => {
 
         <AddEvent
           showText={!isMobileScreen}
-          className={cx({
-            'max-md:w-8 max-md:h-8 rounded-full max-md:p-0': isMobileScreen,
+          className={cx('shadow-[0_10px_24px_-8px_rgba(91,110,242,0.6)]', {
+            'h-9.5 aspect-square rounded-[10px] max-md:p-0': isMobileScreen,
           })}
         />
       </div>

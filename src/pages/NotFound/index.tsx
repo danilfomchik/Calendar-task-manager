@@ -11,7 +11,7 @@ const NotFound = ({customText}: {customText?: string}) => {
         <p className="text-3xl">PAGE NOT FOUND {customText && `(${customText})`}</p>
       </div>
 
-      <Link to="/" className="mt-4 text-2xl transition-all hover:text-sky-500">
+      <Link to="/" className="mt-4 text-2xl transition-all hover:text-[#3b5bfd]">
         Return home
       </Link>
     </div>
