@@ -46,11 +46,14 @@ const AIInfo = ({date, className = ''}: {date: string | undefined; className?: s
             <p className="max-md:text-[11px]/[1.5] font-medium">{parsedContent.holiday.name}</p>
             <Tooltip
               disabled={isMobileScreen}
-              triggerElement={
-                <div className={classNames({'cursor-help': !isMobileScreen})}>
+              triggerElement={(onMouseEnter, onMouseLeave) => (
+                <div
+                  onMouseEnter={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
+                  className={classNames({'cursor-help': !isMobileScreen})}>
                   <InfoIcon className="size-4 shrink-0" />
                 </div>
-              }
+              )}
               contentClassName="w-auto min-w-[200px] max-w-none flex justify-end border-[#9d77f5]">
               <p className="text-xs text-white">{parsedContent.holiday.description}</p>
             </Tooltip>

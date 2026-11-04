@@ -1,9 +1,8 @@
-import {PropsWithChildren, ReactElement, RefObject} from 'react';
+import {PropsWithChildren, ReactElement} from 'react';
 
 export type TooltipProps = PropsWithChildren<{
   disabled?: boolean;
-  triggerElement: ReactElement;
+  triggerElement: (onMouseEnter?: () => void, onMouseLeave?: () => void) => ReactElement;
   className?: string;
   contentClassName?: string;
-  onHover?: (isOpened: boolean, tooltipRef: RefObject<HTMLDivElement>) => void;
 }>;

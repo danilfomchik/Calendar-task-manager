@@ -6,14 +6,21 @@ import {useEventsList} from '@/hooks/useEventsList';
 
 import EventsListItem from './EventsListItem';
 
+// TODO:
+// 1. finalize tooltip implementation
+// 2. refactor day events list (as on screenshot)
+// 3. reuse hidden events logic for refactored list to show (+n events)
+
 const EventsList = ({
   date,
   showItemControls = false,
   showEventsCount = false,
+  className = '',
 }: {
   date: string;
   showItemControls?: boolean;
   showEventsCount?: boolean;
+  className?: string;
 }) => {
   const [hasScroll, setHasScroll] = useState(false);
 
@@ -47,7 +54,13 @@ const EventsList = ({
 
       <div
         ref={eventsContainerRef}
-        className={classNames('flex-1 overflow-y-auto scroll-smooth', {'pr-2.5': hasScroll && !!events?.length})}>
+        className={classNames(
+          'flex-1 overflow-y-auto scroll-smooth',
+          {
+            'pr-2.5': hasScroll && !!events?.length,
+          },
+          className,
+        )}>
         {!events?.length ? (
           <NoEventsMessage />
         ) : (
