@@ -240,7 +240,7 @@ const NewTooltip = ({
           role="tooltip"
           id={tooltipId}
           className={cx(
-            'flex flex-col items-center z-50 pb-0.5 w-[400px]',
+            'flex flex-col items-center z-50 pb-0.5 w-100',
             'transition-all duration-200 ease-in-out',
             'opacity-0 invisible',
             contentClassName,

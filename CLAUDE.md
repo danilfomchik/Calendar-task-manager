@@ -28,3 +28,17 @@ React 18 + TypeScript + Vite SPA (calendar / event manager). Tailwind for stylin
 ## Conventions
 
 Prettier config (`.prettierrc`) uses `@trivago/prettier-plugin-sort-imports`, so import order is enforced by formatting; no bracket spacing (`{foo}`), single quotes. Use `cx` from `@/services/utils` for class merging.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues (`gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-label vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

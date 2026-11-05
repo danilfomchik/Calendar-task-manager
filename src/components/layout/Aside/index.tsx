@@ -33,7 +33,7 @@ const Aside = () => {
           <Link to="/" className="text-lg text-white font-medium">
             Calendar
           </Link>
-          <OpenSidebarBtn className="rotate-180" />
+          <OpenSidebarBtn />
         </div>
 
         <MonthSmallCalendar className="border-y border-secondary-background-color" />

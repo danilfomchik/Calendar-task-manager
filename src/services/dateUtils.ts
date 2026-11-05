@@ -78,3 +78,49 @@ const generateDatesArrayByFullDate = (date: Moment) => {
 
   return dates;
 };
+
+export const WEEK_LENGTH = 7;
+
+export type TWeekDirection = 1 | -1;
+
+const DATE_FORMAT = 'YYYY-MM-DD';
+
+// first day of the week (locale-aware, Monday-first) that contains the given date
+export const getWeekStart = (date: MomentInput) => moment(date).startOf('week').format(DATE_FORMAT);
+
+// current month -> week of today; any other month -> week containing the 1st
+export const getInitialWeekStart = (fullDate: string) => {
+  const today = moment();
+  const visibleMonth = moment(fullDate);
+
+  return getWeekStart(visibleMonth.isSame(today, 'month') ? today : visibleMonth.startOf('month'));
+};
+
+export const isSameMonth = (a: string, b: string) => moment(a).isSame(b, 'month');
+
+export const shiftDate = (date: string, days: number) => moment(date).add(days, 'days').format(DATE_FORMAT);
+
+export const generateWeekDates = (weekStart: string) =>
+  Array.from({length: WEEK_LENGTH}, (_, i) => shiftDate(weekStart, i));
+
+// A date inside the month the week belongs to. A week containing today always belongs to today's month;
+// otherwise it belongs to the month of its last day (so a week containing the 1st belongs to that month).
+export const getWeekOwnerDate = (weekStart: string) => {
+  const today = moment().format(DATE_FORMAT);
+  const weekEnd = shiftDate(weekStart, WEEK_LENGTH - 1);
+
+  return today >= weekStart && today <= weekEnd ? today : weekEnd;
+};
+
+// position of the week among the weeks that belong to the visible month
+export const getWeekPositionInMonth = (fullDate: string, weekStart: string) => {
+  const month = moment(fullDate);
+  const firstWeekStart = getWeekStart(month.clone().startOf('month'));
+  const ownedWeeks = Array.from({length: 8}, (_, i) => shiftDate(firstWeekStart, (i - 1) * WEEK_LENGTH)).filter(week =>
+    moment(getWeekOwnerDate(week)).isSame(month, 'month'),
+  );
+
+  const index = ownedWeeks.indexOf(weekStart);
+
+  return {total: ownedWeeks.length, index: Math.max(index, 0)};
+};

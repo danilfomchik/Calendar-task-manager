@@ -68,7 +68,7 @@ const DayPage = () => {
       <div className="day-content">
         <div className="flex flex-col gap-4 md:flex-[0_0_230px] py-4 md:py-5.5 px-4.5 border-r border-secondary-background-color">
           <time dateTime={date} className="flex md:flex-col max-md:items-center justify-between gap-2">
-            <div className="max-md:flex items-center justify-center max-md:bg-blue-600 max-md:w-20 max-md:h-20 rounded-full">
+            <div className="max-md:flex items-center justify-center max-md:bg-[#3b5bfd] max-md:w-20 max-md:h-20 rounded-full">
               <span className="text-white font-normal text-6xl/[1] md:text-[76px]/[1]">
                 {formatDate(moment(date), 'Do')}
               </span>

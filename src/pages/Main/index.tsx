@@ -9,6 +9,7 @@ const MainPage = () => {
   return (
     <div className="flex flex-col h-full">
       <Header />
+
       <Calendar />
     </div>
   );

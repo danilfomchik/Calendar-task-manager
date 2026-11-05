@@ -37,7 +37,7 @@ const MonthSmallCalendar = ({className = ''}) => {
               key={date}
               className={cx('text-gray-400 text-sm py-0.75 text-center rounded-full', {
                 'text-[#444444]': currentMonth !== dateMonth,
-                'text-white bg-blue-600': currentDate === date,
+                'text-white bg-[#3b5bfd]': currentDate === date,
               })}>
               <time dateTime={date}>{day}</time>
             </div>

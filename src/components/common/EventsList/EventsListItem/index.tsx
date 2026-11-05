@@ -62,7 +62,7 @@ const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemPr
             <Button
               onClick={handleOpen}
               endIcon={<EditIcon size="size-4" />}
-              className="w-fit p-0 text-white hover:text-sky-500"
+              className="w-fit p-0 text-white hover:text-[#3b5bfd]"
               variant="transparent"
             />
             <Button

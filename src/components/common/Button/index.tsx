@@ -31,7 +31,7 @@ const Button = ({
         })}>
         {startIcon ? <span className="font-medium block truncate">{startIcon}</span> : null}
 
-        <span className="font-medium block truncate">{text}</span>
+        <div className="font-medium block truncate">{text}</div>
 
         {endIcon ? <span className="font-medium block truncate">{endIcon}</span> : null}
       </div>

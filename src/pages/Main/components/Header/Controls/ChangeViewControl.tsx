@@ -13,7 +13,7 @@ const ChangeViewControl = () => {
       onChange={handleChange}
       options={viewOptions}
       placeholder="Pick view"
-      className="text-sm max-md:hidden"
+      wrapperClassName="text-sm max-md:hidden"
     />
   );
 };

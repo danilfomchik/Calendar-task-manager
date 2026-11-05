@@ -122,7 +122,7 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
     <div>
       <Button
         startIcon={<CloseIcon size="size-5" />}
-        className="absolute right-2 top-2 p-1 text-sm cursor-pointer hover:text-sky-500"
+        className="absolute right-2 top-2 p-1 text-sm cursor-pointer hover:text-[#3b5bfd]"
         onClick={handleModalClose}
       />
 
@@ -143,6 +143,7 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
                   options={calendarOptions}
                   name="eventCalendar"
                   customOption={customEventCalendarOption}
+                  triggerClassName="flex-row-reverse [&>div]:w-auto"
                 />
               </div>
             ) : (
@@ -162,7 +163,7 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
             <Button
               className={classNames(
                 {
-                  'border-sky-500 text-sky-500': isDirty,
+                  'border-[#3b5bfd] text-[#3b5bfd]': isDirty,
                 },
                 'text-sm p-2 max-md:w-full',
               )}
