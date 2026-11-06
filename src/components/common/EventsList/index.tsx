@@ -1,8 +1,11 @@
 import classNames from 'classnames';
 import {useLayoutEffect, useRef, useState} from 'react';
+import {useSelector} from 'react-redux';
 
 import NoEventsMessage from '@/components/ui/NoEventsMessage';
 import {useEventsList} from '@/hooks/useEventsList';
+import {isEventDimmed} from '@/redux/myCalendars/helpers';
+import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
 
 import EventsListItem from './EventsListItem';
 
@@ -22,6 +25,7 @@ const EventsList = ({
   showEventsCount?: boolean;
   className?: string;
 }) => {
+  const activeCalendars = useSelector(selectActiveCalendars);
   const [hasScroll, setHasScroll] = useState(false);
 
   const events = useEventsList(date);
@@ -70,7 +74,7 @@ const EventsList = ({
                 key={event.id}
                 event={event}
                 showItemControls={showItemControls}
-                isDisabled={event.isDisabled}
+                isDisabled={isEventDimmed(activeCalendars, event.eventCalendar)}
               />
             ))}
           </div>

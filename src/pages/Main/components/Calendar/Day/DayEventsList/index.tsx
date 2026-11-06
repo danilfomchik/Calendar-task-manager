@@ -1,6 +1,9 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
+import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
+import {isEventDimmed} from '@/redux/myCalendars/helpers';
+import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
 import {cx} from '@/services/utils';
 
 import Event from './Event';
@@ -9,6 +12,7 @@ import {TDayEventsListProps} from './types';
 const EVENT_HEIGHT = 24;
 
 const DayEventsList = ({events, date}: TDayEventsListProps) => {
+  const activeCalendars = useSelector(selectActiveCalendars);
   const eventsCount = events.length;
 
   const [visibleEventsCount, setVisibleEventsCount] = useState(eventsCount);
@@ -60,7 +64,7 @@ const DayEventsList = ({events, date}: TDayEventsListProps) => {
       style={{'--event-height': `${EVENT_HEIGHT}px`} as React.CSSProperties}>
       <div className={cx('w-full flex md:flex-col gap-1 max-md:gap-1.5 h-auto min-h-1.5')}>
         {events.slice(0, visibleEventsCount).map(event => (
-          <Event key={event.id} event={event} isDisabled={event.isDisabled} />
+          <Event key={event.id} event={event} isDisabled={isEventDimmed(activeCalendars, event.eventCalendar)} />
         ))}
 
         {hiddenEventsCount > 0 && (

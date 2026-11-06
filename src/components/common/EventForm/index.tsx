@@ -14,7 +14,6 @@ import EditIcon from '@/components/ui/icons/EditIcon';
 import PlusIcon from '@/components/ui/icons/PlusIcon';
 import {selectDay, selectMonth, selectYear} from '@/redux/date/selectors';
 import {addEvent, editEvent} from '@/redux/events/eventsSlice';
-import {selectSelectedCalendar} from '@/redux/myCalendars/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {defaultCalendars} from '@/services/constants';
 import {createDate, formatDate, getDays, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
@@ -30,7 +29,6 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
   const year = useSelector(selectYear);
   const month = useSelector(selectMonth);
   const day = useSelector(selectDay);
-  const selectedCalendar = useSelector(selectSelectedCalendar);
 
   const defaultValues = {
     eventTitle: event?.title ?? '',
@@ -74,7 +72,6 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
       date: createDate(+eventYear, eventMonth, +eventDay),
       description: eventDescription,
       eventCalendar,
-      isDisabled: !selectedCalendar ? false : selectedCalendar !== eventCalendar,
     });
 
     dispatch(addEvent(newEvent));
@@ -90,7 +87,6 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
         date: createDate(+eventYear, eventMonth, +eventDay),
         description: eventDescription,
         eventCalendar,
-        isDisabled: !selectedCalendar ? event?.isDisabled || false : selectedCalendar !== eventCalendar,
       },
     });
 

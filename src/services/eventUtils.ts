@@ -9,7 +9,6 @@ type EventAttribs = {
   description?: string;
   date: string;
   eventCalendar: CalendarsNames;
-  isDisabled: boolean;
 };
 
 type TEditEventAttribs = {
@@ -17,14 +16,13 @@ type TEditEventAttribs = {
   updatedEvent: EventAttribs;
 };
 
-export const createEventObj = ({title, description, date, eventCalendar, isDisabled}: EventAttribs) => {
+export const createEventObj = ({title, description, date, eventCalendar}: EventAttribs) => {
   const newEvent = {
     id: uid(),
     title: title.trim(),
     description: description?.trim(),
     date,
     eventCalendar,
-    isDisabled,
   };
 
   return newEvent;
@@ -37,8 +35,6 @@ export const editEventObj = ({event, updatedEvent}: TEditEventAttribs) => {
     description: updatedEvent.description?.trim(),
     date: updatedEvent.date,
     eventCalendar: updatedEvent.eventCalendar,
-    isDisabled:
-      event?.eventCalendar !== updatedEvent.eventCalendar ? updatedEvent?.isDisabled : event?.isDisabled || false,
   };
 
   return editedEvent;

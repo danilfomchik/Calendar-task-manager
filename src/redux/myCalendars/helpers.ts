@@ -44,3 +44,7 @@ export const handleEventsCountChangeInMap = (
 
   return updatedEventsCalendarsMap;
 };
+
+// an event is dimmed only when a non-empty calendar filter excludes its calendar
+export const isEventDimmed = (activeCalendars: CalendarsNames[], eventCalendar: CalendarsNames) =>
+  activeCalendars.length > 0 && !activeCalendars.includes(eventCalendar);

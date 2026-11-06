@@ -3,8 +3,8 @@ import {KeyboardEvent} from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectFullDate} from '@/redux/date/selectors';
-import {setSelectedCalendar} from '@/redux/myCalendars/myCalendarsSlice';
-import {selectCalendarsList, selectCalendarsMap, selectSelectedCalendar} from '@/redux/myCalendars/selectors';
+import {clearActiveCalendars, toggleActiveCalendar} from '@/redux/myCalendars/myCalendarsSlice';
+import {selectActiveCalendars, selectCalendarsList, selectCalendarsMap} from '@/redux/myCalendars/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
@@ -13,38 +13,49 @@ import {CalendarsNames} from '@/types/types';
 const MyCalendarsList = () => {
   const dispatch = useAppDispatch();
   const calendarsList = useSelector(selectCalendarsList);
-  const selectedCalendar = useSelector(selectSelectedCalendar);
+  const activeCalendars = useSelector(selectActiveCalendars);
   const calendarsMap = useSelector(selectCalendarsMap);
   const fullDate = useSelector(selectFullDate);
 
   const yearMonthKey = formatDate(moment(fullDate), 'YYYY-MM');
   const currentCalendarsData = calendarsMap[yearMonthKey];
+  const hasActiveCalendars = activeCalendars.length > 0;
 
-  const selectCalendar = (name: CalendarsNames) => {
-    if (selectedCalendar === name) {
-      dispatch(setSelectedCalendar(null));
-    } else {
-      dispatch(setSelectedCalendar(name));
-    }
+  const toggleCalendar = (name: CalendarsNames) => {
+    dispatch(toggleActiveCalendar(name));
   };
 
   const handleOptionKeyDown = (event: KeyboardEvent<HTMLLIElement>, index: number) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      selectCalendar(calendarsList[index].name);
-      return;
-    } else {
-      return; // Ignore other keys
+      toggleCalendar(calendarsList[index].name);
     }
   };
 
   return (
     <div className="px-4 py-5">
-      <p className="uppercase text-xs text-[#444444] mb-2.5">My calendars</p>
+      <div className="flex items-center justify-between mb-2.5 min-h-5">
+        <p className="uppercase text-xs text-[#444444]">My calendars</p>
 
-      <ul role="list">
+        {hasActiveCalendars && (
+          <button
+            type="button"
+            onClick={() => dispatch(clearActiveCalendars())}
+            className="group flex cursor-pointer items-center gap-1 rounded-full border border-[#1f1f1f] bg-[#0f0f0f] px-2 py-0.5 text-[11px] leading-none text-gray-400 transition-all hover:border-[#2d2d2d] hover:bg-[#161616] hover:text-gray-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#4a6cf7]">
+            <span className="flex items-center justify-center rounded-full bg-[#1f1f1f] px-1 py-px text-[10px] text-gray-300 group-hover:bg-[#2d2d2d]">
+              {activeCalendars.length}
+            </span>
+            Clear
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+              <path d="M1 1l6 6M7 1L1 7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      <ul role="listbox" aria-multiselectable="true" aria-label="My calendars">
         {calendarsList?.map(({name, itemColor}, index) => {
-          const isSelected = selectedCalendar === name;
+          const isSelected = activeCalendars.includes(name);
           const count = currentCalendarsData?.[name];
 
           return (
@@ -59,7 +70,7 @@ const MyCalendarsList = () => {
                   'bg-[#0f0f0f]': isSelected,
                 },
               )}
-              onClick={() => selectCalendar(name)}
+              onClick={() => toggleCalendar(name)}
               onKeyDown={e => handleOptionKeyDown(e, index)}>
               <div
                 className="w-1.75 h-1.75 rounded-full"
