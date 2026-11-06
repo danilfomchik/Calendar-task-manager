@@ -9,7 +9,6 @@ export type TEvent = {
   description?: string;
   date: string;
   eventCalendar: CalendarsNames;
-  isDisabled?: boolean;
 };
 
 export type TEventsById = {

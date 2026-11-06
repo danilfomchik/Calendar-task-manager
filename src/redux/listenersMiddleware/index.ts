@@ -1,2 +1,1 @@
 import './eventsListener';
-import './selectedCalendarListener';
