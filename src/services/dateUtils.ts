@@ -81,7 +81,7 @@ const generateDatesArrayByFullDate = (date: Moment) => {
 
 export const WEEK_LENGTH = 7;
 
-export type TWeekDirection = 1 | -1;
+export type TDirection = 1 | -1;
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 

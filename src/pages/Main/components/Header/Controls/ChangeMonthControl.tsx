@@ -1,4 +1,3 @@
-import moment from 'moment';
 import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
@@ -6,8 +5,8 @@ import ArrowLeft from '@/components/ui/icons/ArrowLeft';
 import ArrowRight from '@/components/ui/icons/ArrowRight';
 import {useIsCollapsedCalendar} from '@/hooks/useIsCollapsedCalendar';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
-import {setFullDate, shiftWeek} from '@/redux/date/dateSlice';
-import {selectDay, selectFullDate} from '@/redux/date/selectors';
+import {setFullDate, shiftMonth, shiftWeek} from '@/redux/date/dateSlice';
+import {selectDay} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate, getDate} from '@/services/dateUtils';
 
@@ -22,7 +21,6 @@ enum MonthDirection {
 
 const ChangeMonthControl = () => {
   const dispatch = useAppDispatch();
-  const fullDate = useSelector(selectFullDate);
   const currentDay = useSelector(selectDay);
   const isCollapsedCalendar = useIsCollapsedCalendar();
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
@@ -34,18 +32,7 @@ const ChangeMonthControl = () => {
       return;
     }
 
-    let monthIndex = 0;
-
-    if (type === MonthDirection.NEXT) {
-      monthIndex = 1;
-    } else {
-      monthIndex = -1;
-    }
-
-    const changedDate = moment(fullDate).add(monthIndex, 'M');
-    const changedFullDate = formatDate(changedDate, 'YYYY-MM-DD');
-
-    dispatch(setFullDate(changedFullDate));
+    dispatch(shiftMonth(type === MonthDirection.NEXT ? 1 : -1));
   };
 
   const onSwitchToToday = () => {

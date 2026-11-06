@@ -2,7 +2,7 @@ import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import moment from 'moment';
 
 import {
-  TWeekDirection,
+  TDirection,
   WEEK_LENGTH,
   formatDate,
   getDate,
@@ -29,6 +29,13 @@ const reducers = {
     applyVisibleMonth(state, changedDate);
     state.weekStart = getInitialWeekStart(changedDate);
   },
+  // same as the header arrows: moves the visible month, selected date stays untouched
+  shiftMonth: (state: TDateState, action: PayloadAction<TDirection>) => {
+    const changedDate = formatDate(moment(state.fullDate).add(action.payload, 'M'), 'YYYY-MM-DD');
+
+    applyVisibleMonth(state, changedDate);
+    state.weekStart = getInitialWeekStart(changedDate);
+  },
   setIsCollapsed: (state: TDateState, action: PayloadAction<boolean>) => {
     state.isCollapsed = action.payload;
 
@@ -38,7 +45,7 @@ const reducers = {
   },
   // moves the week strip; the visible month follows the month the new week belongs to (see getWeekOwnerDate)
   // the selected date moves together with the week so the selected day stays at the same weekday
-  shiftWeek: (state: TDateState, action: PayloadAction<TWeekDirection>) => {
+  shiftWeek: (state: TDateState, action: PayloadAction<TDirection>) => {
     const direction = action.payload;
 
     state.weekStart = shiftDate(state.weekStart, direction * WEEK_LENGTH);
@@ -73,5 +80,5 @@ const dateSlice = createSlice({
   reducers,
 });
 
-export const {setFullDate, setSelectedDate, setIsCollapsed, shiftWeek} = dateSlice.actions;
+export const {setFullDate, setSelectedDate, setIsCollapsed, shiftWeek, shiftMonth} = dateSlice.actions;
 export default dateSlice;
