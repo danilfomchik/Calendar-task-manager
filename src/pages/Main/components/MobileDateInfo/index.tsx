@@ -43,7 +43,7 @@ const MobileDateInfo = () => {
           />
         </div>
 
-        <EventsList date={selectedDate} className="flex items-center justify-center" />
+        <EventsList date={selectedDate} />
       </div>
 
       <AddEvent

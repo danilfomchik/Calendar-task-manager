@@ -29,10 +29,7 @@ const Calendar = () => {
         <DaysList />
       </div>
 
-      <Divider
-        className={cx('mb-4 md:hidden!', {
-          'my-4': isCollapsed,
-        })}>
+      <Divider className="mb-4 md:hidden!">
         <Button
           startIcon={
             <div className={`transition-all ${isCollapsed ? 'rotate-180' : 'rotate-0'}`}>
