@@ -1,4 +1,4 @@
-import {DragControls, PanInfo, motion} from 'framer-motion';
+import {DragControls, PanInfo, motion} from 'motion/react';
 import {ReactNode, useRef} from 'react';
 
 import {TDirection} from '@/services/dateUtils';
@@ -14,10 +14,12 @@ interface ISwipeSlideProps {
   className?: string;
   // lets an element outside the slide (e.g. an edge cue) start the swipe
   dragControls?: DragControls;
+  // fires after every drag, swipe or not
+  onDragFinish?: () => void;
   children: ReactNode;
 }
 
-const SwipeSlide = ({slideKey, onSwipe, className, dragControls, children}: ISwipeSlideProps) => {
+const SwipeSlide = ({slideKey, onSwipe, className, dragControls, onDragFinish, children}: ISwipeSlideProps) => {
   // 1 - next (slides in from the right), -1 - previous (slides in from the left)
   const directionRef = useRef<TDirection>(1);
   const prevKeyRef = useRef(slideKey);
@@ -32,6 +34,8 @@ const SwipeSlide = ({slideKey, onSwipe, className, dragControls, children}: ISwi
   }
 
   const handleDragEnd = (_: PointerEvent, {offset, velocity}: PanInfo) => {
+    onDragFinish?.();
+
     const isNext = offset.x < -SWIPE_DISTANCE_THRESHOLD || velocity.x < -SWIPE_VELOCITY_THRESHOLD;
     const isPrev = offset.x > SWIPE_DISTANCE_THRESHOLD || velocity.x > SWIPE_VELOCITY_THRESHOLD;
 
