@@ -1,4 +1,4 @@
-import {PanInfo, motion} from 'framer-motion';
+import {DragControls, PanInfo, motion} from 'framer-motion';
 import {ReactNode, useRef} from 'react';
 
 import {TDirection} from '@/services/dateUtils';
@@ -12,10 +12,12 @@ interface ISwipeSlideProps {
   slideKey: string;
   onSwipe: (direction: TDirection) => void;
   className?: string;
+  // lets an element outside the slide (e.g. an edge cue) start the swipe
+  dragControls?: DragControls;
   children: ReactNode;
 }
 
-const SwipeSlide = ({slideKey, onSwipe, className, children}: ISwipeSlideProps) => {
+const SwipeSlide = ({slideKey, onSwipe, className, dragControls, children}: ISwipeSlideProps) => {
   // 1 - next (slides in from the right), -1 - previous (slides in from the left)
   const directionRef = useRef<TDirection>(1);
   const prevKeyRef = useRef(slideKey);
@@ -42,6 +44,7 @@ const SwipeSlide = ({slideKey, onSwipe, className, children}: ISwipeSlideProps) 
     <motion.div
       key={slideKey}
       drag="x"
+      dragControls={dragControls}
       dragSnapToOrigin
       dragElastic={0.2}
       dragConstraints={{left: 0, right: 0}}

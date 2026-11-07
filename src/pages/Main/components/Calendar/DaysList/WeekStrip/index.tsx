@@ -1,3 +1,4 @@
+import {useDragControls} from 'framer-motion';
 import {useSelector} from 'react-redux';
 
 import SwipeSlide from '@/components/common/SwipeSlide';
@@ -10,10 +11,12 @@ import {cx} from '@/services/utils';
 import Day from '../../Day';
 
 const cueClassName =
-  'absolute top-1 h-8 w-10 flex items-center justify-center text-xs sm:text-base text-white/25 active:text-white/50 transition-colors';
+  'absolute top-1 h-8 w-10 flex items-center justify-center touch-pan-y rounded text-xs sm:text-base text-white/25 active:text-white/50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/70';
 
 const WeekStrip = () => {
   const dispatch = useAppDispatch();
+
+  const dragControls = useDragControls();
 
   const weekStart = useSelector(selectWeekStart);
 
@@ -25,6 +28,7 @@ const WeekStrip = () => {
       <button
         type="button"
         aria-label="Previous week"
+        onPointerDown={e => dragControls.start(e)}
         onClick={() => dispatch(shiftWeek(-1))}
         className={cx(cueClassName, 'right-full')}>
         {prevCue}
@@ -33,6 +37,7 @@ const WeekStrip = () => {
       <div className="flex flex-col w-full overflow-hidden">
         <SwipeSlide
           slideKey={weekStart}
+          dragControls={dragControls}
           onSwipe={direction => dispatch(shiftWeek(direction))}
           className="grid grid-cols-7 w-full">
           {generateWeekDates(weekStart).map(date => (
@@ -44,6 +49,7 @@ const WeekStrip = () => {
       <button
         type="button"
         aria-label="Next week"
+        onPointerDown={e => dragControls.start(e)}
         onClick={() => dispatch(shiftWeek(1))}
         className={cx(cueClassName, 'left-full')}>
         {nextCue}
