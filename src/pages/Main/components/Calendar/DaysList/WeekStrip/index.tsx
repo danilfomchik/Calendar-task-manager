@@ -2,43 +2,52 @@ import {useSelector} from 'react-redux';
 
 import SwipeSlide from '@/components/common/SwipeSlide';
 import {shiftWeek} from '@/redux/date/dateSlice';
-import {selectFullDate, selectWeekStart} from '@/redux/date/selectors';
+import {selectWeekStart} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
-import {generateWeekDates, getWeekPositionInMonth} from '@/services/dateUtils';
+import {WEEK_LENGTH, formatDate, generateWeekDates, getDate, shiftDate} from '@/services/dateUtils';
+import {cx} from '@/services/utils';
 
 import Day from '../../Day';
+
+const cueClassName =
+  'absolute top-1 h-8 w-10 flex items-center justify-center text-xs sm:text-base text-white/25 active:text-white/50 transition-colors';
 
 const WeekStrip = () => {
   const dispatch = useAppDispatch();
 
-  const fullDate = useSelector(selectFullDate);
   const weekStart = useSelector(selectWeekStart);
 
-  const weekPosition = getWeekPositionInMonth(fullDate, weekStart);
+  const prevCue = formatDate(getDate(shiftDate(weekStart, -1)), 'DD');
+  const nextCue = formatDate(getDate(shiftDate(weekStart, WEEK_LENGTH)), 'DD');
 
   return (
-    <div className="flex flex-col w-full gap-1 overflow-hidden touch-pan-y">
-      <SwipeSlide
-        slideKey={weekStart}
-        onSwipe={direction => dispatch(shiftWeek(direction))}
-        className="grid grid-cols-7 w-full">
-        {generateWeekDates(weekStart).map(date => (
-          <Day key={date} date={date} />
-        ))}
-      </SwipeSlide>
+    <div className="relative w-full touch-pan-y">
+      <button
+        type="button"
+        aria-label="Previous week"
+        onClick={() => dispatch(shiftWeek(-1))}
+        className={cx(cueClassName, 'right-full')}>
+        {prevCue}
+      </button>
 
-      <div
-        role="img"
-        aria-label={`Week ${weekPosition.index + 1} of ${weekPosition.total}`}
-        className="relative self-center w-24 h-1 rounded-full bg-white/10">
-        <span
-          className="absolute inset-y-0 rounded-full bg-white/45 transition-[left] duration-200 ease-out"
-          style={{
-            width: `${100 / weekPosition.total}%`,
-            left: `${(weekPosition.index * 100) / weekPosition.total}%`,
-          }}
-        />
+      <div className="flex flex-col w-full overflow-hidden">
+        <SwipeSlide
+          slideKey={weekStart}
+          onSwipe={direction => dispatch(shiftWeek(direction))}
+          className="grid grid-cols-7 w-full">
+          {generateWeekDates(weekStart).map(date => (
+            <Day key={date} date={date} />
+          ))}
+        </SwipeSlide>
       </div>
+
+      <button
+        type="button"
+        aria-label="Next week"
+        onClick={() => dispatch(shiftWeek(1))}
+        className={cx(cueClassName, 'left-full')}>
+        {nextCue}
+      </button>
     </div>
   );
 };

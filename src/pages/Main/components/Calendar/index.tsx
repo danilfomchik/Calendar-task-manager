@@ -3,6 +3,7 @@ import {useSelector} from 'react-redux';
 import Button from '@/components/common/Button';
 import Divider from '@/components/ui/Divider';
 import ArrowTop from '@/components/ui/icons/ArrowTop';
+import {useIsCollapsedCalendar} from '@/hooks/useIsCollapsedCalendar';
 import {setIsCollapsed} from '@/redux/date/dateSlice';
 import {selectIsCollapsed} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
@@ -15,10 +16,15 @@ import WeekDays from './WeekDays';
 const Calendar = () => {
   const dispatch = useAppDispatch();
   const isCollapsed = useSelector(selectIsCollapsed);
+  const isCollapsedCalendar = useIsCollapsedCalendar();
 
   return (
     <div className="flex flex-col w-full items-center overflow-x-auto max-md:pb-5 h-[calc(100vh-var(--height-header))]">
-      <div className="flex flex-col w-full md:h-full gap-2 items-center px-3 md:px-0 pt-2 overflow-hidden">
+      <div
+        className={cx('flex flex-col w-full md:h-full gap-2 items-center md:px-0 pt-2 overflow-hidden', {
+          'px-3': !isCollapsedCalendar,
+          'px-10': isCollapsedCalendar,
+        })}>
         <WeekDays />
         <DaysList />
       </div>
