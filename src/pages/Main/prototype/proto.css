@@ -1,0 +1,59 @@
+/* PROTOTYPE: home page redesign. Throwaway. Tokens are defined by role; calendar colours are NEVER used by chrome. */
+
+:root[data-proto] {
+  --surface-base: #0b0c0e;
+  --surface-sunken: #08090a;
+  --surface-raised: #121417;
+  --surface-overlay: #181b1f;
+  --line: #22262b;
+  --line-strong: #343a41;
+  --text: #f3f5f7;
+  --text-muted: #a3acb6;
+  --text-faint: #7d8791;
+
+  /* green = action (buttons, selection, focus), blue = info (today) */
+  --action: #35e08a;
+  --action-ink: #04140b;
+  --info: #5aa2ff;
+  --info-ink: #04101f;
+}
+
+:root[data-proto],
+:root[data-proto] body,
+:root[data-proto] #root {
+  background: var(--surface-base);
+  font-family: 'Inter Tight', system-ui, sans-serif;
+}
+
+:root[data-proto] aside {
+  background: var(--surface-sunken);
+  border-color: var(--line);
+  font-family: 'Inter Tight', system-ui, sans-serif;
+}
+
+:root[data-proto] ::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 0;
+}
+
+.proto-display {
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.proto-mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-proto] :focus-visible {
+  outline: 2px solid var(--action);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proto-root * {
+    transition-duration: 0s !important;
+  }
+}
