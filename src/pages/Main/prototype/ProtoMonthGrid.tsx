@@ -25,11 +25,18 @@ import {todayStr} from './shared';
 export const ProtoWeekdays = ({mode}: {mode: 'desktop' | 'mobile'}) => (
   <div
     className={cx('proto-mono grid shrink-0 grid-cols-7 text-[11px] uppercase tracking-widest text-(--text-faint)', {
-      'border-b border-(--line) px-2 py-2': mode === 'desktop',
+      'border-b border-l border-(--line) border-l-transparent': mode === 'desktop',
       'py-1.5 text-center': mode === 'mobile',
     })}>
     {getWeekDays().map(day => (
-      <span key={day}>{mode === 'desktop' ? day.slice(0, 3) : day.slice(0, 1)}</span>
+      <span
+        key={day}
+        className={cx({
+          // same box model as a day cell (border-r + p-1.5) and the numeral's inner offset, so labels sit over the numerals
+          'border-r border-(--line) py-2 pr-1.5 pl-2.5': mode === 'desktop',
+        })}>
+        {mode === 'desktop' ? day.slice(0, 3) : day.slice(0, 1)}
+      </span>
     ))}
   </div>
 );

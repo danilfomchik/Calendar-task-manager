@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 // PROTOTYPE: day cells. Desktop = dense chips; mobile = numeral + up to 3 dots.
 import moment from 'moment';
 import {memo, useLayoutEffect, useRef, useState} from 'react';
@@ -20,9 +21,9 @@ type TCellProps = {
   showOpenDay?: boolean;
 };
 
-const label = (date: string, count: number) => `${moment(date).format('dddd D MMMM')}, ${pluralEvents(count)}`;
+export const label = (date: string, count: number) => `${moment(date).format('dddd D MMMM')}, ${pluralEvents(count)}`;
 
-const numeralClass = (isToday: boolean, isOutside: boolean) =>
+export const numeralClass = (isToday: boolean, isOutside: boolean) =>
   cx('proto-display flex h-7 min-w-7 items-center justify-center px-1 text-[22px] leading-none', {
     'bg-(--info) text-(--info-ink)': isToday,
     'text-(--text)': !isToday && !isOutside,
@@ -125,9 +126,19 @@ export const DesktopDayCell = memo(
                   edit(event);
                 }}
                 style={calendarVars(event.eventCalendar)}
-                className="flex h-5 w-full shrink-0 cursor-pointer items-center gap-1.5 text-left text-xs leading-none hover:bg-(--surface-overlay) disabled:cursor-not-allowed disabled:hover:bg-transparent">
-                <span aria-hidden className="h-full w-0.75 shrink-0 bg-(--calendar-color)" />
-                <span className={cx('truncate', dimmed ? 'text-(--text-faint)' : 'text-(--text)')}>{event.title}</span>
+                className={cx(
+                  'flex h-5 w-full shrink-0 items-center gap-1.5 text-left text-xs leading-none',
+                  dimmed
+                    ? 'cursor-not-allowed border border-dashed border-(--line-strong) bg-transparent'
+                    : 'cursor-pointer bg-(--surface-overlay) hover:bg-(--line)',
+                )}>
+                <span
+                  aria-hidden
+                  className={cx('h-full w-0.75 shrink-0', dimmed ? 'bg-transparent' : 'bg-(--calendar-color)')}
+                />
+                <span className={cx('truncate', dimmed ? 'text-(--text-faint) italic' : 'text-(--text)')}>
+                  {event.title}
+                </span>
               </button>
             );
           })}

@@ -25,7 +25,8 @@ const PrototypeSwitcher = ({current, labels, onChange}: TProps) => {
 
       onChange(
         PROTO_VARIANTS[
-          (PROTO_VARIANTS.indexOf(current) + (e.key === 'ArrowRight' ? 1 : -1) + 3) % PROTO_VARIANTS.length
+          (PROTO_VARIANTS.indexOf(current) + (e.key === 'ArrowRight' ? 1 : -1) + PROTO_VARIANTS.length) %
+            PROTO_VARIANTS.length
         ],
       );
     };

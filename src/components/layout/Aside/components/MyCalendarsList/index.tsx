@@ -2,6 +2,8 @@ import moment from 'moment';
 import {KeyboardEvent} from 'react';
 import {useSelector} from 'react-redux';
 
+import MyCalendarsListProto from '@/pages/Main/prototype/sidebar/MyCalendarsListProto';
+import {useRedesign} from '@/pages/Main/prototype/useProtoVariant';
 import {selectFullDate} from '@/redux/date/selectors';
 import {clearActiveCalendars, toggleActiveCalendar} from '@/redux/myCalendars/myCalendarsSlice';
 import {selectActiveCalendars, selectCalendarsList, selectCalendarsMap} from '@/redux/myCalendars/selectors';
@@ -10,7 +12,7 @@ import {formatDate} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 import {CalendarsNames} from '@/types/types';
 
-const MyCalendarsList = () => {
+const MyCalendarsListLegacy = () => {
   const dispatch = useAppDispatch();
   const calendarsList = useSelector(selectCalendarsList);
   const activeCalendars = useSelector(selectActiveCalendars);
@@ -88,5 +90,8 @@ const MyCalendarsList = () => {
     </div>
   );
 };
+
+// PROTOTYPE: swap to the redesigned list when a redesign variant is active
+const MyCalendarsList = () => (useRedesign() ? <MyCalendarsListProto /> : <MyCalendarsListLegacy />);
 
 export default MyCalendarsList;

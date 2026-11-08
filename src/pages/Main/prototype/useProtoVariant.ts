@@ -3,7 +3,7 @@
 import {useCallback, useEffect} from 'react';
 import {useSearchParams} from 'react-router';
 
-export const PROTO_VARIANTS = ['0', 'A', 'B'] as const;
+export const PROTO_VARIANTS = ['0', 'A'] as const;
 export type TProtoVariant = (typeof PROTO_VARIANTS)[number];
 
 const DEFAULT_VARIANT: TProtoVariant = 'A';
@@ -50,4 +50,10 @@ export const useProtoVariant = () => {
   );
 
   return {variant, setVariant};
+};
+
+// PROTOTYPE: sidebar restyle follows the variant (variant 0 = current sidebar)
+export const useRedesign = () => {
+  const {variant} = useProtoVariant();
+  return !import.meta.env.PROD && variant !== '0';
 };

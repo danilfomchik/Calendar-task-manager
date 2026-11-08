@@ -63,15 +63,18 @@ export const AgendaItem = ({event, className}: {event: TEvent; className?: strin
       onClick={() => edit(event)}
       style={calendarVars(event.eventCalendar)}
       className={cx(
-        'flex w-full min-h-11 cursor-pointer items-stretch gap-3 border border-(--line) bg-(--surface-raised) text-left transition-colors hover:border-(--line-strong) hover:bg-(--surface-overlay) disabled:cursor-not-allowed disabled:hover:border-(--line) disabled:hover:bg-(--surface-raised)',
+        'flex w-full min-h-11 items-stretch gap-3 border text-left transition-colors',
+        isDimmed
+          ? 'cursor-not-allowed border-dashed border-(--line-strong) bg-transparent'
+          : 'cursor-pointer border-(--line) bg-(--surface-raised) hover:border-(--line-strong) hover:bg-(--surface-overlay)',
         className,
       )}>
-      <span aria-hidden className="w-1 shrink-0 bg-(--calendar-color)" />
+      <span aria-hidden className={cx('w-1 shrink-0', isDimmed ? 'bg-transparent' : 'bg-(--calendar-color)')} />
       <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 py-2 pr-3">
         <span
           className={cx('truncate text-[15px] font-semibold leading-tight', {
             'text-(--text)': !isDimmed,
-            'text-(--text-faint)': isDimmed,
+            'text-(--text-faint) italic': isDimmed,
           })}>
           {event.title}
         </span>

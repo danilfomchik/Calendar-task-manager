@@ -1,11 +1,13 @@
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 
+import MonthSmallCalendarProto from '@/pages/Main/prototype/sidebar/MonthSmallCalendarProto';
+import {useRedesign} from '@/pages/Main/prototype/useProtoVariant';
 import {selectFullDate, selectMonth, selectYear} from '@/redux/date/selectors';
 import {formatDate, generateDatesArray, getDate, getWeekDays} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 
-const MonthSmallCalendar = ({className = ''}) => {
+const MonthSmallCalendarLegacy = ({className = ''}) => {
   const fullDate = useSelector(selectFullDate);
   const year = useSelector(selectYear);
   const month = useSelector(selectMonth);
@@ -47,5 +49,9 @@ const MonthSmallCalendar = ({className = ''}) => {
     </div>
   );
 };
+
+// PROTOTYPE: swap to the redesigned mini-calendar when a redesign variant is active
+const MonthSmallCalendar = (props: {className?: string}) =>
+  useRedesign() ? <MonthSmallCalendarProto {...props} /> : <MonthSmallCalendarLegacy {...props} />;
 
 export default MonthSmallCalendar;

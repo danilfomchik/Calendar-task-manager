@@ -1,18 +1,17 @@
-// PROTOTYPE (throwaway): home page redesign. See the handoff: desktop A = agenda panel, B = "+N more" popover;
-// mobile A = bottom sheet, B = docked Week strip. Events have no time field, so no start times are shown.
+// PROTOTYPE (throwaway): home page redesign. A = agenda panel (desktop) / bottom sheet (mobile). The Matrix variant lives on branch prototype/home-matrix.
+// Events have no time field, so no start times are shown.
 import {useEffect} from 'react';
 
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 
 import DesktopHome from './DesktopHome';
 import MobileSheetHome from './MobileSheetHome';
-import MobileStackHome from './MobileStackHome';
 import './proto.css';
 
 const FONTS_HREF =
   'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap';
 
-const ProtoHome = ({variant}: {variant: 'A' | 'B'}) => {
+const ProtoHome = () => {
   const isMobile = useMediaQuery({size: 'sm', direction: 'to'});
 
   useEffect(() => {
@@ -31,7 +30,7 @@ const ProtoHome = ({variant}: {variant: 'A' | 'B'}) => {
 
   return (
     <div className="proto-root h-full bg-(--surface-base) text-(--text)">
-      {!isMobile ? <DesktopHome variant={variant} /> : variant === 'A' ? <MobileSheetHome /> : <MobileStackHome />}
+      {isMobile ? <MobileSheetHome /> : <DesktopHome />}
     </div>
   );
 };
