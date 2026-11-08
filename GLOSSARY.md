@@ -14,7 +14,10 @@ The full 6×7 view of the Visible month, including dimmed days from neighbouring
 The mobile-only state in which the Month grid is replaced by a single Week strip.
 
 **Week strip**:
-A single Monday-first row of seven days shown in the Collapsed calendar. Days outside the Visible month are dimmed.
+A single Monday-first row of seven days shown in the Collapsed calendar. Days outside the Visible month are dimmed. An Edge cue sits beside each end.
+
+**Edge cue**:
+The faded neighbouring day shown beside each end of the Week strip, hinting that adjacent weeks exist. Tapping it moves one week.
 
 **Initial week**:
 The week a Week strip starts on. For the current month it is the week containing today. For any other month it is the week containing the 1st.

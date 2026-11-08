@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import {useLayoutEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 
@@ -6,6 +5,7 @@ import NoEventsMessage from '@/components/ui/NoEventsMessage';
 import {useEventsList} from '@/hooks/useEventsList';
 import {isEventDimmed} from '@/redux/myCalendars/helpers';
 import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
+import {cx} from '@/services/utils';
 
 import EventsListItem from './EventsListItem';
 
@@ -58,7 +58,7 @@ const EventsList = ({
 
       <div
         ref={eventsContainerRef}
-        className={classNames(
+        className={cx(
           'flex-1 overflow-y-auto scroll-smooth',
           {
             'pr-2.5': hasScroll && !!events?.length,

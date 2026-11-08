@@ -111,16 +111,3 @@ export const getWeekOwnerDate = (weekStart: string) => {
 
   return today >= weekStart && today <= weekEnd ? today : weekEnd;
 };
-
-// position of the week among the weeks that belong to the visible month
-export const getWeekPositionInMonth = (fullDate: string, weekStart: string) => {
-  const month = moment(fullDate);
-  const firstWeekStart = getWeekStart(month.clone().startOf('month'));
-  const ownedWeeks = Array.from({length: 8}, (_, i) => shiftDate(firstWeekStart, (i - 1) * WEEK_LENGTH)).filter(week =>
-    moment(getWeekOwnerDate(week)).isSame(month, 'month'),
-  );
-
-  const index = ownedWeeks.indexOf(weekStart);
-
-  return {total: ownedWeeks.length, index: Math.max(index, 0)};
-};
