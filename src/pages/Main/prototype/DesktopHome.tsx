@@ -1,7 +1,7 @@
-// PROTOTYPE: desktop. A = right-hand agenda panel, B = anchored popover for "+N more".
+// PROTOTYPE: desktop variant A = right-hand agenda panel.
 import moment from 'moment';
 import {motion, useReducedMotion} from 'motion/react';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router';
 
@@ -61,109 +61,18 @@ const AgendaPanel = ({date, onClose}: {date: string; onClose: () => void}) => {
   );
 };
 
-type TPopover = {date: string; rect: DOMRect};
-
-const POPOVER_W = 288;
-
-const MorePopover = ({date, rect, onClose}: TPopover & {onClose: () => void}) => {
-  const events = useDayEvents(date);
-  const {create} = useEventForm();
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const day = moment(date);
-
-  useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
-    ref.current?.focus();
-
-    const onKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('resize', onClose);
-
-    return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('resize', onClose);
-      opener?.focus?.();
-    };
-  }, [onClose]);
-
-  const left = Math.min(Math.max(rect.left + rect.width / 2 - POPOVER_W / 2, 8), window.innerWidth - POPOVER_W - 8);
-  const maxH = Math.min(380, window.innerHeight - 16);
-  const top = Math.min(Math.max(rect.top - 8, 8), window.innerHeight - maxH - 8);
-
-  return (
-    <>
-      <div className="fixed inset-0 z-40" onClick={onClose} />
-      <motion.div
-        ref={ref}
-        role="dialog"
-        aria-label={`Events on ${day.format('D MMMM')}`}
-        tabIndex={-1}
-        initial={reduce ? false : {opacity: 0, y: 6}}
-        animate={{opacity: 1, y: 0}}
-        transition={{duration: 0.15, ease: 'easeOut'}}
-        style={{left, top, width: POPOVER_W, maxHeight: maxH}}
-        className="fixed z-50 flex flex-col border border-(--line-strong) bg-(--surface-overlay) shadow-[0_16px_40px_rgba(0,0,0,0.6)]">
-        <div className="flex items-baseline gap-2 border-b border-(--line) px-3 py-2">
-          <span className="proto-display text-3xl leading-none">{day.format('DD')}</span>
-          <span className="proto-mono text-[11px] uppercase tracking-widest text-(--text-muted)">
-            {day.format('ddd MMM')} · {pluralEvents(events.length)}
-          </span>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto p-2">
-          <AgendaList date={date} events={events} />
-        </div>
-
-        <div className="flex items-center justify-between border-t border-(--line) px-3 py-2">
-          <button
-            type="button"
-            onClick={() => {
-              onClose();
-              create(date);
-            }}
-            className="proto-mono cursor-pointer text-xs uppercase tracking-wider text-(--action)">
-            + Add event
-          </button>
-          <Link
-            to={`/day/${date}`}
-            className="proto-mono text-xs uppercase tracking-wider text-(--text-muted) hover:text-(--text)">
-            Open day ↗
-          </Link>
-        </div>
-      </motion.div>
-    </>
-  );
-};
-
-const DesktopHome = ({variant}: {variant: 'A' | 'B'}) => {
+const DesktopHome = () => {
   const dispatch = useAppDispatch();
   const selectedDate = useSelector(selectSelectedDate);
   const [panelOpen, setPanelOpen] = useState(true);
-  const [popover, setPopover] = useState<TPopover | null>(null);
-
-  const isPanel = variant === 'A';
 
   const handleSelect = useCallback(
     (date: string) => {
       dispatch(setSelectedDate(date));
-      if (isPanel) setPanelOpen(true);
+      setPanelOpen(true);
     },
-    [dispatch, isPanel],
+    [dispatch],
   );
-
-  const handleMore = useCallback(
-    (date: string, anchor: HTMLElement) => {
-      if (isPanel) return;
-      setPopover({
-        date,
-        rect: anchor.closest('[class*="group"]')?.getBoundingClientRect() ?? anchor.getBoundingClientRect(),
-      });
-    },
-    [isPanel],
-  );
-
-  const closePopover = useCallback(() => setPopover(null), []);
 
   return (
     <div className="flex h-full flex-col">
@@ -172,19 +81,11 @@ const DesktopHome = ({variant}: {variant: 'A' | 'B'}) => {
       <div className="flex min-h-0 flex-1">
         <div className="flex min-w-0 flex-1 flex-col">
           <ProtoWeekdays mode="desktop" />
-          <ProtoMonthGrid
-            mode="desktop"
-            selectedDate={selectedDate}
-            onSelect={handleSelect}
-            onMore={handleMore}
-            showOpenDay={!isPanel}
-          />
+          <ProtoMonthGrid mode="desktop" selectedDate={selectedDate} onSelect={handleSelect} />
         </div>
 
-        {isPanel && panelOpen && <AgendaPanel date={selectedDate} onClose={() => setPanelOpen(false)} />}
+        {panelOpen && <AgendaPanel date={selectedDate} onClose={() => setPanelOpen(false)} />}
       </div>
-
-      {!isPanel && popover && <MorePopover {...popover} onClose={closePopover} />}
     </div>
   );
 };

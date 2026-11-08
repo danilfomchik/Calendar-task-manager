@@ -10,11 +10,19 @@ import {TProtoVariant, useProtoVariant} from './prototype/useProtoVariant';
 // TODO: add arrow position
 // TODO: add position recalculation on resize/scroll
 
-const DESKTOP_LABELS: Record<TProtoVariant, string> = {'0': 'Current', A: 'Agenda panel', B: 'More popover'};
-const MOBILE_LABELS: Record<TProtoVariant, string> = {'0': 'Current', A: 'Bottom sheet', B: 'Docked week strip'};
+const DESKTOP_LABELS: Record<TProtoVariant, string> = {
+  '0': 'Current',
+  A: 'Agenda panel',
+  E: 'Matrix',
+};
+const MOBILE_LABELS: Record<TProtoVariant, string> = {
+  '0': 'Current',
+  A: 'Bottom sheet',
+  E: 'Matrix',
+};
 
 const MainPage = () => {
-  // PROTOTYPE: ?variant=0|A|B (dev only; production always renders the current page)
+  // PROTOTYPE: ?variant=0|A|E (dev only; production always renders the current page)
   const {variant, setVariant} = useProtoVariant();
   const isMobile = useMediaQuery({size: 'sm', direction: 'to'});
 

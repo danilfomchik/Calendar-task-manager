@@ -1,6 +1,6 @@
 /* PROTOTYPE: home page redesign. Throwaway. Tokens are defined by role; calendar colours are NEVER used by chrome. */
 
-:root[data-proto] {
+:root {
   --surface-base: #0b0c0e;
   --surface-sunken: #08090a;
   --surface-raised: #121417;
