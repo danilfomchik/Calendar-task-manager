@@ -1,17 +1,23 @@
+import {AgendaPanelProvider} from './AgendaPanelContext';
+import AgendaPanel from './components/AgendaPanel';
 import Calendar from './components/Calendar';
 import Header from './components/Header';
 
-// TODO: add tab support
-// TODO: add arrow position
-// TODO: add position recalculation on resize/scroll
-
 const MainPage = () => {
   return (
-    <div className="flex flex-col h-full">
-      <Header />
+    <AgendaPanelProvider>
+      <div className="flex flex-col h-full">
+        <Header />
 
-      <Calendar />
-    </div>
+        <div className="flex min-h-0 shrink-0">
+          <div className="flex min-w-0 flex-1 flex-col">
+            <Calendar />
+          </div>
+
+          <AgendaPanel />
+        </div>
+      </div>
+    </AgendaPanelProvider>
   );
 };
 
