@@ -2,7 +2,7 @@ import {useSelector} from 'react-redux';
 import {Link} from 'react-router';
 
 import MonthSmallCalendar from '@/components/common/MonthSmallCalendar';
-import OpenSidebarBtn from '@/components/common/OpenSidebarBtn';
+import SidebarToggle from '@/components/common/SidebarToggle';
 import {selectIsSidebarOpen} from '@/redux/sidebar/selectors';
 import {onToggleSidebar} from '@/redux/sidebar/sidebarSlice';
 import {useAppDispatch} from '@/redux/store';
@@ -33,7 +33,7 @@ const Aside = () => {
           <Link to="/" className="font-display font-extrabold tracking-tight text-xl text-text">
             Calendar
           </Link>
-          <OpenSidebarBtn />
+          <SidebarToggle />
         </div>
 
         <MonthSmallCalendar className="border-y border-line" />
