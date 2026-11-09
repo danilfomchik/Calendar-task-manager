@@ -1,9 +1,8 @@
 import Button from '@/components/common/Button';
 import ArrowLeft from '@/components/ui/icons/ArrowLeft';
 import ArrowRight from '@/components/ui/icons/ArrowRight';
-import {useIsCollapsedCalendar} from '@/hooks/useIsCollapsedCalendar';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
-import {setFullDate, shiftMonth, shiftWeek} from '@/redux/date/dateSlice';
+import {setFullDate, shiftMonth} from '@/redux/date/dateSlice';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate, getDate} from '@/services/dateUtils';
 
@@ -17,16 +16,9 @@ enum MonthDirection {
 
 const ChangeMonthControl = () => {
   const dispatch = useAppDispatch();
-  const isCollapsedCalendar = useIsCollapsedCalendar();
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
   const onChangeMonth = (type: MonthDirection) => {
-    if (isCollapsedCalendar) {
-      dispatch(shiftWeek(type === MonthDirection.NEXT ? 1 : -1));
-
-      return;
-    }
-
     dispatch(shiftMonth(type === MonthDirection.NEXT ? 1 : -1));
   };
 

@@ -1,16 +1,7 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import moment from 'moment';
 
-import {
-  TDirection,
-  WEEK_LENGTH,
-  formatDate,
-  getDate,
-  getInitialWeekStart,
-  getWeekOwnerDate,
-  isSameMonth,
-  shiftDate,
-} from '@/services/dateUtils';
+import {TDirection, formatDate, getDate} from '@/services/dateUtils';
 
 import {SliceNames} from '../types';
 import {TDateState} from './types';
@@ -27,35 +18,12 @@ const reducers = {
     const changedDate = action.payload;
 
     applyVisibleMonth(state, changedDate);
-    state.weekStart = getInitialWeekStart(changedDate);
   },
   // same as the header arrows: moves the visible month, selected date stays untouched
   shiftMonth: (state: TDateState, action: PayloadAction<TDirection>) => {
     const changedDate = formatDate(moment(state.fullDate).add(action.payload, 'M'), 'YYYY-MM-DD');
 
     applyVisibleMonth(state, changedDate);
-    state.weekStart = getInitialWeekStart(changedDate);
-  },
-  setIsCollapsed: (state: TDateState, action: PayloadAction<boolean>) => {
-    state.isCollapsed = action.payload;
-
-    if (action.payload) {
-      state.weekStart = getInitialWeekStart(state.fullDate);
-    }
-  },
-  // moves the week strip; the visible month follows the month the new week belongs to (see getWeekOwnerDate)
-  // the selected date moves together with the week so the selected day stays at the same weekday
-  shiftWeek: (state: TDateState, action: PayloadAction<TDirection>) => {
-    const direction = action.payload;
-
-    state.weekStart = shiftDate(state.weekStart, direction * WEEK_LENGTH);
-    state.selectedDate = shiftDate(state.selectedDate, direction * WEEK_LENGTH);
-
-    const ownerDate = getWeekOwnerDate(state.weekStart);
-
-    if (!isSameMonth(ownerDate, state.fullDate)) {
-      applyVisibleMonth(state, ownerDate);
-    }
   },
   setSelectedDate: (state: TDateState, action: PayloadAction<string>) => {
     state.selectedDate = action.payload;
@@ -70,8 +38,6 @@ const initialState: TDateState = {
   month: formatDate(currentDate, 'MMMM'),
   day: formatDate(currentDate, 'DD'),
   selectedDate: formatDate(currentDate, 'YYYY-MM-DD'),
-  isCollapsed: false,
-  weekStart: getInitialWeekStart(formatDate(currentDate, 'YYYY-MM-DD')),
 };
 
 const dateSlice = createSlice({
@@ -80,5 +46,5 @@ const dateSlice = createSlice({
   reducers,
 });
 
-export const {setFullDate, setSelectedDate, setIsCollapsed, shiftWeek, shiftMonth} = dateSlice.actions;
+export const {setFullDate, setSelectedDate, shiftMonth} = dateSlice.actions;
 export default dateSlice;

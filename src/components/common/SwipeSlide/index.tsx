@@ -1,4 +1,4 @@
-import {DragControls, PanInfo, motion} from 'motion/react';
+import {PanInfo, motion} from 'motion/react';
 import {ReactNode, useRef} from 'react';
 
 import {TDirection} from '@/services/dateUtils';
@@ -8,22 +8,18 @@ const SWIPE_VELOCITY_THRESHOLD = 500;
 const SLIDE_OFFSET = 40;
 
 interface ISwipeSlideProps {
-  // changes whenever the slide content changes (week start, month); must be orderable
+  // changes whenever the slide content changes (month); must be orderable
   slideKey: string;
   onSwipe: (direction: TDirection) => void;
   className?: string;
-  // lets an element outside the slide (e.g. an edge cue) start the swipe
-  dragControls?: DragControls;
-  // fires after every drag, swipe or not
-  onDragFinish?: () => void;
   children: ReactNode;
 }
 
-const SwipeSlide = ({slideKey, onSwipe, className, dragControls, onDragFinish, children}: ISwipeSlideProps) => {
+const SwipeSlide = ({slideKey, onSwipe, className, children}: ISwipeSlideProps) => {
   // 1 - next (slides in from the right), -1 - previous (slides in from the left)
   const directionRef = useRef<TDirection>(1);
   const prevKeyRef = useRef(slideKey);
-  // stays false until the slide changes, so mounting (e.g. collapsing/expanding the calendar) doesn't animate
+  // stays false until the slide changes, so mounting doesn't animate
   const hasSlideChangedRef = useRef(false);
 
   // derive direction from the change itself, so header arrows and swipes animate the same way
@@ -34,8 +30,6 @@ const SwipeSlide = ({slideKey, onSwipe, className, dragControls, onDragFinish, c
   }
 
   const handleDragEnd = (_: PointerEvent, {offset, velocity}: PanInfo) => {
-    onDragFinish?.();
-
     const isNext = offset.x < -SWIPE_DISTANCE_THRESHOLD || velocity.x < -SWIPE_VELOCITY_THRESHOLD;
     const isPrev = offset.x > SWIPE_DISTANCE_THRESHOLD || velocity.x > SWIPE_VELOCITY_THRESHOLD;
 
@@ -48,7 +42,6 @@ const SwipeSlide = ({slideKey, onSwipe, className, dragControls, onDragFinish, c
     <motion.div
       key={slideKey}
       drag="x"
-      dragControls={dragControls}
       dragSnapToOrigin
       dragElastic={0.2}
       dragConstraints={{left: 0, right: 0}}
