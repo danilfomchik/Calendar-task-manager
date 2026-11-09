@@ -1,5 +1,6 @@
-import {PropsWithChildren, createContext, useCallback, useContext, useMemo, useState} from 'react';
+import {PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {setSelectedDate} from '@/redux/date/dateSlice';
 import {useAppDispatch} from '@/redux/store';
 
@@ -29,6 +30,25 @@ export const AgendaPanelProvider = ({children}: PropsWithChildren) => {
   );
 
   const close = useCallback(() => setIsOpen(false), []);
+
+  // the panel only exists from md up: don't keep it "open" while hidden
+  const isBelowMd = useMediaQuery({size: 'sm', direction: 'to'});
+
+  useEffect(() => {
+    if (isBelowMd) setIsOpen(false);
+  }, [isBelowMd]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isOpen]);
 
   const value = useMemo(() => ({isOpen, openFor, close}), [isOpen, openFor, close]);
 

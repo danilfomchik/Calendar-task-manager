@@ -44,13 +44,13 @@ const DayEventsList = ({events, date}: TDayEventsListProps) => {
   return (
     <div
       ref={containerRef}
-      className="flex flex-col relative w-full flex-1 min-h-0 overflow-hidden gap-0.5"
+      className="flex flex-col relative w-full flex-1 min-h-(--event-height) overflow-hidden gap-0.5"
       style={{'--event-height': `${EVENT_HEIGHT}px`} as React.CSSProperties}>
       {events.slice(0, visibleEventsCount).map(event => (
         <Event key={event.id} event={event} isDisabled={isEventDimmed(activeCalendars, event.eventCalendar)} />
       ))}
 
-      {hasOverflow && slots >= 1 && (
+      {hasOverflow && (
         <Button
           title="Show all events for this day"
           onClick={e => {

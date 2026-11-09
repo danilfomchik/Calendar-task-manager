@@ -37,7 +37,10 @@ const Event = ({event, isDisabled}: TEventProps) => {
           : 'cursor-pointer bg-surface-overlay hover:bg-line',
       )}
       style={{'--calendar-color': calendarColor} as React.CSSProperties}
-      onClick={handleOpen}>
+      onClick={e => {
+        e.stopPropagation();
+        handleOpen();
+      }}>
       <span
         aria-hidden
         className={cx('h-full w-0.75 shrink-0', isDisabled ? 'bg-transparent' : 'bg-(--calendar-color)')}

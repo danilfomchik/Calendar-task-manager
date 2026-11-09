@@ -1,5 +1,12 @@
 import moment from 'moment';
-import {animate, motion, useDragControls, useMotionValue, useReducedMotion} from 'motion/react';
+import {
+  AnimationPlaybackControls,
+  animate,
+  motion,
+  useDragControls,
+  useMotionValue,
+  useReducedMotion,
+} from 'motion/react';
 import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 
@@ -21,6 +28,8 @@ import {SHEET_PEEK} from './constants';
 
 const TOP_GAP = 72;
 const FLICK_VELOCITY = 250;
+// a click right after a drag is the tail of that same gesture, not a tap
+const CLICK_AFTER_DRAG_WINDOW_MS = 150;
 
 const BottomSheet = () => {
   const dispatch = useAppDispatch();
@@ -34,6 +43,9 @@ const BottomSheet = () => {
   const [layerHeight, setLayerHeight] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const y = useMotionValue(0);
+  const isExpandedRef = useRef(false);
+  const animationRef = useRef<AnimationPlaybackControls | null>(null);
+  const lastDragEndRef = useRef(0);
 
   useLayoutEffect(() => {
     const el = layerRef.current;
@@ -53,14 +65,16 @@ const BottomSheet = () => {
 
   // place without animating on first measure / resize
   useEffect(() => {
-    y.set(isExpanded ? 0 : collapsedY);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collapsedY]);
+    animationRef.current?.stop();
+    y.set(isExpandedRef.current ? 0 : collapsedY);
+  }, [collapsedY, y]);
 
   const settle = useCallback(
     (expand: boolean) => {
+      isExpandedRef.current = expand;
       setIsExpanded(expand);
-      animate(
+      animationRef.current?.stop();
+      animationRef.current = animate(
         y,
         expand ? 0 : collapsedY,
         shouldReduceMotion ? {duration: 0} : {type: 'spring', stiffness: 500, damping: 42, mass: 0.8},
@@ -89,6 +103,7 @@ const BottomSheet = () => {
           dragElastic={0.05}
           dragConstraints={{top: 0, bottom: collapsedY}}
           onDragEnd={(_, info) => {
+            lastDragEndRef.current = performance.now();
             if (info.velocity.y < -FLICK_VELOCITY) settle(true);
             else if (info.velocity.y > FLICK_VELOCITY) settle(false);
             else settle(y.get() < collapsedY / 2);
@@ -108,7 +123,11 @@ const BottomSheet = () => {
             aria-expanded={isExpanded}
             aria-label={isExpanded ? 'Collapse events' : 'Expand events'}
             onPointerDown={e => dragControls.start(e)}
-            onClick={() => settle(!isExpanded)}
+            onClick={() => {
+              if (performance.now() - lastDragEndRef.current < CLICK_AFTER_DRAG_WINDOW_MS) return;
+
+              settle(!isExpanded);
+            }}
             className="flex h-11 w-full shrink-0 cursor-grab touch-none items-center justify-center">
             <span aria-hidden className="h-1 w-10 bg-line-strong" />
           </button>
