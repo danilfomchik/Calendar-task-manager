@@ -5,6 +5,7 @@ import Button from '@/components/common/Button';
 import {isEventDimmed} from '@/redux/myCalendars/helpers';
 import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
 
+import {useAgendaPanel} from '../../../../AgendaPanelContext';
 import Event from './Event';
 import {TDayEventsListProps} from './types';
 
@@ -12,6 +13,7 @@ const EVENT_HEIGHT = 20;
 const EVENT_GAP = 2;
 
 const DayEventsList = ({events, date}: TDayEventsListProps) => {
+  const {openFor} = useAgendaPanel();
   const activeCalendars = useSelector(selectActiveCalendars);
   const eventsCount = events.length;
 
@@ -50,9 +52,11 @@ const DayEventsList = ({events, date}: TDayEventsListProps) => {
 
       {hasOverflow && slots >= 1 && (
         <Button
-          title="Open day page"
-          kind="link"
-          to={`/day/${date}`}
+          title="Show all events for this day"
+          onClick={e => {
+            e.stopPropagation();
+            openFor(date);
+          }}
           className="w-full h-(--event-height) shrink-0 justify-start! text-[11px] leading-none font-mono text-text-muted hover:text-text p-0 pl-2 bg-transparent border-none rounded-none"
           text={`${hiddenEventsCount} more`}
         />

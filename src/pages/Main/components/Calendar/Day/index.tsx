@@ -19,6 +19,7 @@ import {formatDate, getDate} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 import {FormActionType} from '@/types/eventFormTypes';
 
+import {useAgendaPanel} from '../../../AgendaPanelContext';
 import DayEventsList from './DayEventsList';
 import {TDayProps} from './types';
 
@@ -26,6 +27,7 @@ const Day = ({date}: TDayProps) => {
   const [, setSearchParams] = useSearchParams();
 
   const dispatch = useAppDispatch();
+  const {openFor} = useAgendaPanel();
 
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
@@ -42,7 +44,7 @@ const Day = ({date}: TDayProps) => {
 
   const handleDayClick = () => {
     if (!isMobileScreen) {
-      dispatch(setSelectedDate(date));
+      openFor(date);
 
       return;
     }
@@ -60,10 +62,17 @@ const Day = ({date}: TDayProps) => {
 
   return (
     <div
-      tabIndex={-1}
+      tabIndex={isMobileScreen ? -1 : 0}
       role="button"
       ref={dayRef}
       onClick={handleDayClick}
+      onKeyDown={e => {
+        // only the cell itself; inner buttons handle their own keys
+        if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          handleDayClick();
+        }
+      }}
       className={cx(
         'group flex flex-col gap-1 relative min-h-0 not-nth-[7n]:border-r border-b border-line p-1 md:p-1.5 transition-colors cursor-default',
         {
