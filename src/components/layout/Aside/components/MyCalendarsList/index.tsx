@@ -41,7 +41,7 @@ const MyCalendarsList = () => {
           <button
             type="button"
             onClick={() => dispatch(clearActiveCalendars())}
-            className="group flex cursor-pointer items-center gap-1 border border-line-strong bg-surface-raised px-2 py-0.5 font-mono text-[11px] leading-none text-text-muted transition-colors hover:bg-surface-overlay hover:text-text">
+            className="group flex cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action items-center gap-1 border border-line-strong bg-surface-raised px-2 py-0.5 font-mono text-[11px] leading-none text-text-muted transition-colors hover:bg-surface-overlay hover:text-text">
             <span className="flex items-center justify-center bg-line px-1 py-px text-[10px] text-text-muted group-hover:bg-line-strong">
               {activeCalendars.length}
             </span>
@@ -65,9 +65,10 @@ const MyCalendarsList = () => {
               tabIndex={0}
               aria-selected={isSelected}
               className={cx(
-                'flex items-center gap-2 py-1 px-2 rounded-lg cursor-pointer transition-all hover:bg-surface-raised select-none',
+                'relative flex min-h-9 items-center gap-2.5 px-2.5 cursor-pointer transition-colors hover:bg-surface-raised select-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-action',
                 {
-                  'bg-surface-raised border-l-2 border-action': isSelected,
+                  'bg-surface-raised before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-action':
+                    isSelected,
                 },
               )}
               onClick={() => toggleCalendar(name)}
