@@ -36,8 +36,7 @@ const Calendar = () => {
               <ArrowTop size="size-4" />
             </div>
           }
-          // TODO: move [#9a9aa3] into separate var
-          className="p-2 text-[#9a9aa3] hover:bg-white/6"
+          className="p-2 text-text-muted hover:bg-surface-overlay"
           onClick={() => dispatch(setIsCollapsed(!isCollapsed))}
         />
       </Divider>

@@ -33,7 +33,7 @@ const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemPr
       <div
         className={cx(
           'relative flex items-center gap-6 max-md:gap-4 rounded-lg px-3 md:px-4 py-2 md:py-3 transition-opacity overflow-auto',
-          'overflow-hidden isolate bg-[linear-gradient(to_right,rgb(from_var(--calendar-color)_r_g_b/0.15),#0a0a0a)] border-l-2 border-solid border-(--calendar-color)',
+          'overflow-hidden isolate bg-[linear-gradient(to_right,rgb(from_var(--calendar-color)_r_g_b/0.15),var(--color-surface-base))] border-l-2 border-solid border-(--calendar-color)',
           {
             'opacity-10 pointer-events-none cursor-not-allowed select-none': isDisabled,
           },
@@ -46,7 +46,9 @@ const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemPr
         <div className="flex-1">
           <h4 className="text-base md:text-lg font-semibold break-all">{event.title}</h4>
 
-          {event.description && <p className="text-xs md:text-base text-gray-400 line-clamp-3">{event.description}</p>}
+          {event.description && (
+            <p className="text-xs md:text-base text-text-muted line-clamp-3">{event.description}</p>
+          )}
 
           {event.eventCalendar && (
             <div
@@ -62,19 +64,19 @@ const EventsListItem = ({event, showItemControls, isDisabled}: IEventsListItemPr
             <Button
               onClick={handleOpen}
               endIcon={<EditIcon size="size-4" />}
-              className="w-fit p-0 text-white hover:text-[#3b5bfd]"
+              className="w-fit p-0 text-text hover:text-action"
               variant="transparent"
             />
             <Button
               variant="transparent"
               onClick={handleDeleteEvent}
               endIcon={<DeleteIcon size="size-4" />}
-              className="w-fit p-0 text-white hover:text-red-400"
+              className="w-fit p-0 text-text hover:text-red-400"
             />
           </div>
         )}
 
-        <BarsIcon className="size-4 text-gray-400 cursor-pointer" />
+        <BarsIcon className="size-4 text-text-muted cursor-pointer" />
       </div>
     </>
   );

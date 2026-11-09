@@ -30,8 +30,7 @@ const Controls = () => {
 
       <div
         className={cx('flex items-center gap-2 md:gap-4 z-20', {
-          'flex flex-col border border-secondaryBackgroundColor bg-mainBackgroundColor p-4 mt-2 rounded visible':
-            isMenuOpen && isMobileScreen,
+          'flex flex-col border border-line bg-surface-base p-4 mt-2 rounded visible': isMenuOpen && isMobileScreen,
         })}>
         <div
           className={cx('flex flex-row gap-2.5', {
@@ -41,11 +40,11 @@ const Controls = () => {
           <ChangeViewControl />
         </div>
 
-        <div className="max-md:hidden self-stretch my-2 border-t border-s border-gray-200 dark:border-neutral-700 max-md:w-[40%] max-md:mx-auto"></div>
+        <div className="max-md:hidden self-stretch my-2 border-t border-s border-line max-md:w-[40%] max-md:mx-auto"></div>
 
         <AddEvent
           showText={!isMobileScreen}
-          className={cx('shadow-[0_10px_24px_-8px_rgba(91,110,242,0.6)]', {
+          className={cx('shadow-[0_10px_24px_-8px_var(--color-action)]', {
             'h-9.5 aspect-square rounded-[10px] max-md:p-0': isMobileScreen,
           })}
         />

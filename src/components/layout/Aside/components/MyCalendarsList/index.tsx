@@ -35,14 +35,14 @@ const MyCalendarsList = () => {
   return (
     <div className="px-4 py-5">
       <div className="flex items-center justify-between mb-2.5 min-h-5">
-        <p className="uppercase text-xs text-[#444444]">My calendars</p>
+        <p className="uppercase font-mono text-xs text-text-faint">My calendars</p>
 
         {hasActiveCalendars && (
           <button
             type="button"
             onClick={() => dispatch(clearActiveCalendars())}
-            className="group flex cursor-pointer items-center gap-1 rounded-full border border-[#1f1f1f] bg-[#0f0f0f] px-2 py-0.5 text-[11px] leading-none text-gray-400 transition-all hover:border-[#2d2d2d] hover:bg-[#161616] hover:text-gray-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#4a6cf7]">
-            <span className="flex items-center justify-center rounded-full bg-[#1f1f1f] px-1 py-px text-[10px] text-gray-300 group-hover:bg-[#2d2d2d]">
+            className="group flex cursor-pointer items-center gap-1 border border-line-strong bg-surface-raised px-2 py-0.5 font-mono text-[11px] leading-none text-text-muted transition-colors hover:bg-surface-overlay hover:text-text">
+            <span className="flex items-center justify-center bg-line px-1 py-px text-[10px] text-text-muted group-hover:bg-line-strong">
               {activeCalendars.length}
             </span>
             Clear
@@ -65,9 +65,9 @@ const MyCalendarsList = () => {
               tabIndex={0}
               aria-selected={isSelected}
               className={cx(
-                'flex items-center gap-2 py-1 px-2 rounded-lg cursor-pointer transition-all hover:bg-[#0f0f0f] select-none outline-none focus:bg-[#0f0f0f]',
+                'flex items-center gap-2 py-1 px-2 rounded-lg cursor-pointer transition-all hover:bg-surface-raised select-none',
                 {
-                  'bg-[#0f0f0f]': isSelected,
+                  'bg-surface-raised border-l-2 border-action': isSelected,
                 },
               )}
               onClick={() => toggleCalendar(name)}
@@ -76,11 +76,11 @@ const MyCalendarsList = () => {
                 className="w-1.75 h-1.75 rounded-full"
                 style={{
                   backgroundColor: itemColor,
-                  boxShadow: isSelected ? `0 0 0 2px #0a0a0a, 0 0 0 3px ${itemColor}` : '',
+                  boxShadow: isSelected ? `0 0 0 2px var(--color-surface-base), 0 0 0 3px ${itemColor}` : '',
                 }}></div>
-              <p className="text-gray-400 text-[15px]">{name}</p>
+              <p className="text-text-muted font-mono text-sm">{name}</p>
 
-              {!!count && <span className="text-[#444444] text-sm/[1] ml-auto">{count}</span>}
+              {!!count && <span className="text-text-faint font-mono text-sm/[1] ml-auto">{count}</span>}
             </li>
           );
         })}

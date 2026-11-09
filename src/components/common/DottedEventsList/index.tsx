@@ -37,7 +37,7 @@ const DottedEventsList = ({events, className}: IDottedEventsListProps) => {
         ))}
 
         {hasMoreEvents && (
-          <span className="text-[10px] font-medium rounded-lg bg-[#032042] text-[#6da7ec] py-px px-1.25">
+          <span className="text-[10px] font-medium font-mono bg-surface-overlay text-text-muted py-px px-1.25">
             {hiddenEventsCount < 10 ? `+${hiddenEventsCount}` : '9+'}
           </span>
         )}

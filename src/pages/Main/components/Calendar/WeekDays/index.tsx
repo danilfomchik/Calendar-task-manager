@@ -10,7 +10,7 @@ const WeekDays = () => {
       {weekDays.map(weekday => (
         <span
           key={weekday}
-          className="flex flex-1 justify-center px-2 uppercase text-[#444444] tracking-[0.08em] text-xs md:text-sm">
+          className="flex flex-1 justify-center px-2 uppercase font-mono text-text-faint tracking-[0.08em] text-xs md:text-sm">
           {screenSize === 'sm' ? weekday.slice(0, 3) : screenSize === 'xs' ? weekday.slice(0, 1) : weekday}
         </span>
       ))}

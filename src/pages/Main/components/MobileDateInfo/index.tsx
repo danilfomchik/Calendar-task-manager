@@ -18,7 +18,7 @@ const MobileDateInfo = () => {
     <>
       <div className="md:hidden flex-1 min-h-0 w-full flex flex-col gap-4 px-3">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2 text-xs md:text-sm text-[#444444] uppercase">
+          <div className="flex items-center gap-2 text-xs md:text-sm font-mono text-text-faint uppercase">
             <div className="flex items-center gap-1">
               <span>{formatDate(moment(selectedDate), 'MMMM')}</span>
               <span>{formatDate(moment(selectedDate), 'YYYY')}</span>

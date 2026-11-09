@@ -61,9 +61,9 @@ const Day = ({date}: TDayProps) => {
       ref={dayRef}
       onClick={handleDayClick}
       className={cx(
-        'group flex flex-col gap-1.5 relative justify-between not-nth-[7n]:border-r border-b border-secondary-background-color p-1 lg:p-3 transition-all cursor-default',
+        'group flex flex-col gap-1.5 relative justify-between not-nth-[7n]:border-r border-b border-line p-1 lg:p-3 transition-all cursor-default',
         {
-          'bg-mainBackgroundColor md:hover:bg-secondary-background-color': dateMonth !== currentMonth,
+          'bg-surface-sunken md:hover:bg-surface-raised': dateMonth !== currentMonth,
         },
         'max-md:bg-transparent max-md:border-none max-md:items-center',
       )}>
@@ -71,11 +71,11 @@ const Day = ({date}: TDayProps) => {
         <div className="flex items-center md:gap-2 text-xs sm:text-base">
           <span
             className={cx(
-              'rounded-full p-1 w-8 h-8 lg:w-8 lg:h-8 flex items-center justify-center text-white border border-transparent transition-colors',
+              'font-display font-extrabold tracking-tight text-lg p-1 w-8 h-8 flex items-center justify-center text-text border border-transparent transition-colors',
               {
-                'border-blue-500': date === selectedDate && isMobileScreen,
-                'text-[#444444]': dateMonth !== currentMonth,
-                'bg-[#3b5bfd] border-none text-white': currentDate === date,
+                'border-action': date === selectedDate && isMobileScreen,
+                'text-text-faint': dateMonth !== currentMonth,
+                'bg-info border-none text-info-ink': currentDate === date,
               },
             )}>
             <time dateTime={date}>{day}</time>

@@ -53,7 +53,7 @@ const EventsList = ({
   return (
     <>
       {showEventsCount && !!events?.length && (
-        <p className="text-sm text-[#444444] uppercase mb-2.5">Events · {events?.length}</p>
+        <p className="font-mono text-sm text-text-faint uppercase mb-2.5">Events · {events?.length}</p>
       )}
 
       <div

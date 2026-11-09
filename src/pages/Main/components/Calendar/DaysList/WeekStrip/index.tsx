@@ -12,7 +12,7 @@ import {cx} from '@/services/utils';
 import Day from '../../Day';
 
 const EDGE_CUE_CLASS_NAME =
-  'absolute inset-y-0 w-10 flex items-start justify-center pt-1 touch-pan-y rounded text-xs sm:text-base text-white/25 active:text-white/50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/70';
+  'absolute inset-y-0 w-10 flex items-start justify-center pt-1 touch-pan-y rounded text-xs sm:text-base text-text-faint active:text-text-muted transition-colors focus-visible:outline-2 focus-visible:outline-action';
 
 // a click right after a drag is the tail of that same gesture, not a tap
 const CLICK_AFTER_DRAG_WINDOW_MS = 150;

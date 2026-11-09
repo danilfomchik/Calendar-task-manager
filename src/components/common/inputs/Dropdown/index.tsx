@@ -95,9 +95,9 @@ const Dropdown = ({
     <div className={cx('w-full relative', wrapperClassName)}>
       <Button
         className={cx(
-          'py-2 w-full h-full text-left border-secondary-background-color z-30 outline-none focus:border-[#3b5bfd]',
+          'py-2 w-full h-full text-left border-line z-30 outline-none focus:border-action',
           {
-            'border-[#3b5bfd] text-[#3b5bfd]': isOpen,
+            'border-action text-action': isOpen,
           },
           triggerClassName,
         )}
