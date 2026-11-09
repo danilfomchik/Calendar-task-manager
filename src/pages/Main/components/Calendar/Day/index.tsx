@@ -62,17 +62,8 @@ const Day = ({date}: TDayProps) => {
 
   return (
     <div
-      tabIndex={isMobileScreen ? -1 : 0}
-      role="button"
       ref={dayRef}
       onClick={handleDayClick}
-      onKeyDown={e => {
-        // only the cell itself; inner buttons handle their own keys
-        if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
-          e.preventDefault();
-          handleDayClick();
-        }
-      }}
       className={cx(
         'group flex flex-col gap-1 relative min-h-0 not-nth-[7n]:border-r border-b border-line p-1 md:p-1.5 transition-colors cursor-default',
         {
@@ -84,9 +75,16 @@ const Day = ({date}: TDayProps) => {
       )}>
       <div className="flex items-center justify-between h-7 shrink-0">
         <div className="flex items-center gap-1.5">
-          <span
+          <button
+            type="button"
+            tabIndex={isMobileScreen ? -1 : 0}
+            aria-label={`Select ${date}`}
+            onClick={e => {
+              e.stopPropagation();
+              handleDayClick();
+            }}
             className={cx(
-              'font-display font-extrabold tracking-tight text-[22px] leading-none px-1 min-w-7 h-7 flex items-center justify-center text-text border border-transparent transition-colors',
+              'cursor-pointer font-display font-extrabold tracking-tight text-[22px] leading-none px-1 min-w-7 h-7 flex items-center justify-center text-text border border-transparent transition-colors',
               {
                 'border-action': date === selectedDate && isMobileScreen && currentDate !== date,
                 'text-text-faint': dateMonth !== currentMonth,
@@ -94,7 +92,7 @@ const Day = ({date}: TDayProps) => {
               },
             )}>
             <time dateTime={date}>{day}</time>
-          </span>
+          </button>
 
           {events.length > 0 && !isMobileScreen && (
             <span className="font-mono border border-line-strong px-1 text-[10px] leading-4 text-text-muted">
@@ -110,6 +108,7 @@ const Day = ({date}: TDayProps) => {
             to={`/day/${date}`}
             className="p-0 bg-transparent border-none text-text-muted hover:text-text"
             startIcon={<ExternalPage size="size-5" />}
+            onClick={e => e.stopPropagation()}
           />
           <Button
             title="Create event"
