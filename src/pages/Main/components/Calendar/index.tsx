@@ -2,7 +2,7 @@ import {useMediaQuery} from '@/hooks/useMediaQuery';
 
 import BottomSheet from '../BottomSheet';
 import {SHEET_PEEK} from '../BottomSheet/constants';
-import DaysList from './DaysList';
+import MonthGrid from './MonthGrid';
 import WeekDays from './WeekDays';
 
 const Calendar = () => {
@@ -14,7 +14,7 @@ const Calendar = () => {
         className="flex flex-col w-full md:h-full items-center md:px-0 overflow-hidden max-md:flex-1 max-md:min-h-0"
         style={isMobileScreen ? {paddingBottom: SHEET_PEEK} : undefined}>
         <WeekDays />
-        <DaysList />
+        <MonthGrid />
       </div>
 
       {isMobileScreen && <BottomSheet />}

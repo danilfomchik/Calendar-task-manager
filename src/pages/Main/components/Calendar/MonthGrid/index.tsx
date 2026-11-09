@@ -7,7 +7,7 @@ import {selectFullDate, selectMonth, selectYear} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {generateDatesArray} from '@/services/dateUtils';
 
-import Day from '../../Day';
+import Day from '../Day';
 
 const GRID_CLASS = 'grid grid-rows-6 grid-cols-7 w-full min-h-71.5 h-full md:border-l border-line';
 
