@@ -5,9 +5,8 @@ import {useOpeningItem} from '@/hooks/useOpeningItem';
 import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
 import {cx} from '@/services/utils';
 
-import AddEvent from './AddEvent';
+import AddEventButton from './AddEventButton';
 import ChangeMonthControl from './ChangeMonthControl';
-import ChangeViewControl from './ChangeViewControl';
 
 const Controls = () => {
   const {ref: menuRef, refId, handleClose} = useOpeningItem();
@@ -37,13 +36,10 @@ const Controls = () => {
             'flex-col': isMenuOpen && isMobileScreen,
           })}>
           <ChangeMonthControl />
-          <ChangeViewControl />
         </div>
 
-        <div className="max-md:hidden self-stretch my-2 border-t border-s border-line max-md:w-[40%] max-md:mx-auto"></div>
-
         {/* on mobile the Bottom sheet's floating button adds events */}
-        {!isMobileScreen && <AddEvent className="shadow-[0_10px_24px_-8px_var(--color-action)]" />}
+        {!isMobileScreen && <AddEventButton />}
       </div>
     </div>
   );

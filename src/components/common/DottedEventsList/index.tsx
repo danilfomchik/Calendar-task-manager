@@ -17,13 +17,8 @@ const DottedEventsList = ({events, className}: IDottedEventsListProps) => {
   const hasMoreEvents = events.length > MAX_EVENTS_TO_SHOW;
 
   return (
-    <div
-      ref={containerRef}
-      className={cx(
-        'flex flex-col items-start justify-between relative w-full flex-1 overflow-y-auto scrollbar-none',
-        className,
-      )}>
-      <div className={cx('w-full flex justify-center gap-1 h-auto min-h-4.25')}>
+    <div ref={containerRef} className={cx('flex flex-col items-start relative w-full scrollbar-none', className)}>
+      <div className={cx('w-full flex justify-center items-center gap-1 h-2')}>
         {events.slice(0, MAX_EVENTS_TO_SHOW).map(event => (
           <DottedEventsListItem
             key={event.id}
@@ -32,9 +27,7 @@ const DottedEventsList = ({events, className}: IDottedEventsListProps) => {
           />
         ))}
 
-        {hasMoreEvents && (
-          <span className="text-[10px] font-medium font-mono bg-surface-overlay text-text-muted py-px px-1.25">+</span>
-        )}
+        {hasMoreEvents && <span className="text-[10px] leading-none font-mono text-text-muted">+</span>}
       </div>
     </div>
   );

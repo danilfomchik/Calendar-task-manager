@@ -29,7 +29,7 @@ const Event = ({event, isDisabled}: TEventProps) => {
     <button
       type="button"
       disabled={isDisabled}
-      title={isDisabled ? `${event.title} (filtered out)` : 'Click to edit event'}
+      title={`${event.title} · ${event.eventCalendar}`}
       className={cx(
         'h-(--event-height) w-full shrink-0 flex items-center gap-1.5 overflow-hidden text-left text-xs leading-none',
         isDisabled

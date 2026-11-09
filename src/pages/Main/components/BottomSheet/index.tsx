@@ -11,8 +11,6 @@ import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
-import ExternalPage from '@/components/ui/icons/ExternalPage';
-import PlusIcon from '@/components/ui/icons/PlusIcon';
 import {useEventsList} from '@/hooks/useEventsList';
 import {selectSelectedDate} from '@/redux/date/selectors';
 import {setEventFormData} from '@/redux/events/eventsSlice';
@@ -114,8 +112,8 @@ const BottomSheet = () => {
             type="button"
             aria-label="Add event"
             onClick={handleAddEvent}
-            className="absolute -top-7 right-4 flex size-14 cursor-pointer items-center justify-center bg-action text-action-ink shadow-[0_8px_20px_rgba(0,0,0,0.5)]">
-            <PlusIcon size="size-7" />
+            className="absolute -top-7 right-4 flex size-14 cursor-pointer items-center justify-center bg-action font-mono text-3xl font-medium text-action-ink shadow-[0_8px_20px_rgba(0,0,0,0.5)]">
+            +
           </button>
 
           <button
@@ -149,9 +147,8 @@ const BottomSheet = () => {
             <Button
               kind="link"
               to={`/day/${selectedDate}`}
-              text="Open"
-              endIcon={<ExternalPage size="size-3" />}
-              className="mr-14 h-11 px-2 text-xs"
+              text="Open day ↗"
+              className="h-8 shrink-0 rounded-none border-line-strong bg-transparent p-0 px-2.5 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
             />
           </div>
 

@@ -1,26 +1,17 @@
-import Button from '@/components/common/Button';
-import ArrowLeft from '@/components/ui/icons/ArrowLeft';
-import ArrowRight from '@/components/ui/icons/ArrowRight';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {setFullDate, shiftMonth} from '@/redux/date/dateSlice';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate, getDate} from '@/services/dateUtils';
+import {cx} from '@/services/utils';
 
-const CONTROL_BUTTON_CLASS = 'bg-transparent border-none hover:text-text hover:bg-surface-overlay';
-const ARROW_BUTTON_CLASS = `w-7.5 h-7.5 p-0 text-text-muted ${CONTROL_BUTTON_CLASS}`;
-
-enum MonthDirection {
-  NEXT = 'next',
-  PREV = 'prev',
-}
+const CONTROL_CLASS =
+  'flex cursor-pointer items-center justify-center border border-line-strong font-mono text-text-muted transition-colors hover:border-text-muted hover:text-text';
 
 const ChangeMonthControl = () => {
   const dispatch = useAppDispatch();
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
-  const onChangeMonth = (type: MonthDirection) => {
-    dispatch(shiftMonth(type === MonthDirection.NEXT ? 1 : -1));
-  };
+  const size = isMobileScreen ? 'h-11 min-w-11' : 'h-9 min-w-9';
 
   const onSwitchToToday = () => {
     const currentFullDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
@@ -29,25 +20,30 @@ const ChangeMonthControl = () => {
   };
 
   return (
-    <div className="flex items-center gap-0.5 border border-line p-0.75">
+    <div className="flex items-center gap-1.5">
       {!isMobileScreen && (
-        <Button
-          startIcon={<ArrowLeft size="size-4" />}
-          className={ARROW_BUTTON_CLASS}
-          onClick={() => onChangeMonth(MonthDirection.PREV)}
-        />
+        <button
+          type="button"
+          aria-label="Previous month"
+          className={cx(CONTROL_CLASS, size)}
+          onClick={() => dispatch(shiftMonth(-1))}>
+          ‹
+        </button>
       )}
-      <Button
-        text="today"
-        className={`h-full max-md:h-11 max-md:min-w-11 px-3 capitalize font-mono text-sm text-text-muted ${CONTROL_BUTTON_CLASS}`}
-        onClick={onSwitchToToday}
-      />
+      <button
+        type="button"
+        className={cx(CONTROL_CLASS, size, 'px-2 text-[11px] uppercase tracking-wider md:px-3 md:text-xs')}
+        onClick={onSwitchToToday}>
+        Today
+      </button>
       {!isMobileScreen && (
-        <Button
-          endIcon={<ArrowRight size="size-4" />}
-          className={ARROW_BUTTON_CLASS}
-          onClick={() => onChangeMonth(MonthDirection.NEXT)}
-        />
+        <button
+          type="button"
+          aria-label="Next month"
+          className={cx(CONTROL_CLASS, size)}
+          onClick={() => dispatch(shiftMonth(1))}>
+          ›
+        </button>
       )}
     </div>
   );

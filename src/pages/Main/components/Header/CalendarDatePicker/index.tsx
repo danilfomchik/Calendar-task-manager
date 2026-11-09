@@ -61,18 +61,18 @@ const CalendarDatePicker = () => {
         selectedOption={`${month} ${year}`}
         options={[]}
         placeholder="Pick month"
-        className="left-0 max-md:fixed max-md:left-3 max-md:right-3 w-auto md:w-[max(100%,300px)] max-h-none rounded-[10px] mt-3"
-        wrapperClassName="font-display font-extrabold tracking-tight text-2xl md:text-4xl static"
-        triggerClassName="bg-transparent border-none p-0 max-md:min-h-11">
+        className="left-0 max-md:fixed max-md:left-3 max-md:right-3 w-auto md:w-[max(100%,300px)] max-h-none mt-3"
+        wrapperClassName="font-display font-extrabold tracking-tight text-2xl md:text-[44px] static"
+        triggerClassName="bg-transparent border-none p-0 max-md:min-h-11 [&_div]:font-extrabold">
         <div className="px-5 py-4">
-          <div className="flex items-center justify-between mb-4 bg-surface-overlay border border-line rounded-none px-3.5 py-2.5">
+          <div className="flex items-center justify-between mb-4 bg-surface-overlay border border-line-strong px-3.5 py-2.5">
             <Button
               startIcon={<ArrowLeft size="size-4" />}
               aria-label="Previous year"
               className="size-11 md:size-6 p-0 rounded-lg outline-none border-none bg-tansparent text-text-muted hover:bg-surface-raised"
               onClick={() => handleYearSwitch('prev')}
             />
-            <p className="flex flex-1 items-center justify-center text-center text-base text-text font-mono">{year}</p>
+            <p className="flex flex-1 items-center justify-center text-center text-base text-text">{year}</p>
             <Button
               endIcon={<ArrowRight size="size-4" />}
               aria-label="Next year"
@@ -89,9 +89,9 @@ const CalendarDatePicker = () => {
                   type="button"
                   onClick={() => onMonthChange(option)}
                   className={cx(
-                    'text-sm text-center cursor-pointer outline outline-line transition-colors duration-150 bg-surface-overlay hover:bg-surface-raised text-text font-mono py-3 md:py-2.5 px-2.5',
+                    'text-sm text-center cursor-pointer outline outline-line-strong transition-colors duration-150 bg-surface-overlay hover:bg-surface-raised text-text font-mono py-3 md:py-2.5 px-2.5',
                     {
-                      'outline-action text-action bg-surface-raised': isCurrentMonth,
+                      'outline-action text-action': isCurrentMonth,
                     },
                   )}>
                   {option.substring(0, 3)}

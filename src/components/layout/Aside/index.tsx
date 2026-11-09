@@ -24,7 +24,7 @@ const Aside = () => {
 
       <aside
         className={cx(
-          'fixed left-0 top-0 bottom-0 flex-[0_0_240px] py-5 border-r border-line bg-surface-sunken transition-transform duration-200 ease-out translate-x-0 z-70 max-w-60',
+          'fixed left-0 top-0 bottom-0 w-60 py-5 border-r border-line bg-surface-sunken transition-transform duration-200 ease-out translate-x-0 z-70 max-w-60',
           {
             '-translate-x-60': !isOpen,
           },

@@ -14,7 +14,7 @@ const reducers = {
 
 const initialState: TSidebarState = {
   // matches the desktop default so the sidebar does not slide in on page load
-  isOpen: typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches,
+  isOpen: typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
 };
 
 const sidebarSlice = createSlice({

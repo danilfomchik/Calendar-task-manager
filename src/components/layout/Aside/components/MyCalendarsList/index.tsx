@@ -35,14 +35,14 @@ const MyCalendarsList = () => {
   return (
     <div className="px-4 py-5">
       <div className="flex items-center justify-between mb-2.5 min-h-5">
-        <p className="uppercase font-mono text-xs text-text-faint">My calendars</p>
+        <p className="uppercase font-mono text-[11px] tracking-widest text-text-faint">My calendars</p>
 
         {hasActiveCalendars && (
           <button
             type="button"
             onClick={() => dispatch(clearActiveCalendars())}
-            className="group flex cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action items-center gap-1 border border-line-strong bg-surface-raised px-2 py-0.5 max-md:min-h-11 font-mono text-[11px] leading-none text-text-muted transition-colors hover:bg-surface-overlay hover:text-text">
-            <span className="flex items-center justify-center bg-line px-1 py-px text-[10px] text-text-muted group-hover:bg-line-strong">
+            className="group flex h-6 max-md:min-h-11 cursor-pointer items-center gap-1.5 border border-line-strong px-2 font-mono text-[11px] uppercase leading-none tracking-wider text-text-muted transition-colors hover:border-text-muted hover:text-text">
+            <span className="flex items-center justify-center bg-surface-overlay px-1 py-px text-[10px] text-text">
               {activeCalendars.length}
             </span>
             Clear
@@ -74,14 +74,14 @@ const MyCalendarsList = () => {
               onClick={() => toggleCalendar(name)}
               onKeyDown={e => handleOptionKeyDown(e, index)}>
               <div
-                className="w-1.75 h-1.75 rounded-full"
+                className="size-2 rounded-full"
                 style={{
                   backgroundColor: itemColor,
-                  boxShadow: isSelected ? `0 0 0 2px var(--color-surface-base), 0 0 0 3px ${itemColor}` : '',
+                  boxShadow: isSelected ? `0 0 0 2px var(--color-surface-raised), 0 0 0 3px ${itemColor}` : '',
                 }}></div>
-              <p className="text-text-muted font-mono text-sm">{name}</p>
+              <p className={cx('text-[15px]', isSelected ? 'text-text' : 'text-text-muted')}>{name}</p>
 
-              {!!count && <span className="text-text-faint font-mono text-sm/[1] ml-auto">{count}</span>}
+              {!!count && <span className="text-text-faint font-mono text-xs/[1] ml-auto">{count}</span>}
             </li>
           );
         })}

@@ -19,30 +19,28 @@ const AgendaPanelContext = createContext<TAgendaPanelContext>({
 
 export const AgendaPanelProvider = ({children}: PropsWithChildren) => {
   const dispatch = useAppDispatch();
-  const [isOpen, setIsOpen] = useState(false);
+  // the user's own choice; the panel is shown by default and comes back when returning to desktop
+  const [isDismissed, setIsDismissed] = useState(false);
 
   const openFor = useCallback(
     (date: string) => {
       dispatch(setSelectedDate(date));
-      setIsOpen(true);
+      setIsDismissed(false);
     },
     [dispatch],
   );
 
-  const close = useCallback(() => setIsOpen(false), []);
+  const close = useCallback(() => setIsDismissed(true), []);
 
-  // the panel only exists from md up: don't keep it "open" while hidden
+  // the panel only exists from md up, but resizing below md must not count as dismissing it
   const isBelowMd = useMediaQuery({size: 'sm', direction: 'to'});
-
-  useEffect(() => {
-    if (isBelowMd) setIsOpen(false);
-  }, [isBelowMd]);
+  const isOpen = !isDismissed && !isBelowMd;
 
   useEffect(() => {
     if (!isOpen) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === 'Escape') setIsDismissed(true);
     };
 
     document.addEventListener('keydown', onKeyDown);

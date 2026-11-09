@@ -34,6 +34,17 @@
   --grid-template-columns-auto-fill: repeat(auto-fill, minmax(330px, 1fr));
 }
 
+/* home page header: h-16 on mobile, h-22 from md (matches the prototype) */
+:root {
+  --height-home-header: 4rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --height-home-header: 5.5rem;
+  }
+}
+
 body {
   min-height: 100vh;
   min-height: 100svh;

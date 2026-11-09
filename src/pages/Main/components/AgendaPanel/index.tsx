@@ -3,9 +3,6 @@ import {motion, useReducedMotion} from 'motion/react';
 import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
-import AddIcon from '@/components/ui/icons/AddIcon';
-import CloseIcon from '@/components/ui/icons/CloseIcon';
-import ExternalPage from '@/components/ui/icons/ExternalPage';
 import {useEventsList} from '@/hooks/useEventsList';
 import {selectSelectedDate} from '@/redux/date/selectors';
 import {setEventFormData} from '@/redux/events/eventsSlice';
@@ -44,7 +41,7 @@ const AgendaPanel = () => {
       animate={{opacity: 1, x: 0}}
       transition={{duration: 0.18, ease: 'easeOut'}}
       onKeyDown={e => e.key === 'Escape' && close()}
-      className="max-md:hidden flex w-72 xl:w-80 shrink-0 flex-col border-l border-line bg-surface-sunken h-[calc(100vh-var(--height-header))]">
+      className="max-md:hidden flex w-85 shrink-0 flex-col border-l border-line bg-surface-sunken h-[calc(100vh-var(--height-home-header))]">
       <div className="flex items-start gap-3 border-b border-line p-5">
         <div className="min-w-0 flex-1">
           <p className="font-mono text-[11px] uppercase tracking-widest text-text-faint">{day.format('dddd')}</p>
@@ -61,8 +58,8 @@ const AgendaPanel = () => {
           aria-label="Close agenda"
           title="Close agenda"
           onClick={close}
-          className="flex size-8 shrink-0 cursor-pointer items-center justify-center border border-line-strong text-text-muted transition-colors hover:text-text">
-          <CloseIcon size="size-4" />
+          className="flex size-8 shrink-0 cursor-pointer items-center justify-center border border-line-strong font-mono text-text-muted transition-colors hover:text-text">
+          ×
         </button>
       </div>
 
@@ -90,17 +87,15 @@ const AgendaPanel = () => {
 
       <div className="flex items-center gap-2 border-t border-line p-4">
         <Button
-          text="Add event"
-          startIcon={<AddIcon size="size-4" />}
+          text="+ Add event"
           onClick={handleAdd}
-          className="h-9 flex-1 rounded-none border-action bg-action p-0 px-3 text-xs font-medium uppercase tracking-wider text-action-ink hover:brightness-110"
+          className="h-9 flex-1 rounded-none border-action bg-action p-0 px-3 font-mono text-xs font-medium uppercase tracking-wider text-action-ink hover:brightness-110"
         />
         <Button
           kind="link"
           to={`/day/${selectedDate}`}
-          text="Open day"
-          endIcon={<ExternalPage size="size-4" />}
-          className="h-9 rounded-none border-line-strong bg-transparent p-0 px-3 text-xs uppercase tracking-wider text-text-muted hover:text-text"
+          text="Open day ↗"
+          className="h-9 rounded-none border-line-strong bg-transparent p-0 px-3 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
         />
       </div>
     </motion.aside>

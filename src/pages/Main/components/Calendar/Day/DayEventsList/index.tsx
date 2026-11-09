@@ -57,8 +57,8 @@ const DayEventsList = ({events, date}: TDayEventsListProps) => {
             e.stopPropagation();
             openFor(date);
           }}
-          className="w-full h-(--event-height) shrink-0 justify-start! text-[11px] leading-none font-mono text-text-muted hover:text-text p-0 pl-2 bg-transparent border-none rounded-none"
-          text={`${hiddenEventsCount} more`}
+          className="w-full h-(--event-height) shrink-0 [&_div]:justify-start! text-[11px] leading-none font-mono text-text-muted hover:text-text p-0 bg-transparent border-none rounded-none"
+          text={`+${hiddenEventsCount} more`}
         />
       )}
     </div>
