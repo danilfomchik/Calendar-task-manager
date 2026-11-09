@@ -10,8 +10,6 @@ type TDate = {
   year: TYear;
   day: TDay;
   selectedDate: string;
-  isCollapsed: boolean;
-  weekStart: string;
 };
 
 export type TDateState = TDate;
