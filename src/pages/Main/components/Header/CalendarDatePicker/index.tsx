@@ -52,8 +52,6 @@ const CalendarDatePicker = () => {
     onYearChange(newYear);
   };
 
-  // TODO: fix all repeated colors + change pallete colors
-  // TODO: add mobile styles
   // TODO: investigate how to position Dropdown with left-1/2 -translate-x-1/2 because now it is overflowing by aside (fixed)
   return (
     <div className="flex items-center relative">
@@ -61,21 +59,24 @@ const CalendarDatePicker = () => {
         selectedOption={`${month} ${year}`}
         options={[]}
         placeholder="Pick month"
-        className="left-0 max-md:fixed max-md:left-3 max-md:right-3 w-auto md:w-[max(100%,300px)] max-h-none rounded-[10px] mt-3"
-        wrapperClassName="text-base static"
-        triggerClassName="bg-transparent border-none p-0">
-        <div className="px-5 py-4">
-          <div className="flex items-center justify-between mb-4 bg-[#18181d] border border-[rgba(255,255,255,0.09)] rounded-[9px] px-3.5 py-2.5">
+        className="left-0 max-md:fixed max-md:left-3 max-md:right-3 w-auto md:w-[max(100%,300px)] max-h-none mt-3 max-md:mt-2.5 rounded-none border-line-strong bg-surface-raised shadow-2xl"
+        wrapperClassName="font-display font-extrabold tracking-tight text-2xl md:text-[44px] static"
+        triggerClassName="bg-transparent border-none p-0 max-md:min-h-11 [&_div]:font-extrabold">
+        <div className="p-4 md:p-5">
+          <div className="flex items-center justify-between mb-4 border border-line-strong bg-surface-overlay p-1">
             <Button
               startIcon={<ArrowLeft size="size-4" />}
-              // TODO: move [#3b5bfd] into separate var
-              className="w-6 h-6 p-0 rounded-lg outline-none border-none bg-tansparent text-[#9a9aa3] hover:bg-white/6"
+              aria-label="Previous year"
+              className="size-11 md:size-8 p-0 rounded-none border-none bg-transparent text-text-muted hover:bg-surface-raised hover:text-text"
               onClick={() => handleYearSwitch('prev')}
             />
-            <p className="flex flex-1 items-center justify-center text-center text-base text-[#f2f2f4]">{year}</p>
+            <p className="flex flex-1 items-center justify-center text-center font-mono text-sm tracking-wider text-text">
+              {year}
+            </p>
             <Button
               endIcon={<ArrowRight size="size-4" />}
-              className="w-6 h-6 p-0 rounded-lg outline-none border-none bg-tansparent text-[#9a9aa3] hover:bg-white/6"
+              aria-label="Next year"
+              className="size-11 md:size-8 p-0 rounded-none border-none bg-transparent text-text-muted hover:bg-surface-raised hover:text-text"
               onClick={() => handleYearSwitch('next')}
             />
           </div>
@@ -85,12 +86,14 @@ const CalendarDatePicker = () => {
 
               return (
                 <button
+                  key={option}
                   type="button"
+                  aria-pressed={isCurrentMonth}
                   onClick={() => onMonthChange(option)}
                   className={cx(
-                    'rounded-[9px] text-sm text-center cursor-pointer outline outline-white/9 transition-all bg-[#18181d] hover:bg-[rgba(109,124,247,0.12)] text-[#f2f2f4] py-2.5 px-2.5',
+                    'min-h-11 cursor-pointer border border-line-strong bg-surface-overlay px-2.5 py-3 text-center font-mono text-xs uppercase tracking-wider text-text transition-colors duration-150 hover:border-text-muted md:min-h-0 md:py-2.5',
                     {
-                      'outline-[#3b5bfd] text-[#3b5bfd] bg-[rgba(109,124,247,0.12)]': isCurrentMonth,
+                      'border-action text-action': isCurrentMonth,
                     },
                   )}>
                   {option.substring(0, 3)}

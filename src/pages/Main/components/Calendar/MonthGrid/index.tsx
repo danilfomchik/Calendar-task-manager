@@ -7,10 +7,9 @@ import {selectFullDate, selectMonth, selectYear} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {generateDatesArray} from '@/services/dateUtils';
 
-import Day from '../../Day';
+import Day from '../Day';
 
-const GRID_CLASS =
-  'grid grid-rows-6 grid-cols-7 w-full min-h-71.5 h-auto md:h-full md:border-t border-secondary-background-color';
+const GRID_CLASS = 'grid grid-rows-6 grid-cols-7 w-full min-h-71.5 h-full md:border-l border-line';
 
 const MonthGrid = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +27,7 @@ const MonthGrid = () => {
   }
 
   return (
-    <div className="w-full overflow-hidden touch-pan-y">
+    <div className="w-full min-h-0 flex-1 overflow-hidden touch-pan-y">
       <SwipeSlide
         slideKey={fullDate.slice(0, 7)}
         onSwipe={direction => dispatch(shiftMonth(direction))}
