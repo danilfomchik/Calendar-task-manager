@@ -57,7 +57,7 @@ const MainLayout = () => {
 
       <Aside />
       <main
-        className={cx('ml-0 h-full flex-1 overflow-y-auto transition-all duration-300 ease-in-out', {
+        className={cx('ml-0 h-full flex-1 overflow-y-auto', {
           'md:ml-60': isSidebarOpen,
         })}>
         <Suspense fallback={<Loading />}>
