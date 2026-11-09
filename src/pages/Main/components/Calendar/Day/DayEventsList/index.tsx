@@ -1,82 +1,62 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useLayoutEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
 import {isEventDimmed} from '@/redux/myCalendars/helpers';
 import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
-import {cx} from '@/services/utils';
 
 import Event from './Event';
 import {TDayEventsListProps} from './types';
 
-const EVENT_HEIGHT = 24;
+const EVENT_HEIGHT = 20;
+const EVENT_GAP = 2;
 
 const DayEventsList = ({events, date}: TDayEventsListProps) => {
   const activeCalendars = useSelector(selectActiveCalendars);
   const eventsCount = events.length;
 
-  const [visibleEventsCount, setVisibleEventsCount] = useState(eventsCount);
-  const [hiddenEventsCount, setHiddenEventsCount] = useState(0);
+  const [slots, setSlots] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const requestRef = useRef<number | null>(null);
 
-  const onCalcEventsVisibility = useCallback(() => {
+  useLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const containerHeight = container.getBoundingClientRect().height;
+    const measure = () =>
+      setSlots(Math.max(0, Math.floor((container.clientHeight + EVENT_GAP) / (EVENT_HEIGHT + EVENT_GAP))));
 
-    // calculate how many events can fit in the container height of the day cell, considering the height of each event and the gap between them
-    // 4 - gap between events
-    const visibleEventsCount = Math.floor((containerHeight - EVENT_HEIGHT) / (EVENT_HEIGHT + 4));
+    measure();
 
-    setVisibleEventsCount(visibleEventsCount);
-    setHiddenEventsCount(Math.max(eventsCount - visibleEventsCount, 0));
-  }, [eventsCount]);
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
 
-  useEffect(() => {
-    onCalcEventsVisibility();
+    return () => observer.disconnect();
+  }, []);
 
-    const handleResize = () => {
-      if (requestRef.current) return;
-
-      requestRef.current = requestAnimationFrame(() => {
-        onCalcEventsVisibility();
-        requestRef.current = null;
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
-    };
-  }, [onCalcEventsVisibility]);
+  // a slot is reserved for "N more" only when events really overflow
+  const hasOverflow = eventsCount > slots;
+  const visibleEventsCount = hasOverflow ? Math.max(slots - 1, 0) : eventsCount;
+  const hiddenEventsCount = eventsCount - visibleEventsCount;
 
   return (
     <div
       ref={containerRef}
-      className="flex flex-col items-start justify-between relative w-full flex-1 overflow-y-auto max-md:scrollbar-none"
+      className="flex flex-col relative w-full flex-1 min-h-0 overflow-hidden gap-0.5"
       style={{'--event-height': `${EVENT_HEIGHT}px`} as React.CSSProperties}>
-      <div className={cx('w-full flex md:flex-col gap-1 max-md:gap-1.5 h-auto min-h-1.5')}>
-        {events.slice(0, visibleEventsCount).map(event => (
-          <Event key={event.id} event={event} isDisabled={isEventDimmed(activeCalendars, event.eventCalendar)} />
-        ))}
+      {events.slice(0, visibleEventsCount).map(event => (
+        <Event key={event.id} event={event} isDisabled={isEventDimmed(activeCalendars, event.eventCalendar)} />
+      ))}
 
-        {hiddenEventsCount > 0 && (
-          <Button
-            title="Open day page"
-            kind="link"
-            to={`/day/${date}`}
-            className="max-md:hidden w-full md:h-(--event-height) relative flex items-center gap-3 text-xs overflow-hidden font-mono hover:bg-surface-overlay md:p-1 cursor-pointer"
-            text={`${hiddenEventsCount} more`}
-          />
-        )}
-      </div>
+      {hasOverflow && slots >= 1 && (
+        <Button
+          title="Open day page"
+          kind="link"
+          to={`/day/${date}`}
+          className="w-full h-(--event-height) shrink-0 justify-start! text-[11px] leading-none font-mono text-text-muted hover:text-text p-0 pl-2 bg-transparent border-none rounded-none"
+          text={`${hiddenEventsCount} more`}
+        />
+      )}
     </div>
   );
 };
