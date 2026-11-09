@@ -1,12 +1,6 @@
-import {useIsCollapsedCalendar} from '@/hooks/useIsCollapsedCalendar';
-
 import MonthGrid from './MonthGrid';
-import WeekStrip from './WeekStrip';
 
-const DaysList = () => {
-  const isCollapsedCalendar = useIsCollapsedCalendar();
-
-  return isCollapsedCalendar ? <WeekStrip /> : <MonthGrid />;
-};
+// the mobile Bottom sheet replaces the Collapsed calendar, so the Month grid is always shown
+const DaysList = () => <MonthGrid />;
 
 export default DaysList;
