@@ -44,12 +44,12 @@ const Event = ({event, isDisabled}: TEventProps) => {
       {/* base gradient layer */}
       <span
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgb(from_var(--calendar-color)_r_g_b/0.15),#0a0a0a)]"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgb(from_var(--calendar-color)_r_g_b/0.15),var(--color-surface-base))]"
       />
       {/* hover gradient layer, faded in on hover */}
       <span
         aria-hidden
-        className="absolute inset-0 -z-10 opacity-0 transition-opacity duration-350 group-hover/event:opacity-100 bg-[linear-gradient(to_right,rgb(from_var(--calendar-color)_r_g_b/0.5),#0a0a0a)]"
+        className="absolute inset-0 -z-10 opacity-0 transition-opacity duration-350 group-hover/event:opacity-100 bg-[linear-gradient(to_right,rgb(from_var(--calendar-color)_r_g_b/0.5),var(--color-surface-base))]"
       />
       <div className="h-full w-0.75 rounded-full transition-opacity aspect-square bg-(--calendar-color)"></div>
 

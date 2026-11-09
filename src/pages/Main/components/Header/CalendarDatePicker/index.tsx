@@ -62,20 +62,19 @@ const CalendarDatePicker = () => {
         options={[]}
         placeholder="Pick month"
         className="left-0 max-md:fixed max-md:left-3 max-md:right-3 w-auto md:w-[max(100%,300px)] max-h-none rounded-[10px] mt-3"
-        wrapperClassName="text-base static"
+        wrapperClassName="font-display font-extrabold tracking-tight text-2xl md:text-4xl static"
         triggerClassName="bg-transparent border-none p-0">
         <div className="px-5 py-4">
-          <div className="flex items-center justify-between mb-4 bg-[#18181d] border border-[rgba(255,255,255,0.09)] rounded-[9px] px-3.5 py-2.5">
+          <div className="flex items-center justify-between mb-4 bg-surface-overlay border border-line rounded-none px-3.5 py-2.5">
             <Button
               startIcon={<ArrowLeft size="size-4" />}
-              // TODO: move [#3b5bfd] into separate var
-              className="w-6 h-6 p-0 rounded-lg outline-none border-none bg-tansparent text-[#9a9aa3] hover:bg-white/6"
+              className="w-6 h-6 p-0 rounded-lg outline-none border-none bg-tansparent text-text-muted hover:bg-surface-raised"
               onClick={() => handleYearSwitch('prev')}
             />
-            <p className="flex flex-1 items-center justify-center text-center text-base text-[#f2f2f4]">{year}</p>
+            <p className="flex flex-1 items-center justify-center text-center text-base text-text font-mono">{year}</p>
             <Button
               endIcon={<ArrowRight size="size-4" />}
-              className="w-6 h-6 p-0 rounded-lg outline-none border-none bg-tansparent text-[#9a9aa3] hover:bg-white/6"
+              className="w-6 h-6 p-0 rounded-lg outline-none border-none bg-tansparent text-text-muted hover:bg-surface-raised"
               onClick={() => handleYearSwitch('next')}
             />
           </div>
@@ -88,9 +87,9 @@ const CalendarDatePicker = () => {
                   type="button"
                   onClick={() => onMonthChange(option)}
                   className={cx(
-                    'rounded-[9px] text-sm text-center cursor-pointer outline outline-white/9 transition-all bg-[#18181d] hover:bg-[rgba(109,124,247,0.12)] text-[#f2f2f4] py-2.5 px-2.5',
+                    'text-sm text-center cursor-pointer outline outline-line transition-all bg-surface-overlay hover:bg-surface-raised text-text font-mono py-2.5 px-2.5',
                     {
-                      'outline-[#3b5bfd] text-[#3b5bfd] bg-[rgba(109,124,247,0.12)]': isCurrentMonth,
+                      'outline-action text-action bg-surface-raised': isCurrentMonth,
                     },
                   )}>
                   {option.substring(0, 3)}

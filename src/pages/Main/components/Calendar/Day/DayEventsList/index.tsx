@@ -72,7 +72,7 @@ const DayEventsList = ({events, date}: TDayEventsListProps) => {
             title="Open day page"
             kind="link"
             to={`/day/${date}`}
-            className="max-md:hidden w-full md:h-(--event-height) relative flex items-center gap-3 text-xs overflow-hidden hover:bg-[#3b5bfd]/15 md:p-1 rounded-lg cursor-pointer"
+            className="max-md:hidden w-full md:h-(--event-height) relative flex items-center gap-3 text-xs overflow-hidden font-mono hover:bg-surface-overlay md:p-1 cursor-pointer"
             text={`${hiddenEventsCount} more`}
           />
         )}

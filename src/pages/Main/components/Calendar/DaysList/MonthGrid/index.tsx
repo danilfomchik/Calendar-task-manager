@@ -9,8 +9,7 @@ import {generateDatesArray} from '@/services/dateUtils';
 
 import Day from '../../Day';
 
-const GRID_CLASS =
-  'grid grid-rows-6 grid-cols-7 w-full min-h-71.5 h-auto md:h-full md:border-t border-secondary-background-color';
+const GRID_CLASS = 'grid grid-rows-6 grid-cols-7 w-full min-h-71.5 h-auto md:h-full md:border-t border-line';
 
 const MonthGrid = () => {
   const dispatch = useAppDispatch();

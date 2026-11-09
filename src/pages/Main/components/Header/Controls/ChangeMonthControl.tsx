@@ -10,9 +10,8 @@ import {selectDay} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate, getDate} from '@/services/dateUtils';
 
-const CONTROL_BUTTON_CLASS =
-  'bg-transparent border-none rounded-[7px] hover:text-white hover:bg-[rgba(91,110,242,0.18)]';
-const ARROW_BUTTON_CLASS = `w-7.5 h-7.5 p-0 text-[#a9b2f7] ${CONTROL_BUTTON_CLASS}`;
+const CONTROL_BUTTON_CLASS = 'bg-transparent border-none hover:text-text hover:bg-surface-overlay';
+const ARROW_BUTTON_CLASS = `w-7.5 h-7.5 p-0 text-text-muted ${CONTROL_BUTTON_CLASS}`;
 
 enum MonthDirection {
   NEXT = 'next',
@@ -42,7 +41,7 @@ const ChangeMonthControl = () => {
   };
 
   return (
-    <div className="flex items-center gap-0.5 bg-[linear-gradient(180deg,rgba(91,110,242,0.10),rgba(91,110,242,0.04))] border border-[rgba(91,110,242,0.35)] rounded-[10px] p-0.75 shadow-[0_6px_20px_-10px_rgba(91,110,242,0.35)]">
+    <div className="flex items-center gap-0.5 border border-line p-0.75">
       <Button
         startIcon={<ArrowLeft size="size-4" />}
         className={ARROW_BUTTON_CLASS}
@@ -50,7 +49,7 @@ const ChangeMonthControl = () => {
       />
       <Button
         text={isMobileScreen ? currentDay : 'today'}
-        className={`h-full p-0 md:px-3 capitalize text-sm text-[#c7cdfb] ${CONTROL_BUTTON_CLASS}`}
+        className={`h-full p-0 md:px-3 capitalize font-mono text-sm text-text-muted ${CONTROL_BUTTON_CLASS}`}
         onClick={onSwitchToToday}
       />
       <Button
