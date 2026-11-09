@@ -1,12 +1,13 @@
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 
-import {selectFullDate, selectMonth, selectYear} from '@/redux/date/selectors';
+import {selectFullDate, selectMonth, selectSelectedDate, selectYear} from '@/redux/date/selectors';
 import {formatDate, generateDatesArray, getDate, getWeekDays} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 
 const MonthSmallCalendar = ({className = ''}) => {
   const fullDate = useSelector(selectFullDate);
+  const selectedDate = useSelector(selectSelectedDate);
   const year = useSelector(selectYear);
   const month = useSelector(selectMonth);
 
@@ -38,6 +39,7 @@ const MonthSmallCalendar = ({className = ''}) => {
               className={cx('text-text-muted font-mono text-sm py-0.75 text-center', {
                 'text-text-faint': currentMonth !== dateMonth,
                 'text-info-ink bg-info font-bold': currentDate === date,
+                'outline-1 -outline-offset-1 outline-action': selectedDate === date && currentDate !== date,
               })}>
               <time dateTime={date}>{day}</time>
             </div>

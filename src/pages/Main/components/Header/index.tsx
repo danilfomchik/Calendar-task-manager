@@ -1,6 +1,6 @@
 import {useSelector} from 'react-redux';
 
-import OpenSidebarBtn from '@/components/common/OpenSidebarBtn';
+import SidebarToggle from '@/components/common/SidebarToggle';
 import {selectIsSidebarOpen} from '@/redux/sidebar/selectors';
 import {cx} from '@/services/utils';
 
@@ -18,7 +18,7 @@ const Header = () => {
           'md:gap-5': !isSidebarOpen,
         },
       )}>
-      <OpenSidebarBtn className="md:-translate-x-75 md:w-0" openClassName="md:translate-x-0 md:w-[20px]" />
+      <SidebarToggle className={cx({'md:hidden': isSidebarOpen})} />
 
       <div className="flex flex-1 items-center justify-between gap-5">
         <CalendarDatePicker />
