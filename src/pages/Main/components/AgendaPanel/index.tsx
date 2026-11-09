@@ -41,7 +41,7 @@ const AgendaPanel = () => {
       animate={{opacity: 1, x: 0}}
       transition={{duration: 0.18, ease: 'easeOut'}}
       onKeyDown={e => e.key === 'Escape' && close()}
-      className="max-md:hidden flex w-85 shrink-0 flex-col border-l border-line bg-surface-sunken h-[calc(100vh-var(--height-home-header))]">
+      className="max-md:hidden flex w-85 shrink-0 flex-col border-l border-line bg-surface-sunken h-[calc(100svh-var(--height-home-header))]">
       <div className="flex items-start gap-3 border-b border-line p-5">
         <div className="min-w-0 flex-1">
           <p className="font-mono text-[11px] uppercase tracking-widest text-text-faint">{day.format('dddd')}</p>

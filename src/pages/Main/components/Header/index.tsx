@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <header
       className={cx(
-        'h-16 md:h-22 shrink-0 flex flex-1 items-center justify-between gap-3 md:gap-0 px-3 md:px-6 border-b border-line',
+        'h-16 md:h-22 shrink-0 flex items-center justify-between gap-3 md:gap-0 px-3 md:px-6 border-b border-line',
         {
           'md:gap-5': !isSidebarOpen,
         },

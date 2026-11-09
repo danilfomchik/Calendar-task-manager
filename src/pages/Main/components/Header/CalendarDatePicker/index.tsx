@@ -59,7 +59,7 @@ const CalendarDatePicker = () => {
         selectedOption={`${month} ${year}`}
         options={[]}
         placeholder="Pick month"
-        className="left-0 max-md:fixed max-md:left-3 max-md:right-3 w-auto md:w-[max(100%,300px)] max-h-none mt-3 rounded-none border-line-strong bg-surface-raised shadow-2xl"
+        className="left-0 max-md:fixed max-md:left-3 max-md:right-3 w-auto md:w-[max(100%,300px)] max-h-none mt-3 max-md:mt-2.5 rounded-none border-line-strong bg-surface-raised shadow-2xl"
         wrapperClassName="font-display font-extrabold tracking-tight text-2xl md:text-[44px] static"
         triggerClassName="bg-transparent border-none p-0 max-md:min-h-11 [&_div]:font-extrabold">
         <div className="p-4 md:p-5">
