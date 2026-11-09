@@ -20,7 +20,7 @@ const Button = ({
     <button
       tabIndex={0}
       className={cx(
-        'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition duration-500 ease-in-out disabled:hover:border-line disabled:text-text-faint disabled:hover:text-text-faint disabled:cursor-auto',
+        'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition-colors duration-150 ease-out disabled:hover:border-line disabled:text-text-faint disabled:hover:text-text-faint disabled:cursor-auto',
         buttonVariants[variant],
         className,
       )}

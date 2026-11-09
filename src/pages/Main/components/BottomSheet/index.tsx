@@ -4,17 +4,19 @@ import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
-import EventsList from '@/components/common/EventsList';
 import ExternalPage from '@/components/ui/icons/ExternalPage';
 import PlusIcon from '@/components/ui/icons/PlusIcon';
 import {useEventsList} from '@/hooks/useEventsList';
 import {selectSelectedDate} from '@/redux/date/selectors';
 import {setEventFormData} from '@/redux/events/eventsSlice';
+import {isEventDimmed} from '@/redux/myCalendars/helpers';
+import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
 import {onOpenItem} from '@/redux/overflow/overflowSlice';
 import {useAppDispatch} from '@/redux/store';
 import {EVENT_FORM_ID} from '@/services/constants';
 import {FormActionType} from '@/types/eventFormTypes';
 
+import AgendaEvent from '../AgendaPanel/AgendaEvent';
 import {SHEET_PEEK} from './constants';
 
 const TOP_GAP = 72;
@@ -23,6 +25,7 @@ const FLICK_VELOCITY = 250;
 const BottomSheet = () => {
   const dispatch = useAppDispatch();
   const selectedDate = useSelector(selectSelectedDate);
+  const activeCalendars = useSelector(selectActiveCalendars);
   const events = useEventsList(selectedDate);
   const shouldReduceMotion = useReducedMotion();
   const dragControls = useDragControls();
@@ -134,7 +137,25 @@ const BottomSheet = () => {
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
-            <EventsList date={selectedDate} />
+            {eventsCount === 0 ? (
+              <p className="font-mono text-xs text-text-faint">
+                No events{' '}
+                <button
+                  type="button"
+                  onClick={handleAddEvent}
+                  className="-my-3 cursor-pointer px-1 py-3 text-action underline underline-offset-2">
+                  Add event
+                </button>
+              </p>
+            ) : (
+              <ul className="flex flex-col gap-1.5">
+                {events?.map(event => (
+                  <li key={event.id}>
+                    <AgendaEvent event={event} isDisabled={isEventDimmed(activeCalendars, event.eventCalendar)} />
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </motion.section>
       )}
