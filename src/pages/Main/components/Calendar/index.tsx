@@ -1,47 +1,23 @@
-import {useSelector} from 'react-redux';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 
-import Button from '@/components/common/Button';
-import Divider from '@/components/ui/Divider';
-import ArrowTop from '@/components/ui/icons/ArrowTop';
-import {useIsCollapsedCalendar} from '@/hooks/useIsCollapsedCalendar';
-import {setIsCollapsed} from '@/redux/date/dateSlice';
-import {selectIsCollapsed} from '@/redux/date/selectors';
-import {useAppDispatch} from '@/redux/store';
-import {cx} from '@/services/utils';
-
-import MobileDateInfo from '../MobileDateInfo';
+import BottomSheet from '../BottomSheet';
+import {SHEET_PEEK} from '../BottomSheet/constants';
 import DaysList from './DaysList';
 import WeekDays from './WeekDays';
 
 const Calendar = () => {
-  const dispatch = useAppDispatch();
-  const isCollapsed = useSelector(selectIsCollapsed);
-  const isCollapsedCalendar = useIsCollapsedCalendar();
+  const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
   return (
-    <div className="flex flex-col w-full items-center overflow-x-auto max-md:pb-5 h-[calc(100vh-var(--height-header))]">
+    <div className="relative flex flex-col w-full items-center overflow-x-auto h-[calc(100vh-var(--height-header))]">
       <div
-        className={cx('flex flex-col w-full md:h-full gap-2 items-center md:px-0 pt-2 overflow-hidden', {
-          'px-3': !isCollapsedCalendar,
-          'px-10': isCollapsedCalendar,
-        })}>
+        className="flex flex-col w-full md:h-full gap-2 items-center md:px-0 pt-2 overflow-hidden max-md:px-3 max-md:flex-1 max-md:min-h-0"
+        style={isMobileScreen ? {paddingBottom: SHEET_PEEK} : undefined}>
         <WeekDays />
         <DaysList />
       </div>
 
-      <Divider className="mb-4 md:hidden!">
-        <Button
-          startIcon={
-            <div className={`transition-all ${isCollapsed ? 'rotate-180' : 'rotate-0'}`}>
-              <ArrowTop size="size-4" />
-            </div>
-          }
-          className="p-2 text-text-muted hover:bg-surface-overlay"
-          onClick={() => dispatch(setIsCollapsed(!isCollapsed))}
-        />
-      </Divider>
-
-      <MobileDateInfo />
+      {isMobileScreen && <BottomSheet />}
     </div>
   );
 };

@@ -14,11 +14,7 @@ const DottedEventsList = ({events, className}: IDottedEventsListProps) => {
   const activeCalendars = useSelector(selectActiveCalendars);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const eventsCount = events.length;
-  const hasMoreEvents = eventsCount > MAX_EVENTS_TO_SHOW;
-
-  const eventsToShow = hasMoreEvents ? Math.min(2, MAX_EVENTS_TO_SHOW) : MAX_EVENTS_TO_SHOW;
-  const hiddenEventsCount = eventsCount - eventsToShow;
+  const hasMoreEvents = events.length > MAX_EVENTS_TO_SHOW;
 
   return (
     <div
@@ -28,7 +24,7 @@ const DottedEventsList = ({events, className}: IDottedEventsListProps) => {
         className,
       )}>
       <div className={cx('w-full flex justify-center gap-1 h-auto min-h-4.25')}>
-        {events.slice(0, hasMoreEvents ? Math.min(2, MAX_EVENTS_TO_SHOW) : MAX_EVENTS_TO_SHOW).map(event => (
+        {events.slice(0, MAX_EVENTS_TO_SHOW).map(event => (
           <DottedEventsListItem
             key={event.id}
             event={event}
@@ -37,9 +33,7 @@ const DottedEventsList = ({events, className}: IDottedEventsListProps) => {
         ))}
 
         {hasMoreEvents && (
-          <span className="text-[10px] font-medium font-mono bg-surface-overlay text-text-muted py-px px-1.25">
-            {hiddenEventsCount < 10 ? `+${hiddenEventsCount}` : '9+'}
-          </span>
+          <span className="text-[10px] font-medium font-mono bg-surface-overlay text-text-muted py-px px-1.25">+</span>
         )}
       </div>
     </div>

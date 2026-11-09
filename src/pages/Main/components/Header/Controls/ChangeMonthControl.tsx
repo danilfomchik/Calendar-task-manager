@@ -1,12 +1,9 @@
-import {useSelector} from 'react-redux';
-
 import Button from '@/components/common/Button';
 import ArrowLeft from '@/components/ui/icons/ArrowLeft';
 import ArrowRight from '@/components/ui/icons/ArrowRight';
 import {useIsCollapsedCalendar} from '@/hooks/useIsCollapsedCalendar';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {setFullDate, shiftMonth, shiftWeek} from '@/redux/date/dateSlice';
-import {selectDay} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate, getDate} from '@/services/dateUtils';
 
@@ -20,7 +17,6 @@ enum MonthDirection {
 
 const ChangeMonthControl = () => {
   const dispatch = useAppDispatch();
-  const currentDay = useSelector(selectDay);
   const isCollapsedCalendar = useIsCollapsedCalendar();
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
@@ -42,21 +38,25 @@ const ChangeMonthControl = () => {
 
   return (
     <div className="flex items-center gap-0.5 border border-line p-0.75">
+      {!isMobileScreen && (
+        <Button
+          startIcon={<ArrowLeft size="size-4" />}
+          className={ARROW_BUTTON_CLASS}
+          onClick={() => onChangeMonth(MonthDirection.PREV)}
+        />
+      )}
       <Button
-        startIcon={<ArrowLeft size="size-4" />}
-        className={ARROW_BUTTON_CLASS}
-        onClick={() => onChangeMonth(MonthDirection.PREV)}
-      />
-      <Button
-        text={isMobileScreen ? currentDay : 'today'}
-        className={`h-full p-0 md:px-3 capitalize font-mono text-sm text-text-muted ${CONTROL_BUTTON_CLASS}`}
+        text="today"
+        className={`h-full max-md:h-11 max-md:min-w-11 px-3 capitalize font-mono text-sm text-text-muted ${CONTROL_BUTTON_CLASS}`}
         onClick={onSwitchToToday}
       />
-      <Button
-        endIcon={<ArrowRight size="size-4" />}
-        className={ARROW_BUTTON_CLASS}
-        onClick={() => onChangeMonth(MonthDirection.NEXT)}
-      />
+      {!isMobileScreen && (
+        <Button
+          endIcon={<ArrowRight size="size-4" />}
+          className={ARROW_BUTTON_CLASS}
+          onClick={() => onChangeMonth(MonthDirection.NEXT)}
+        />
+      )}
     </div>
   );
 };

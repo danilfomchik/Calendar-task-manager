@@ -42,12 +42,8 @@ const Controls = () => {
 
         <div className="max-md:hidden self-stretch my-2 border-t border-s border-line max-md:w-[40%] max-md:mx-auto"></div>
 
-        <AddEvent
-          showText={!isMobileScreen}
-          className={cx('shadow-[0_10px_24px_-8px_var(--color-action)]', {
-            'h-9.5 aspect-square rounded-[10px] max-md:p-0': isMobileScreen,
-          })}
-        />
+        {/* on mobile the Bottom sheet's floating button adds events */}
+        {!isMobileScreen && <AddEvent className="shadow-[0_10px_24px_-8px_var(--color-action)]" />}
       </div>
     </div>
   );
