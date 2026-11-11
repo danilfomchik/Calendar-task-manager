@@ -1,8 +1,6 @@
 @import 'tailwindcss';
 
 @theme {
-  --height-header: 77px;
-
   /* Role-named design tokens (dark only). Calendar colours are never used by chrome. */
   --color-surface-base: #0b0c0e;
   --color-surface-sunken: #08090a;
@@ -28,8 +26,6 @@
   --color-secondary-background-color: var(--secondary-bg-color);
   --color-secondaryBackgroundColorHover: #161c22a3;
   --color-overlay: var(--overlay-color);
-
-  --height-header: 77px;
 
   --grid-template-columns-auto-fill: repeat(auto-fill, minmax(330px, 1fr));
 }
