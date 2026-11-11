@@ -8,4 +8,5 @@ export enum SliceNames {
   overflowSlice = 'overflowData',
   myCalendarsSlice = 'myCalendarsData',
   sidebarSlice = 'sidebarData',
+  dayNotesSlice = 'dayNotesData',
 }

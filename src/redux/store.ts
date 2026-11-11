@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 
 import dateSlice from './date/dateSlice';
 import {holidaysApi} from './dateHolidaysGenerator/holidaysApi';
+import dayNotesSlice from './dayNotes/dayNotesSlice';
 import eventsSlice from './events/eventsSlice';
 import {listenerMiddleware} from './listenerMiddleware';
 import './listenersMiddleware';
@@ -18,6 +19,7 @@ const combinedReducer = combineReducers({
   [SliceNames.myCalendarsSlice]: myCalendarsSlice.reducer,
   [holidaysApi.reducerPath]: holidaysApi.reducer,
   [SliceNames.sidebarSlice]: sidebarSlice.reducer,
+  [SliceNames.dayNotesSlice]: dayNotesSlice.reducer,
 });
 
 export const setupStore = (preloadedState?: PreloadedState) => {

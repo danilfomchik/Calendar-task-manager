@@ -1,1 +1,2 @@
+import './dayNotesListener';
 import './eventsListener';
