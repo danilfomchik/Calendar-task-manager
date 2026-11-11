@@ -3,9 +3,8 @@ import {useNavigate} from 'react-router';
 
 import {setFullDate, setSelectedDate} from '@/redux/date/dateSlice';
 import {useAppDispatch} from '@/redux/store';
+import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
 import {RouterPaths} from '@/types/types';
-
-import {CONTROL_CLASS} from './constants';
 
 // Back to the Month grid showing the Viewed day's month, with the Viewed day selected. Not navigate(-1): after stepping between
 // days that would land on the previous day, and on a direct load it would leave the app.
@@ -21,7 +20,7 @@ const BackToMonth = ({date}: {date: string}) => {
   };
 
   return (
-    <button type="button" onClick={handleClick} aria-label={`Back to ${monthLabel}`} className={CONTROL_CLASS}>
+    <button type="button" onClick={handleClick} aria-label={`Back to ${monthLabel}`} className={HAIRLINE_CONTROL_CLASS}>
       <span aria-hidden>‹</span> {monthLabel}
     </button>
   );

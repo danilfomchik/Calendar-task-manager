@@ -3,6 +3,7 @@ import {PropsWithChildren, useMemo} from 'react';
 import {useGetDayHolidaysInfoQuery} from '@/redux/dateHolidaysGenerator/holidaysApi';
 import {cx} from '@/services/utils';
 
+import {BlockCard, SkeletonLine} from '../BlockCard';
 import {DayContextBlock} from '../types';
 import {parseAIContent} from './parseAIContent';
 
@@ -14,31 +15,31 @@ const CARD_MIN_HEIGHT = 'min-h-96';
 
 const Frame = ({children, busy = false}: PropsWithChildren<{busy?: boolean}>) => (
   <div className="bg-linear-to-br from-info via-action to-info p-px">
-    <section
-      aria-label="AI insights"
-      aria-busy={busy}
-      className={cx('relative flex flex-col gap-3 overflow-hidden bg-surface-sunken p-4', CARD_MIN_HEIGHT)}>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-10 -right-10 size-40 rounded-full bg-action/20 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-12 -left-10 size-40 rounded-full bg-info/20 blur-3xl"
-      />
-      <div className="relative flex items-center gap-2">
-        <span aria-hidden className="text-action">
-          ✦
-        </span>
-        <span className="font-mono text-[10px] tracking-widest text-action uppercase">AI insight</span>
-      </div>
+    <BlockCard
+      label="AI insights"
+      busy={busy}
+      className={cx('relative overflow-hidden bg-surface-sunken', CARD_MIN_HEIGHT)}
+      header={
+        <>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-10 -right-10 size-40 rounded-full bg-action/20 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-12 -left-10 size-40 rounded-full bg-info/20 blur-3xl"
+          />
+          <div className="relative flex items-center gap-2">
+            <span aria-hidden className="text-action">
+              ✦
+            </span>
+            <span className="font-mono text-[10px] tracking-widest text-action uppercase">AI insight</span>
+          </div>
+        </>
+      }>
       {children}
-    </section>
+    </BlockCard>
   </div>
-);
-
-const SkeletonLine = ({className}: {className: string}) => (
-  <span aria-hidden className={cx('block animate-pulse bg-surface-overlay motion-reduce:animate-none', className)} />
 );
 
 const AIInsightsSkeleton = () => (

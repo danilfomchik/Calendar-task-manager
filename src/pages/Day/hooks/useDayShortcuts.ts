@@ -8,9 +8,10 @@ import {onOpenItem} from '@/redux/overflow/overflowSlice';
 import {selectOpenedItems} from '@/redux/overflow/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {EVENT_FORM_ID} from '@/services/constants';
+import {getDayPath, getTodayKey} from '@/services/dateUtils';
 import {FormActionType} from '@/types/eventFormTypes';
 
-import {getDayPath, getTodayKey, shiftDay} from '../helpers';
+import {shiftDay} from '../helpers';
 
 const isTypingTarget = (target: EventTarget | null) => {
   if (!(target instanceof HTMLElement)) return false;

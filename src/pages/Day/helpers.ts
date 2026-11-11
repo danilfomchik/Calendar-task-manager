@@ -1,12 +1,6 @@
 import moment from 'moment';
 
-import {formatDate, getDate} from '@/services/dateUtils';
-
-export const DATE_KEY_FORMAT = 'YYYY-MM-DD';
-
-export const getDayPath = (date: string) => `/day/${date}`;
-
-export const getTodayKey = () => formatDate(getDate(new Date()), DATE_KEY_FORMAT);
+import {DATE_KEY_FORMAT, formatDate, formatEventsCount} from '@/services/dateUtils';
 
 export const shiftDay = (date: string, days: number) => formatDate(moment(date).add(days, 'day'), DATE_KEY_FORMAT);
 
@@ -19,8 +13,6 @@ export const getWeekDates = (date: string) => {
 
 // ISO week number: the 'uk' locale is not bundled, so moment's locale week() is not ISO
 export const getWeekNumber = (date: string) => moment(date).isoWeek();
-
-export const formatEventsCount = (count: number) => (count === 1 ? '1 event' : `${count} events`);
 
 // "Monday 9 November, 3 events"
 export const getDayCellLabel = (date: string, count: number) =>

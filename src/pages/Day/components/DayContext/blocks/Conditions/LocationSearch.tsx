@@ -2,8 +2,8 @@ import {FormEvent, useId, useState} from 'react';
 
 import {useSearchPlacesQuery} from '@/redux/conditions/conditionsApi';
 import {TPlace} from '@/redux/conditions/types';
-
-import {HAIRLINE_CONTROL_CLASS} from './constants';
+import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
+import {cx} from '@/services/utils';
 
 // Open-Meteo returns nothing for 0-1 characters, so don't send those
 const MIN_QUERY_LENGTH = 2;
@@ -61,7 +61,7 @@ const LocationSearch = ({onPick, onCancel}: TLocationSearchProps) => {
             placeholder="e.g. Lisbon"
             className="h-11 min-w-0 flex-1 border border-line-strong bg-surface-base px-3 text-sm placeholder:text-text-faint md:h-9"
           />
-          <button type="submit" className={HAIRLINE_CONTROL_CLASS}>
+          <button type="submit" className={cx(HAIRLINE_CONTROL_CLASS, 'shrink-0')}>
             Search
           </button>
         </div>

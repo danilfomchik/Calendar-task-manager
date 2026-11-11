@@ -1,4 +1,3 @@
-import moment from 'moment';
 import {PropsWithChildren, ReactNode, useState} from 'react';
 
 import {useGetDayConditionsQuery} from '@/redux/conditions/conditionsApi';
@@ -6,8 +5,11 @@ import {TConditionsSource, TDayConditions, TPlace} from '@/redux/conditions/type
 import {setLocation} from '@/redux/location/locationSlice';
 import {TGeolocationStatus, TLocation} from '@/redux/location/types';
 import {useAppDispatch} from '@/redux/store';
+import {getTodayKey} from '@/services/dateUtils';
+import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
 
+import {BlockCard, SkeletonLine} from '../BlockCard';
 import {DayContextBlock} from '../types';
 import LocationSearch from './LocationSearch';
 import {getConditionsSource} from './conditionsRange';
@@ -20,23 +22,18 @@ import {formatWindDirection} from './wind';
 const CARD_MIN_HEIGHT = 'min-h-68';
 
 const Frame = ({children, label, busy = false}: PropsWithChildren<{label?: ReactNode; busy?: boolean}>) => (
-  <section
-    aria-label="Conditions"
-    aria-busy={busy}
-    className={cx(
-      'flex flex-col gap-3 border border-info/40 bg-linear-to-br from-info/25 via-info/10 to-transparent p-4',
-      CARD_MIN_HEIGHT,
-    )}>
-    <div className="flex items-center justify-between gap-2">
-      <span className="font-mono text-[10px] tracking-widest text-info uppercase">Conditions</span>
-      {label}
-    </div>
+  <BlockCard
+    label="Conditions"
+    busy={busy}
+    className={cx('border border-info/40 bg-linear-to-br from-info/25 via-info/10 to-transparent', CARD_MIN_HEIGHT)}
+    header={
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-mono text-[10px] tracking-widest text-info uppercase">Conditions</span>
+        {label}
+      </div>
+    }>
     {children}
-  </section>
-);
-
-const SkeletonLine = ({className}: {className: string}) => (
-  <span aria-hidden className={cx('block animate-pulse bg-surface-overlay motion-reduce:animate-none', className)} />
+  </BlockCard>
 );
 
 const ConditionsSkeleton = () => (
@@ -88,7 +85,7 @@ const ChangeLocationButton = ({name, onClick, autoFocus}: TLocationTriggerProps 
       autoFocus={autoFocus}
       onClick={onClick}
       aria-label={name ? `Change location (${name})` : 'Change location'}
-      className="inline-flex h-11 shrink-0 cursor-pointer items-center border border-line-strong px-2 font-mono text-[10px] tracking-wider text-text-muted uppercase transition-colors hover:border-text-muted hover:text-text md:h-7">
+      className={cx(HAIRLINE_CONTROL_CLASS, 'shrink-0 px-2 text-[10px] md:h-7 md:text-[10px]')}>
       Change
     </button>
   </div>
@@ -168,7 +165,7 @@ const ConditionsCard = ({date, location, source, onChangeLocation, focusChange}:
 // "Set location" prompt that opens a city search; a picked city is persisted and can be changed from the card.
 const Conditions: DayContextBlock = ({date}) => {
   const dispatch = useAppDispatch();
-  const source = getConditionsSource(date, moment().format('YYYY-MM-DD'));
+  const source = getConditionsSource(date, getTodayKey());
   const {location, geolocationStatus} = useConditionsLocation(source !== null);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);

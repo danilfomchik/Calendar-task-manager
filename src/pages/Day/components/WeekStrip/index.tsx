@@ -2,8 +2,9 @@ import moment from 'moment';
 
 import SwipeSlide from '@/components/common/SwipeSlide';
 import {TDirection} from '@/services/dateUtils';
+import {getTodayKey} from '@/services/dateUtils';
 
-import {getTodayKey, getWeekDates, getWeekNumber, shiftDay} from '../../helpers';
+import {getWeekDates, getWeekNumber, shiftDay} from '../../helpers';
 import DayCell from './DayCell';
 import StepLink from './StepLink';
 import ViewedDayCell from './ViewedDayCell';

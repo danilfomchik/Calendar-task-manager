@@ -1,7 +1,7 @@
-export interface IAIInsights {
+export type TAIInsights = {
   holiday: {name: string; description: string} | null;
   fact: string | null;
-}
+};
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -10,7 +10,7 @@ const nonEmptyString = (value: unknown) => (typeof value === 'string' && value.t
 
 // The model's message content is untrusted text: anything that is not the expected JSON shape yields null
 // (render nothing) instead of throwing. Partial content keeps the valid half.
-export const parseAIContent = (content: string | undefined): IAIInsights | null => {
+export const parseAIContent = (content: string | undefined): TAIInsights | null => {
   if (!content) return null;
 
   let raw: unknown;
