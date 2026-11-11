@@ -18,6 +18,8 @@ import ContextButton from './components/DayContext/ContextButton';
 import {DayContextProvider} from './components/DayContext/DayContextState';
 import Masthead from './components/Masthead';
 import AddEventDayButton from './components/Masthead/AddEventDayButton';
+import ShortcutsHint from './components/ShortcutsHint';
+import {useDayShortcuts} from './hooks/useDayShortcuts';
 import './index.css';
 // PROTOTYPE (throwaway): remove with ./prototype
 import VariantE from './prototype/variantE';
@@ -29,6 +31,7 @@ const DayPage = () => {
   const {date} = useParams<{date: string}>();
   const showEventsCount = useMediaQuery({size: 'sm', direction: 'to'});
   const isSidebarOpen = useSelector(selectIsSidebarOpen);
+  useDayShortcuts(date ?? '');
   // PROTOTYPE: ?variant=prototype renders variant E and ?variant=old the pre-redesign page, for comparison
   const [params] = useSearchParams();
   const variant = params.get('variant');
@@ -57,6 +60,7 @@ const DayPage = () => {
         <div className="flex min-h-0 flex-1 max-md:flex-col max-md:overflow-auto">
           <div className="flex min-w-0 flex-1 flex-col p-3 max-md:pb-40 md:overflow-auto md:p-5">
             <EventsList date={viewedDate} showItemControls showEventsCount={showEventsCount} />
+            <ShortcutsHint className="mt-auto pt-6" />
           </div>
 
           <DayContext date={viewedDate} />
