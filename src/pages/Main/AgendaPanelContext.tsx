@@ -1,7 +1,9 @@
 import {PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react';
+import {useSelector} from 'react-redux';
 
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {setSelectedDate} from '@/redux/date/dateSlice';
+import {selectSelectedDate} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
 
 type TAgendaPanelContext = {
@@ -21,6 +23,15 @@ export const AgendaPanelProvider = ({children}: PropsWithChildren) => {
   const dispatch = useAppDispatch();
   // the user's own choice; the panel is shown by default and comes back when returning to desktop
   const [isDismissed, setIsDismissed] = useState(false);
+
+  // selecting a date from outside the provider (the sidebar mini-calendar) re-opens the panel, as openFor does
+  const selectedDate = useSelector(selectSelectedDate);
+  const [panelDate, setPanelDate] = useState(selectedDate);
+
+  if (panelDate !== selectedDate) {
+    setPanelDate(selectedDate);
+    setIsDismissed(false);
+  }
 
   const openFor = useCallback(
     (date: string) => {
