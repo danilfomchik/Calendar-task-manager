@@ -9,4 +9,5 @@ export enum SliceNames {
   myCalendarsSlice = 'myCalendarsData',
   sidebarSlice = 'sidebarData',
   dayNotesSlice = 'dayNotesData',
+  locationSlice = 'locationData',
 }
