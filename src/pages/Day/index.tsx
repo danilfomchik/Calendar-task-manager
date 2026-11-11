@@ -1,6 +1,6 @@
 import moment from 'moment';
 import {useSelector} from 'react-redux';
-import {useNavigate, useParams} from 'react-router';
+import {useNavigate, useParams, useSearchParams} from 'react-router';
 
 import Button from '@/components/common/Button';
 import EventsList from '@/components/common/EventsList';
@@ -14,6 +14,8 @@ import {cx} from '@/services/utils';
 import AddEvent from '../Main/components/Header/Controls/AddEvent';
 import AIInfo from './components/AIInfo';
 import './index.css';
+// PROTOTYPE (throwaway): remove with ./prototype
+import VariantE from './prototype/variantE';
 
 const isGroqEnabled = import.meta.env.VITE_REACT_APP_IS_GROQ_ENABLED === 'true';
 
@@ -22,6 +24,17 @@ const DayPage = () => {
   const {date} = useParams<{date: string}>();
   const showEventsCount = useMediaQuery({size: 'sm', direction: 'to'});
   const isSidebarOpen = useSelector(selectIsSidebarOpen);
+  // PROTOTYPE: renders variant E; ?variant=old keeps the current page for comparison
+  const [params] = useSearchParams();
+  const showPrototype = params.get('variant') !== 'old';
+  const m = moment(date);
+  const dayCtx = {
+    date: date ?? '',
+    numeral: m.format('D'),
+    weekday: m.format('dddd'),
+    monthYear: m.format('MMMM YYYY'),
+    month: m.format('MMMM'),
+  };
 
   const handleReturn = () => {
     navigate(-1);
@@ -29,80 +42,86 @@ const DayPage = () => {
 
   return (
     <>
-      <header
-        className={cx(
-          'flex items-center gap-5 md:gap-0 h-header sticky top-0 z-50 px-3 md:px-5 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color transition-all duration-300 ease-in-out',
-          {
-            'md:gap-5': !isSidebarOpen,
-          },
-        )}>
-        <OpenSidebarBtn className="md:-translate-x-75 md:w-0" openClassName="md:translate-x-0 md:w-[20px]" />
+      {!showPrototype && (
+        <header
+          className={cx(
+            'flex items-center gap-5 md:gap-0 h-header sticky top-0 z-50 px-3 md:px-5 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color transition-all duration-300 ease-in-out',
+            {
+              'md:gap-5': !isSidebarOpen,
+            },
+          )}>
+          <OpenSidebarBtn className="md:-translate-x-75 md:w-0" openClassName="md:translate-x-0 md:w-[20px]" />
 
-        <div className="flex items-center justify-between gap-4 flex-1 h-full">
-          <div className="flex items-center gap-4 md:divide-x divide-[#1e1e1e]">
-            <Button
-              text="Back"
-              onClick={handleReturn}
-              startIcon={<ArrowLeft size="size-4" />}
-              className="w-fit p-0 hidden md:flex"
-              variant="transparent"
-            />
+          <div className="flex items-center justify-between gap-4 flex-1 h-full">
+            <div className="flex items-center gap-4 md:divide-x divide-[#1e1e1e]">
+              <Button
+                text="Back"
+                onClick={handleReturn}
+                startIcon={<ArrowLeft size="size-4" />}
+                className="w-fit p-0 hidden md:flex"
+                variant="transparent"
+              />
 
-            <Button
-              text={formatDate(moment(date), 'MMMM YYYY')}
-              onClick={handleReturn}
-              startIcon={<ArrowLeft size="size-4" />}
-              className="w-fit p-0 max-md:flex hidden"
-              variant="transparent"
-            />
+              <Button
+                text={formatDate(moment(date), 'MMMM YYYY')}
+                onClick={handleReturn}
+                startIcon={<ArrowLeft size="size-4" />}
+                className="w-fit p-0 max-md:flex hidden"
+                variant="transparent"
+              />
 
-            <time dateTime={date} className="max-md:hidden text-base md:text-[17px]/[1] text-[#444444] md:pl-4">
-              {formatDate(moment(date), 'MMMM YYYY')}
+              <time dateTime={date} className="max-md:hidden text-base md:text-[17px]/[1] text-[#444444] md:pl-4">
+                {formatDate(moment(date), 'MMMM YYYY')}
+              </time>
+            </div>
+
+            <AddEvent date={date} className="max-md:hidden" />
+          </div>
+        </header>
+      )}
+
+      {showPrototype && <VariantE d={dayCtx} />}
+
+      {!showPrototype && (
+        <div className="day-content">
+          <div className="flex flex-col gap-4 md:flex-[0_0_230px] py-4 md:py-5.5 px-4.5 border-r border-secondary-background-color">
+            <time dateTime={date} className="flex md:flex-col max-md:items-center justify-between gap-2">
+              <div className="max-md:flex items-center justify-center max-md:bg-[#3b5bfd] max-md:w-20 max-md:h-20 rounded-full">
+                <span className="text-white font-normal text-6xl/[1] md:text-[76px]/[1]">
+                  {formatDate(moment(date), 'Do')}
+                </span>
+              </div>
+              {/* desktop weekday */}
+              <span className="hidden md:block text-base text-[#444444] uppercase tracking-[0.08em] font-extralight">
+                {formatDate(moment(date), 'dddd')}
+              </span>
+              {/* mobile weekday */}
+              <div className="hidden max-md:flex flex-col items-end">
+                <p className="text-xl font-normal">{formatDate(moment(date), 'dddd')}</p>
+                <div className="flex items-center gap-1 text-sm text-[#444444]">
+                  <span className="uppercase">{formatDate(moment(date), 'MMMM')}</span>·
+                  <span>{formatDate(moment(date), 'YYYY')}</span>
+                </div>
+              </div>
             </time>
+
+            {isGroqEnabled && <AIInfo date={date} className="max-md:hidden" />}
           </div>
 
-          <AddEvent date={date} className="max-md:hidden" />
+          <div className="flex flex-col flex-1 overflow-auto px-4 py-2 md:py-5">
+            <EventsList date={date || ''} showItemControls showEventsCount={showEventsCount} />
+          </div>
+
+          <div className="flex-col gap-8 overflow-auto px-4 pb-5 hidden max-md:flex max-h-62.5">
+            {isGroqEnabled && <AIInfo date={date} />}
+          </div>
+
+          <AddEvent
+            date={date}
+            className="hidden max-md:flex self-center max-md:w-[min(50%,250px)] rounded-[100px] h-11 py-3 px-9 mb-5"
+          />
         </div>
-      </header>
-
-      <div className="day-content">
-        <div className="flex flex-col gap-4 md:flex-[0_0_230px] py-4 md:py-5.5 px-4.5 border-r border-secondary-background-color">
-          <time dateTime={date} className="flex md:flex-col max-md:items-center justify-between gap-2">
-            <div className="max-md:flex items-center justify-center max-md:bg-[#3b5bfd] max-md:w-20 max-md:h-20 rounded-full">
-              <span className="text-white font-normal text-6xl/[1] md:text-[76px]/[1]">
-                {formatDate(moment(date), 'Do')}
-              </span>
-            </div>
-            {/* desktop weekday */}
-            <span className="hidden md:block text-base text-[#444444] uppercase tracking-[0.08em] font-extralight">
-              {formatDate(moment(date), 'dddd')}
-            </span>
-            {/* mobile weekday */}
-            <div className="hidden max-md:flex flex-col items-end">
-              <p className="text-xl font-normal">{formatDate(moment(date), 'dddd')}</p>
-              <div className="flex items-center gap-1 text-sm text-[#444444]">
-                <span className="uppercase">{formatDate(moment(date), 'MMMM')}</span>·
-                <span>{formatDate(moment(date), 'YYYY')}</span>
-              </div>
-            </div>
-          </time>
-
-          {isGroqEnabled && <AIInfo date={date} className="max-md:hidden" />}
-        </div>
-
-        <div className="flex flex-col flex-1 overflow-auto px-4 py-2 md:py-5">
-          <EventsList date={date || ''} showItemControls showEventsCount={showEventsCount} />
-        </div>
-
-        <div className="flex-col gap-8 overflow-auto px-4 pb-5 hidden max-md:flex max-h-62.5">
-          {isGroqEnabled && <AIInfo date={date} />}
-        </div>
-
-        <AddEvent
-          date={date}
-          className="hidden max-md:flex self-center max-md:w-[min(50%,250px)] rounded-[100px] h-11 py-3 px-9 mb-5"
-        />
-      </div>
+      )}
     </>
   );
 };
