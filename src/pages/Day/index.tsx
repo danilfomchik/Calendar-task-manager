@@ -13,6 +13,9 @@ import {cx} from '@/services/utils';
 
 import AddEvent from '../Main/components/Header/Controls/AddEvent';
 import AIInfo from './components/AIInfo';
+import DayContext from './components/DayContext';
+import ContextButton from './components/DayContext/ContextButton';
+import {DayContextProvider} from './components/DayContext/DayContextState';
 import DayEventsList from './components/DayEventsList';
 import DaySummary from './components/DaySummary';
 import Masthead from './components/Masthead';
@@ -54,26 +57,25 @@ const DayPage = () => {
     const viewedDate = date ?? '';
 
     return (
-      <div className="flex h-full flex-col">
+      <DayContextProvider className="flex h-full flex-col">
         <Masthead date={viewedDate} />
 
         <div className="flex min-h-0 flex-1 max-md:flex-col max-md:overflow-auto">
-          <div className="flex min-w-0 flex-1 flex-col gap-3 p-3 max-md:pb-24 md:overflow-auto md:p-5">
+          <div className="flex min-w-0 flex-1 flex-col gap-3 p-3 max-md:pb-40 md:overflow-auto md:p-5">
             <DaySummary date={viewedDate} />
             <QuickAdd key={viewedDate} date={viewedDate} />
             <DayEventsList date={viewedDate} />
             <ShortcutsHint className="mt-auto pt-6" />
           </div>
 
-          {isGroqEnabled && (
-            <aside className="border-line p-3 pb-24 md:w-80 md:shrink-0 md:overflow-auto md:border-l md:p-5">
-              <AIInfo date={viewedDate} />
-            </aside>
-          )}
+          <DayContext date={viewedDate} />
         </div>
 
-        <AddEventDayButton date={viewedDate} floating />
-      </div>
+        <div className="fixed right-4 bottom-4 z-30 flex flex-col gap-2 md:hidden">
+          <ContextButton />
+          <AddEventDayButton date={viewedDate} floating />
+        </div>
+      </DayContextProvider>
     );
   }
 
