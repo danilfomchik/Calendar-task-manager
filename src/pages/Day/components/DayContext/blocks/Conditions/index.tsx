@@ -1,12 +1,15 @@
 import moment from 'moment';
-import {PropsWithChildren, ReactNode} from 'react';
+import {PropsWithChildren, ReactNode, useState} from 'react';
 
 import {useGetDayConditionsQuery} from '@/redux/conditions/conditionsApi';
-import {TConditionsSource, TDayConditions} from '@/redux/conditions/types';
-import {TLocation} from '@/redux/location/types';
+import {TConditionsSource, TDayConditions, TPlace} from '@/redux/conditions/types';
+import {setLocation} from '@/redux/location/locationSlice';
+import {TGeolocationStatus, TLocation} from '@/redux/location/types';
+import {useAppDispatch} from '@/redux/store';
 import {cx} from '@/services/utils';
 
 import {DayContextBlock} from '../types';
+import LocationSearch from './LocationSearch';
 import {getConditionsSource} from './conditionsRange';
 import {getMoonPhase} from './moonPhase';
 import {useConditionsLocation} from './useConditionsLocation';
@@ -70,9 +73,56 @@ const Fact = ({term, children}: PropsWithChildren<{term: string}>) => (
   </div>
 );
 
-type TConditionsCardProps = {date: string; location: TLocation; source: TConditionsSource};
+// autoFocus: set when coming back from the city search, so keyboard focus lands where it started
+type TLocationTriggerProps = {onClick: () => void; autoFocus: boolean};
 
-const ConditionsCard = ({date, location, source}: TConditionsCardProps) => {
+const ChangeLocationButton = ({name, onClick, autoFocus}: TLocationTriggerProps & {name: string | null}) => (
+  <div className="flex min-w-0 items-center gap-2">
+    {name && (
+      <span className="truncate text-xs text-text-muted" title={name}>
+        {name}
+      </span>
+    )}
+    <button
+      type="button"
+      autoFocus={autoFocus}
+      onClick={onClick}
+      aria-label={name ? `Change location (${name})` : 'Change location'}
+      className="inline-flex h-11 shrink-0 cursor-pointer items-center border border-line-strong px-2 font-mono text-[10px] tracking-wider text-text-muted uppercase transition-colors hover:border-text-muted hover:text-text md:h-7">
+      Change
+    </button>
+  </div>
+);
+
+const SetLocationPrompt = ({
+  geolocationStatus,
+  onClick,
+  autoFocus,
+}: TLocationTriggerProps & {geolocationStatus: TGeolocationStatus}) => (
+  <Frame>
+    <p className="text-sm text-text-muted">
+      {geolocationStatus === 'denied' ? 'Location access is off.' : 'Your location isn’t available.'} Choose a city to
+      see the weather, sunrise and sunset for this day.
+    </p>
+    <button
+      type="button"
+      autoFocus={autoFocus}
+      onClick={onClick}
+      className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 self-start bg-action px-3 font-mono text-xs font-medium tracking-wider text-action-ink uppercase hover:brightness-110 md:h-9">
+      Set location
+    </button>
+  </Frame>
+);
+
+type TConditionsCardProps = {
+  date: string;
+  location: TLocation;
+  source: TConditionsSource;
+  onChangeLocation: () => void;
+  focusChange: boolean;
+};
+
+const ConditionsCard = ({date, location, source, onChangeLocation, focusChange}: TConditionsCardProps) => {
   const {latitude, longitude} = location;
   const {data, isFetching, isError} = useGetDayConditionsQuery({date, latitude, longitude, source});
 
@@ -83,7 +133,7 @@ const ConditionsCard = ({date, location, source}: TConditionsCardProps) => {
   const moon = getMoonPhase(date);
 
   return (
-    <Frame label={location.name && <span className="truncate text-xs text-text-muted">{location.name}</span>}>
+    <Frame label={<ChangeLocationButton name={location.name} onClick={onChangeLocation} autoFocus={focusChange} />}>
       <div className="flex items-end justify-between gap-3">
         <p className="font-display text-4xl leading-none font-extrabold">
           <span className="sr-only">Low </span>
@@ -114,16 +164,50 @@ const ConditionsCard = ({date, location, source}: TConditionsCardProps) => {
 };
 
 // Conditions: weather, sunrise/sunset and moon phase for the Viewed day at the user's location.
-// Hidden outside Open-Meteo's range, without a location (#76 adds the city fallback here) and on failure.
+// Hidden outside Open-Meteo's range and on failure. Without a location (denied or unavailable) it shows a
+// "Set location" prompt that opens a city search; a picked city is persisted and can be changed from the card.
 const Conditions: DayContextBlock = ({date}) => {
+  const dispatch = useAppDispatch();
   const source = getConditionsSource(date, moment().format('YYYY-MM-DD'));
   const {location, geolocationStatus} = useConditionsLocation(source !== null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const openSearch = () => setIsSearching(true);
+  const closeSearch = () => {
+    setIsSearching(false);
+    setHasSearched(true);
+  };
+  const pickPlace = ({name, region, latitude, longitude}: TPlace) => {
+    dispatch(setLocation({latitude, longitude, name: region ? `${name}, ${region}` : name, source: 'city'}));
+    closeSearch();
+  };
 
   if (!source) return null;
-  if (location) return <ConditionsCard date={date} location={location} source={source} />;
-  if (geolocationStatus === 'pending') return <ConditionsSkeleton />;
 
-  return null;
+  if (isSearching) {
+    return (
+      <Frame>
+        <LocationSearch onPick={pickPlace} onCancel={closeSearch} />
+      </Frame>
+    );
+  }
+
+  if (location) {
+    return (
+      <ConditionsCard
+        date={date}
+        location={location}
+        source={source}
+        onChangeLocation={openSearch}
+        focusChange={hasSearched}
+      />
+    );
+  }
+
+  if (geolocationStatus === 'pending' || geolocationStatus === 'idle') return <ConditionsSkeleton />;
+
+  return <SetLocationPrompt geolocationStatus={geolocationStatus} onClick={openSearch} autoFocus={hasSearched} />;
 };
 
 export default Conditions;

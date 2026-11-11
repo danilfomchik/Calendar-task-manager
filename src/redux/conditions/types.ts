@@ -36,3 +36,24 @@ export type TOpenMeteoDailyResponse = {
     sunset?: (string | null)[];
   };
 };
+
+// A place from Open-Meteo geocoding, ready to become the Conditions location
+export type TPlace = {
+  id: number;
+  name: string; // "Springfield"
+  region: string; // "Missouri, United States", or "" when there is nothing to add
+  latitude: number; // rounded to 2 dp, like the device position
+  longitude: number;
+};
+
+// Raw geocoding row (only what we read). `results` is absent when nothing matches.
+export type TOpenMeteoGeocodingResponse = {
+  results?: {
+    id?: number;
+    name?: string;
+    latitude?: number;
+    longitude?: number;
+    country?: string;
+    admin1?: string;
+  }[];
+};
