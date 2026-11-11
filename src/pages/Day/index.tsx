@@ -13,6 +13,8 @@ import {cx} from '@/services/utils';
 
 import AddEvent from '../Main/components/Header/Controls/AddEvent';
 import AIInfo from './components/AIInfo';
+import Masthead from './components/Masthead';
+import AddEventDayButton from './components/Masthead/AddEventDayButton';
 import './index.css';
 // PROTOTYPE (throwaway): remove with ./prototype
 import VariantE from './prototype/variantE';
@@ -24,9 +26,11 @@ const DayPage = () => {
   const {date} = useParams<{date: string}>();
   const showEventsCount = useMediaQuery({size: 'sm', direction: 'to'});
   const isSidebarOpen = useSelector(selectIsSidebarOpen);
-  // PROTOTYPE: renders variant E; ?variant=old keeps the current page for comparison
+  // PROTOTYPE: ?variant=prototype renders variant E and ?variant=old the pre-redesign page, for comparison
   const [params] = useSearchParams();
-  const showPrototype = params.get('variant') !== 'old';
+  const variant = params.get('variant');
+  const showPrototype = variant === 'prototype';
+  const showOld = variant === 'old';
   const m = moment(date);
   const dayCtx = {
     date: date ?? '',
@@ -40,9 +44,33 @@ const DayPage = () => {
     navigate(-1);
   };
 
+  if (!showPrototype && !showOld) {
+    const viewedDate = date ?? '';
+
+    return (
+      <div className="flex h-full flex-col">
+        <Masthead date={viewedDate} />
+
+        <div className="flex min-h-0 flex-1 max-md:flex-col max-md:overflow-auto">
+          <div className="flex min-w-0 flex-1 flex-col p-3 max-md:pb-24 md:overflow-auto md:p-5">
+            <EventsList date={viewedDate} showItemControls showEventsCount={showEventsCount} />
+          </div>
+
+          {isGroqEnabled && (
+            <aside className="border-line p-3 pb-24 md:w-80 md:shrink-0 md:overflow-auto md:border-l md:p-5">
+              <AIInfo date={viewedDate} />
+            </aside>
+          )}
+        </div>
+
+        <AddEventDayButton date={viewedDate} floating />
+      </div>
+    );
+  }
+
   return (
     <>
-      {!showPrototype && (
+      {showOld && (
         <header
           className={cx(
             'flex items-center gap-5 md:gap-0 h-header sticky top-0 z-50 px-3 md:px-5 py-4 md:py-5 bg-[#0a0a0a] md:border-b border-secondary-background-color transition-all duration-300 ease-in-out',
@@ -82,7 +110,7 @@ const DayPage = () => {
 
       {showPrototype && <VariantE d={dayCtx} />}
 
-      {!showPrototype && (
+      {showOld && (
         <div className="day-content">
           <div className="flex flex-col gap-4 md:flex-[0_0_230px] py-4 md:py-5.5 px-4.5 border-r border-secondary-background-color">
             <time dateTime={date} className="flex md:flex-col max-md:items-center justify-between gap-2">
