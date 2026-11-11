@@ -20,6 +20,7 @@ import DayEventsList from './components/DayEventsList';
 import DaySummary from './components/DaySummary';
 import Masthead from './components/Masthead';
 import AddEventDayButton from './components/Masthead/AddEventDayButton';
+import QuickAdd from './components/QuickAdd';
 import ShortcutsHint from './components/ShortcutsHint';
 import {useDayShortcuts} from './hooks/useDayShortcuts';
 import './index.css';
@@ -62,6 +63,7 @@ const DayPage = () => {
         <div className="flex min-h-0 flex-1 max-md:flex-col max-md:overflow-auto">
           <div className="flex min-w-0 flex-1 flex-col gap-3 p-3 max-md:pb-40 md:overflow-auto md:p-5">
             <DaySummary date={viewedDate} />
+            <QuickAdd key={viewedDate} date={viewedDate} />
             <DayEventsList date={viewedDate} />
             <ShortcutsHint className="mt-auto pt-6" />
           </div>
