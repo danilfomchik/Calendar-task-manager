@@ -23,17 +23,19 @@ Scope: the Day page (`src/pages/Day`), the sidebar mini-calendar, two new persis
 3. **Totals ignore the filter, the list dims.** The Calendar filter produces Dimmed events in the events list, exactly as on Home. The Day summary, Event mix and Upcoming always count every event, so a forgotten filter can't hide what the day holds.
 4. **Same two colour channels as Home.** Calendar colour only on event marks (Event mix segments, chips, list bars, Quick add dots). Green for action (Add event, Quick add focus, open drawer toggle), blue for info and today (the Viewed day tint, today's numeral, the Conditions card).
 5. **Meaning is never colour alone.** Today has an underline and a "Today" label as well as blue. Empty days have a dashed line, not just no colour. Chips and Quick add dots carry the calendar name (text or `title`, plus sr-only labels). Day cells are labelled "Monday 9 November, 3 events" (", today" when it applies) and the Viewed day has `aria-current="date"`.
-6. **Blocks fail silently, prompts are deliberate.** AI insights and Conditions render nothing on error, disabled flag, malformed data or an unsupported date, and show a fixed-height skeleton while loading so the drawer doesn't jump. The one non-data state that is shown on purpose is Conditions' "Set location" prompt.
+6. **Blocks fail silently, prompts are deliberate.** AI insights and Conditions render nothing on error, disabled flag, malformed data or an unsupported date, and show a fixed-height skeleton while loading so the drawer doesn't jump. The one non-data state that is shown on purpose is Conditions' "Set location" prompt. Conditions waits at most 4 s for the device position before showing it ("Still waiting for your location"), because the browser's own timeout only starts once its permission prompt is answered; a position that arrives later still replaces the prompt.
 7. **A Day note is not an event.** It has its own slice and storage key and never feeds the Month grid, Day summary, Event mix or calendar counts.
 
 ## 3. Layout
 
 ### Desktop
 
-- **Masthead** (`components/Masthead`). Top row in Home's header classes (`h-22`): `SidebarToggle` (hidden while the sidebar is open), **Back to month** (hairline control, `‹ November 2026`; sets the month and selected date on Home, then navigates to `/`), then on the right the **Day context** toggle (`aria-pressed`, `aria-controls`, green while open) and the green **+ Add event**, bound to the Viewed day rather than Home's selected date. The Week strip sits below.
+- **Masthead** (`components/Masthead`). Top row in Home's header classes (`h-22`): `SidebarToggle` (hidden while the sidebar is open), **Back to month** (hairline control, `‹ November 2026`; returns to the month Home showed, see **Back to month rule** below), then on the right the **Day context** toggle (`aria-pressed`, `aria-controls`, green while open) and the green **+ Add event**, bound to the Viewed day rather than Home's selected date. The Week strip sits below.
 - **Body.** A main column with the Day summary, Quick add, the events list and, at the bottom, a discreet **keyboard shortcuts hint**. The Day context drawer is a 320px aside on the right.
 
 ### Mobile (below `md`)
+
+**Back to month rule.** The Day page never writes the date slice, so while Home's Month grid has been shown in this session (the in-memory `hasShownMonthGrid` flag, set when Home mounts) the slice still holds the month and selected date the user came from: Back to month shows that month in its label and returns to it with both untouched, however many days were stepped through on the Day page. On a direct load or reload of a Day URL there is no such month, so it falls back to the Viewed day's month and selects the Viewed day. It navigates to `/` rather than `navigate(-1)`, which would land on the previous day or leave the app.
 
 - Header: sidebar toggle, Back to month, a "Week N" label and, after a swipe away from the Viewed day's week, a **Back to {day}** control. The header row is full at 390px while Back is shown; below 390px the "Week N" label hides then.
 - The Week strip is the hero, with no chevrons. The Viewed day is about 2.4x wide; the six compact cells are about 44px each at 390px.
@@ -81,7 +83,7 @@ Desktop only: `←` / `→` previous / next day, `T` today, `N` the add-event fo
 
 ### Sidebar mini-calendar (`components/common/MonthSmallCalendar`)
 
-Days are buttons with an accessible label and event dots. On the Day page a click opens that day, the Viewed day is highlighted and the shown month follows the URL with its own month-step buttons; on mobile the sidebar overlay closes after the tap. On Home a click selects the date, as clicking a cell does, and re-opens the Agenda panel.
+Days are buttons with an accessible label and event dots. The grid is one tab stop (roving tabindex): arrow keys move by a day or a week, Home / End go to the start / end of the week row, within the six weeks shown; the tab stop sits on the last day reached, else the highlighted day, else today. On the Day page a click opens that day, the Viewed day is highlighted and the shown month follows the URL with its own month-step buttons; on mobile the sidebar overlay closes after the tap so the opened day is visible. On Home a click selects the date, as clicking a cell does, and re-opens the Agenda panel; the sidebar stays open, as it did before. That re-open is the only change to the Agenda panel: `AgendaPanelProvider` now sits in `MainLayout` so the sidebar can call `openFor`, it is never open off Home, and leaving Home forgets a dismissal, as when it unmounted with the Home page. Below `md` the sidebar overlay is 344px wide (at most the viewport minus 1rem) so the days are 44px targets; from `md` it stays the 240px column.
 
 ## 5. State and persistence
 
@@ -109,5 +111,5 @@ At desktop width and a 390px viewport, with seeded events in all four calendars:
 - Day-level swipe on mobile.
 - Delete has no confirmation or undo, on Home and the Day page alike.
 - `ui/Tooltip/NewTooltip.tsx` is unused; finish adopting it or remove it.
-- Sidebar mini-calendar: on mobile its day buttons are 29px wide (seven columns in the 240px sidebar), under the 44px target; every day is also its own tab stop (42 per month), so a roving tabindex with arrow keys would make keyboard use faster.
+- Sidebar mini-calendar: arrow keys stop at the edge of the six weeks shown instead of paging the month. Below 360px viewports the overlay narrows with the screen and its days drop under 44px.
 - The event form modal still has the pre-redesign styling.

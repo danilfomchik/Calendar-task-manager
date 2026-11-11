@@ -4,7 +4,7 @@ import {getLocalStoredValues} from '@/services/utils';
 import {StorageKeys} from '@/types/types';
 
 import {SliceNames} from '../types';
-import {roundCoordinate} from './helpers';
+import {roundCoordinate, toPersistedGeolocationStatus} from './helpers';
 import {TGeolocationStatus, TLocation, TLocationState} from './types';
 
 const GEOLOCATION_TIMEOUT_MS = 15_000;
@@ -12,11 +12,10 @@ const GEOLOCATION_TIMEOUT_MS = 15_000;
 const getInitialState = (): TLocationState => {
   try {
     const stored = getLocalStoredValues(StorageKeys.conditionsLocation, null) as Partial<TLocationState> | null;
-    const status = stored?.geolocationStatus;
 
     return {
       location: stored?.location ?? null,
-      geolocationStatus: status === 'granted' || status === 'denied' ? status : 'idle',
+      geolocationStatus: toPersistedGeolocationStatus(stored?.geolocationStatus),
     };
   } catch {
     return {location: null, geolocationStatus: 'idle'};

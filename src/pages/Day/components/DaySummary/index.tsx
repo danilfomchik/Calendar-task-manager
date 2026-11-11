@@ -4,8 +4,7 @@ import {useMemo} from 'react';
 import {useEventsList} from '@/hooks/useEventsList';
 import {defaultCalendars} from '@/services/constants';
 import {formatDate} from '@/services/dateUtils';
-
-import {formatEventsCount} from '../../helpers';
+import {formatEventsCount} from '@/services/dateUtils';
 
 // Day summary: total events of the Viewed day plus one chip per calendar that has events.
 // Reads every event of the day, so the Calendar filter never changes it.

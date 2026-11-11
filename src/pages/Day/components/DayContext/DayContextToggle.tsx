@@ -1,6 +1,6 @@
+import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
 
-import {CONTROL_CLASS} from '../Masthead/constants';
 import {useDayContext} from './DayContextState';
 import {DAY_CONTEXT_DRAWER_ID} from './constants';
 
@@ -16,7 +16,7 @@ const DayContextToggle = ({className}: {className?: string}) => {
       title={isDrawerOpen ? 'Hide Day context' : 'Show Day context'}
       onClick={toggleDrawer}
       className={cx(
-        CONTROL_CLASS,
+        HAIRLINE_CONTROL_CLASS,
         {'border-action text-action hover:border-action hover:text-action hover:brightness-110': isDrawerOpen},
         className,
       )}>

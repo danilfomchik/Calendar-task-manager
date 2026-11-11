@@ -1,9 +1,10 @@
 import moment from 'moment';
 import {Link} from 'react-router';
 
+import {getDayPath} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 
-import {getDayCellLabel, getDayPath} from '../../helpers';
+import {getDayCellLabel} from '../../helpers';
 import MixBar from './MixBar';
 import {useEventMix} from './useEventMix';
 

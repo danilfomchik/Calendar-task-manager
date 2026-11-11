@@ -1,13 +1,15 @@
-import moment from 'moment';
-import {PropsWithChildren, ReactNode, useState} from 'react';
+import {PropsWithChildren, ReactNode, useEffect, useState} from 'react';
 
 import {useGetDayConditionsQuery} from '@/redux/conditions/conditionsApi';
 import {TConditionsSource, TDayConditions, TPlace} from '@/redux/conditions/types';
 import {setLocation} from '@/redux/location/locationSlice';
 import {TGeolocationStatus, TLocation} from '@/redux/location/types';
 import {useAppDispatch} from '@/redux/store';
+import {getTodayKey} from '@/services/dateUtils';
+import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
 
+import {BlockCard, SkeletonLine} from '../BlockCard';
 import {DayContextBlock} from '../types';
 import LocationSearch from './LocationSearch';
 import {getConditionsSource} from './conditionsRange';
@@ -19,24 +21,24 @@ import {formatWindDirection} from './wind';
 // Skeleton and content share a minimum so the blocks below don't jump when the data arrives
 const CARD_MIN_HEIGHT = 'min-h-68';
 
-const Frame = ({children, label, busy = false}: PropsWithChildren<{label?: ReactNode; busy?: boolean}>) => (
-  <section
-    aria-label="Conditions"
-    aria-busy={busy}
-    className={cx(
-      'flex flex-col gap-3 border border-info/40 bg-linear-to-br from-info/25 via-info/10 to-transparent p-4',
-      CARD_MIN_HEIGHT,
-    )}>
-    <div className="flex items-center justify-between gap-2">
-      <span className="font-mono text-[10px] tracking-widest text-info uppercase">Conditions</span>
-      {label}
-    </div>
-    {children}
-  </section>
-);
+// How long the skeleton waits for the device position before offering "Set location". The browser's own
+// timeout only starts once the permission prompt is answered, so an ignored prompt would otherwise keep the
+// skeleton up for good. The device position still wins if it arrives later.
+const DEVICE_LOCATION_WAIT_MS = 4000;
 
-const SkeletonLine = ({className}: {className: string}) => (
-  <span aria-hidden className={cx('block animate-pulse bg-surface-overlay motion-reduce:animate-none', className)} />
+const Frame = ({children, label, busy = false}: PropsWithChildren<{label?: ReactNode; busy?: boolean}>) => (
+  <BlockCard
+    label="Conditions"
+    busy={busy}
+    className={cx('border border-info/40 bg-linear-to-br from-info/25 via-info/10 to-transparent', CARD_MIN_HEIGHT)}
+    header={
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-mono text-[10px] tracking-widest text-info uppercase">Conditions</span>
+        {label}
+      </div>
+    }>
+    {children}
+  </BlockCard>
 );
 
 const ConditionsSkeleton = () => (
@@ -88,11 +90,17 @@ const ChangeLocationButton = ({name, onClick, autoFocus}: TLocationTriggerProps 
       autoFocus={autoFocus}
       onClick={onClick}
       aria-label={name ? `Change location (${name})` : 'Change location'}
-      className="inline-flex h-11 shrink-0 cursor-pointer items-center border border-line-strong px-2 font-mono text-[10px] tracking-wider text-text-muted uppercase transition-colors hover:border-text-muted hover:text-text md:h-7">
+      className={cx(HAIRLINE_CONTROL_CLASS, 'shrink-0 px-2 text-[10px] md:h-7 md:text-[10px]')}>
       Change
     </button>
   </div>
 );
+
+const LOCATION_STATUS_TEXT: Partial<Record<TGeolocationStatus, string>> = {
+  denied: 'Location access is off.',
+  idle: 'Still waiting for your location.',
+  pending: 'Still waiting for your location.',
+};
 
 const SetLocationPrompt = ({
   geolocationStatus,
@@ -101,8 +109,8 @@ const SetLocationPrompt = ({
 }: TLocationTriggerProps & {geolocationStatus: TGeolocationStatus}) => (
   <Frame>
     <p className="text-sm text-text-muted">
-      {geolocationStatus === 'denied' ? 'Location access is off.' : 'Your location isn’t available.'} Choose a city to
-      see the weather, sunrise and sunset for this day.
+      {LOCATION_STATUS_TEXT[geolocationStatus] ?? 'Your location isn’t available.'} Choose a city to see the weather,
+      sunrise and sunset for this day.
     </p>
     <button
       type="button"
@@ -164,14 +172,27 @@ const ConditionsCard = ({date, location, source, onChangeLocation, focusChange}:
 };
 
 // Conditions: weather, sunrise/sunset and moon phase for the Viewed day at the user's location.
-// Hidden outside Open-Meteo's range and on failure. Without a location (denied or unavailable) it shows a
-// "Set location" prompt that opens a city search; a picked city is persisted and can be changed from the card.
+// Hidden outside Open-Meteo's range and on failure. Without a location (denied, unavailable, or no answer
+// within DEVICE_LOCATION_WAIT_MS) it shows a "Set location" prompt that opens a city search; a picked city is
+// persisted and can be changed from the card.
 const Conditions: DayContextBlock = ({date}) => {
   const dispatch = useAppDispatch();
-  const source = getConditionsSource(date, moment().format('YYYY-MM-DD'));
+  const source = getConditionsSource(date, getTodayKey());
   const {location, geolocationStatus} = useConditionsLocation(source !== null);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+
+  const isWaitingForDevice =
+    source !== null && !location && (geolocationStatus === 'pending' || geolocationStatus === 'idle');
+  const [hasWaitedTooLong, setHasWaitedTooLong] = useState(false);
+
+  useEffect(() => {
+    if (!isWaitingForDevice) return;
+
+    const timeoutId = window.setTimeout(() => setHasWaitedTooLong(true), DEVICE_LOCATION_WAIT_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isWaitingForDevice]);
 
   const openSearch = () => setIsSearching(true);
   const closeSearch = () => {
@@ -205,7 +226,7 @@ const Conditions: DayContextBlock = ({date}) => {
     );
   }
 
-  if (geolocationStatus === 'pending' || geolocationStatus === 'idle') return <ConditionsSkeleton />;
+  if (isWaitingForDevice && !hasWaitedTooLong) return <ConditionsSkeleton />;
 
   return <SetLocationPrompt geolocationStatus={geolocationStatus} onClick={openSearch} autoFocus={hasSearched} />;
 };

@@ -4,8 +4,9 @@ import {useSelector} from 'react-redux';
 import {Link} from 'react-router';
 
 import {selectAllEventsByDate, selectEventsById} from '@/redux/events/selectors';
+import {formatEventsCount, getDayPath} from '@/services/dateUtils';
 
-import {formatEventsCount, getDayCellLabel, getDayPath} from '../../../../helpers';
+import {getDayCellLabel} from '../../../../helpers';
 import {useDayContext} from '../../DayContextState';
 import {DayContextBlock} from '../types';
 import {UPCOMING_SCAN_DAYS, getUpcomingDays} from './getUpcomingDays';

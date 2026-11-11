@@ -4,6 +4,7 @@ import {Outlet} from 'react-router';
 
 import Loading from '@/components/ui/Loading';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
+import {AgendaPanelProvider} from '@/pages/Main/AgendaPanelContext';
 import {setEventFormData} from '@/redux/events/eventsSlice';
 import {selectEventFormData} from '@/redux/events/selectors';
 import {selectOpenedItems} from '@/redux/overflow/selectors';
@@ -52,7 +53,7 @@ const MainLayout = () => {
   }, [openedItems]);
 
   return (
-    <>
+    <AgendaPanelProvider>
       <DataInitWrapper />
 
       <Aside />
@@ -75,7 +76,7 @@ const MainLayout = () => {
           </Modal>
         </Suspense>
       )}
-    </>
+    </AgendaPanelProvider>
   );
 };
 

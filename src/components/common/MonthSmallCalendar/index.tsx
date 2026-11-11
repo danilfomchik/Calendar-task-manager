@@ -1,35 +1,52 @@
 import moment from 'moment';
-import {useState} from 'react';
+import {KeyboardEvent, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useMatch, useNavigate} from 'react-router';
 
 import {useMediaQuery} from '@/hooks/useMediaQuery';
-import {setFullDate, setSelectedDate} from '@/redux/date/dateSlice';
+import {useAgendaPanel} from '@/pages/Main/AgendaPanelContext';
+import {setFullDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectMonth, selectSelectedDate, selectYear} from '@/redux/date/selectors';
 import {selectAllEventsByDate} from '@/redux/events/selectors';
 import {setIsOpenSidebar} from '@/redux/sidebar/sidebarSlice';
 import {useAppDispatch} from '@/redux/store';
-import {formatDate, generateDatesArray, getDate, getWeekDays} from '@/services/dateUtils';
+import {
+  DATE_KEY_FORMAT,
+  formatDate,
+  formatEventsCount,
+  generateDatesArray,
+  getDate,
+  getDayPath,
+  getTodayKey,
+  getWeekDays,
+} from '@/services/dateUtils';
+import {HAIRLINE_CONTROL_BASE_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
 import {RouterPaths} from '@/types/types';
 
-const DATE_FORMAT = 'YYYY-MM-DD';
+const MONTH_CONTROL_CLASS = cx(HAIRLINE_CONTROL_BASE_CLASS, 'flex size-11 md:size-7');
 
-const MONTH_CONTROL_CLASS =
-  'flex size-11 md:size-7 cursor-pointer items-center justify-center border border-line-strong font-mono text-text-muted transition-colors hover:border-text-muted hover:text-text';
+// Arrow keys move the roving focus by a day or a week; Home / End go to the start / end of the row (week)
+const KEY_STEPS: Record<string, (index: number) => number> = {
+  ArrowLeft: i => i - 1,
+  ArrowRight: i => i + 1,
+  ArrowUp: i => i - 7,
+  ArrowDown: i => i + 7,
+  Home: i => i - (i % 7),
+  End: i => i - (i % 7) + 6,
+};
 
 // the Viewed day, when the sidebar is shown on a valid Day page
 const useViewedDay = () => {
   const date = useMatch(RouterPaths.day)?.params.date;
 
-  return date && moment(date, DATE_FORMAT, true).isValid() ? date : null;
+  return date && moment(date, DATE_KEY_FORMAT, true).isValid() ? date : null;
 };
-
-const getEventsLabel = (count: number) => (count === 1 ? '1 event' : `${count} events`);
 
 const MonthSmallCalendar = ({className = ''}) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const {openFor} = useAgendaPanel();
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
   const fullDate = useSelector(selectFullDate);
@@ -45,33 +62,63 @@ const MonthSmallCalendar = ({className = ''}) => {
   const [monthOffset, setMonthOffset] = useState({viewedDay, by: 0});
   const offset = monthOffset.viewedDay === viewedDay ? monthOffset.by : 0;
 
-  const shownMonth = viewedDay ? moment(viewedDay, DATE_FORMAT).add(offset, 'M') : moment(fullDate, DATE_FORMAT);
+  const shownMonth = viewedDay
+    ? moment(viewedDay, DATE_KEY_FORMAT).add(offset, 'M')
+    : moment(fullDate, DATE_KEY_FORMAT);
   const shownYear = viewedDay ? formatDate(shownMonth, 'YYYY') : (year as string);
   const shownMonthName = viewedDay ? formatDate(shownMonth, 'MMMM') : (month as string);
 
   const dates = generateDatesArray(shownYear, shownMonthName);
   const weekDays = getWeekDays();
-  const currentDate = formatDate(getDate(new Date()), DATE_FORMAT);
+  const todayKey = getTodayKey();
   const highlightedDate = viewedDay ?? selectedDate;
+
+  // Roving tabindex: the grid is one tab stop. It sits on the day the arrow keys last reached (until the
+  // highlighted day changes), else the highlighted day, else today, else the 1st of the shown month.
+  const [roving, setRoving] = useState<{date: string; highlightedDate: string} | null>(null);
+  const rovingDate = roving?.highlightedDate === highlightedDate ? roving.date : null;
+  const setRovingDate = (date: string) => setRoving({date, highlightedDate});
+  const tabStopDate =
+    [rovingDate, highlightedDate, todayKey].find(date => date && dates.includes(date)) ??
+    formatDate(shownMonth.clone().startOf('month'), DATE_KEY_FORMAT);
+  const dayButtons = useRef(new Map<string, HTMLButtonElement>());
 
   const shiftShownMonth = (by: number) => setMonthOffset({viewedDay, by: offset + by});
 
   const handleDayClick = (date: string) => {
     if (viewedDay) {
-      if (date !== viewedDay) navigate(`/day/${date}`);
-    } else {
-      // Home: select the date as a Month grid cell does; a day of a neighbouring month also brings that month into view
-      if (!moment(date).isSame(shownMonth, 'month')) dispatch(setFullDate(date));
+      if (date !== viewedDay) navigate(getDayPath(date));
 
-      dispatch(setSelectedDate(date));
+      // on mobile the sidebar covers the Day page, so get out of the way of the day just opened
+      if (isMobileScreen) dispatch(setIsOpenSidebar(false));
+
+      return;
     }
 
-    // on mobile the sidebar covers the page, so get out of the way of what the click changed
-    if (isMobileScreen) dispatch(setIsOpenSidebar(false));
+    // Home: select the date and open the Agenda panel for it, as a Month grid cell does; a day of a
+    // neighbouring month also brings that month into view
+    if (!moment(date).isSame(shownMonth, 'month')) dispatch(setFullDate(date));
+
+    openFor(date);
+  };
+
+  const handleGridKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    const step = KEY_STEPS[e.key];
+    const index = dates.indexOf(tabStopDate);
+
+    if (!step || index === -1) return;
+
+    e.preventDefault();
+
+    // stays within the shown six weeks; the month-step buttons (Day page) or Home's header change the month
+    const next = dates[Math.min(Math.max(step(index), 0), dates.length - 1)];
+
+    setRovingDate(next);
+    dayButtons.current.get(next)?.focus();
   };
 
   return (
-    <div className={cx('px-4 py-5', className)}>
+    <div className={cx('px-3 py-5 md:px-4', className)}>
       <div className="mb-3 flex items-center justify-between gap-2">
         <p className="font-mono text-[11px] uppercase tracking-widest text-text-faint" aria-live="polite">
           {shownMonthName} {shownYear}
@@ -97,7 +144,7 @@ const MonthSmallCalendar = ({className = ''}) => {
         )}
       </div>
 
-      <div className="grid grid-cols-7 gap-px">
+      <div className="grid grid-cols-7 gap-px" onKeyDown={handleGridKeyDown}>
         {weekDays.map(weekday => (
           <span
             key={weekday}
@@ -110,19 +157,24 @@ const MonthSmallCalendar = ({className = ''}) => {
         {dates.map(date => {
           const day = formatDate(getDate(date), 'DD');
           const isOtherMonth = !moment(date).isSame(shownMonth, 'month');
-          const isToday = currentDate === date;
+          const isToday = todayKey === date;
           const isHighlighted = highlightedDate === date;
           const eventsCount = eventsByDate[date]?.length ?? 0;
 
           return (
             <button
               key={date}
+              ref={button => {
+                if (button) dayButtons.current.set(date, button);
+                else dayButtons.current.delete(date);
+              }}
               type="button"
+              tabIndex={date === tabStopDate ? 0 : -1}
               onClick={() => handleDayClick(date)}
-              aria-label={`${formatDate(getDate(date), 'dddd D MMMM')}, ${getEventsLabel(eventsCount)}${isToday ? ', today' : ''}`}
+              aria-label={`${formatDate(getDate(date), 'dddd D MMMM')}, ${formatEventsCount(eventsCount)}${isToday ? ', today' : ''}`}
               {...(viewedDay ? {'aria-current': isHighlighted ? 'date' : undefined} : {'aria-pressed': isHighlighted})}
               className={cx(
-                'relative flex cursor-pointer flex-col items-center justify-center text-text-muted font-mono text-xs py-0.75 max-md:min-h-11 transition-colors hover:bg-surface-raised hover:text-text',
+                'relative flex cursor-pointer flex-col items-center justify-center text-text-muted font-mono text-xs py-0.75 max-md:min-h-11 transition-colors hover:bg-surface-raised hover:text-text focus-visible:z-10',
                 {
                   'text-text-faint': isOtherMonth,
                   'text-info-ink bg-info font-medium hover:bg-info hover:text-info-ink': isToday,
