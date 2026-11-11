@@ -1,0 +1,11 @@
+# Open-Meteo and browser geolocation for Day Conditions
+
+The Day context's Conditions block (weather, sunrise, sunset, moon phase for the Viewed day) gets its data from Open-Meteo, called straight from the browser through an RTK Query API (`src/redux/conditions/conditionsApi.ts`). We picked it because the app has no backend and Open-Meteo needs no API key and allows CORS, so no secret ships in the bundle (unlike the Groq key behind AI insights). It also covers past days as well as forecasts. Two hosts are used. `api.open-meteo.com/v1/forecast` serves 92 days back to 15 days ahead. `archive-api.open-meteo.com/v1/archive` (ERA5 reanalysis, from 1940) serves older days. The card is hidden outside that range. Open-Meteo does return a `moon_phase` daily value, but it is not defined in the API docs. Because of that, the moon phase is computed locally from the date (`moonPhase.ts`), the same way for both hosts.
+
+The location comes from the browser's Geolocation API, and the app asks for it **once**. The position is rounded to two decimals (about 1 km) and stored in `localStorage` (`conditionsLocation`) with the user's answer (`granted`/`denied`). After that, every Viewed day reuses it, and a denial is never re-prompted. The trade-off is that the rounded coordinates, along with the date and the user's IP address, go to a third party (Open-Meteo, Germany) every time an uncached day is looked up. We accept this because the precision is coarse, there is no account or identifier attached, and asking is opt-in. Users who refuse can pick a city instead (#76). Doing that sends only the city query to Open-Meteo's geocoding API and stores the picked city's coordinates in the same place. If a user moves, the stored device position goes stale until they choose a location. We prefer that to prompting on every visit.
+
+## Considered options
+
+- **OpenWeatherMap / WeatherAPI and similar**: these need an API key, which would be public in a client-only app. Free tiers have no long history.
+- **IP-based location**: no prompt, but it still sends data to a third party, it is often wrong by a whole city, and it is less transparent than an explicit permission prompt.
+- **Asking for geolocation on every visit**: fresher position, but it repeats a permission prompt (or a silent lookup) the user has already answered.
