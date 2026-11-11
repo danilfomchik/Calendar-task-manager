@@ -13,6 +13,8 @@ import {cx} from '@/services/utils';
 
 import AddEvent from '../Main/components/Header/Controls/AddEvent';
 import AIInfo from './components/AIInfo';
+import DayEventsList from './components/DayEventsList';
+import DaySummary from './components/DaySummary';
 import Masthead from './components/Masthead';
 import AddEventDayButton from './components/Masthead/AddEventDayButton';
 import './index.css';
@@ -52,8 +54,9 @@ const DayPage = () => {
         <Masthead date={viewedDate} />
 
         <div className="flex min-h-0 flex-1 max-md:flex-col max-md:overflow-auto">
-          <div className="flex min-w-0 flex-1 flex-col p-3 max-md:pb-24 md:overflow-auto md:p-5">
-            <EventsList date={viewedDate} showItemControls showEventsCount={showEventsCount} />
+          <div className="flex min-w-0 flex-1 flex-col gap-3 p-3 max-md:pb-24 md:overflow-auto md:p-5">
+            <DaySummary date={viewedDate} />
+            <DayEventsList date={viewedDate} />
           </div>
 
           {isGroqEnabled && (
