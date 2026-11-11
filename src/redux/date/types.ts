@@ -10,6 +10,9 @@ type TDate = {
   year: TYear;
   day: TDay;
   selectedDate: string;
+  // Home's Month grid has been shown in this session (in memory: a reload counts as a direct load). The Day page's
+  // "Back to month" returns to the month Home showed when set, else to the Viewed day's month.
+  hasShownMonthGrid: boolean;
 };
 
 export type TDateState = TDate;
