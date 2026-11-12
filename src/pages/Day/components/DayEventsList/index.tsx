@@ -10,9 +10,10 @@ import {EVENT_FORM_ID} from '@/services/constants';
 import {FormActionType} from '@/types/eventFormTypes';
 
 import DayEvent from './DayEvent';
+import {TDayEventsListProps} from './types';
 
 // Events of the Viewed day. The Calendar filter dims events (Dimmed event), it never hides them.
-const DayEventsList = ({date}: {date: string}) => {
+const DayEventsList = ({date}: TDayEventsListProps) => {
   const dispatch = useAppDispatch();
   const activeCalendars = useSelector(selectActiveCalendars);
   const events = useEventsList(date);

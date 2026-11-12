@@ -21,4 +21,6 @@ export type TLocationState = {
   location: TLocation | null;
   geolocationStatus: TGeolocationStatus;
   geolocationFailure: TGeolocationFailure | null;
+  // The answer held before the request in flight, so a failed retry (timeout, no fix) can keep it (session only)
+  answerBeforeRequest: TGeolocationStatus | null;
 };

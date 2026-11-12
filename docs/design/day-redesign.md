@@ -2,7 +2,7 @@
 
 Spec: [issue #65](https://github.com/danilfomchik/Calendar-task-manager/issues/65) (tickets #66 to #77). This document describes what shipped on `integration/day-redesign`. Domain terms (**Viewed day**, **Week strip**, **Event mix**, **Day summary**, **Quick add**, **Day context**, **Conditions**, **Upcoming**, **Day note**, plus Home's **Calendar filter**, **Dimmed event** and **Bottom sheet**) are defined in `GLOSSARY.md`. The shared rules (colour channels, tokens, type, focus, motion, Today, mini-calendar) are in `docs/design/overview.md` and the visual system in `docs/design/home-redesign.md`; they are not repeated here.
 
-Scope: the Day page (`src/pages/Day`), the sidebar mini-calendar, two new persisted slices (`dayNotes`, `location`) and a weather API. Not touched: the Month grid, Agenda panel, Home's Bottom sheet, the event form modal and the event data model.
+Scope: the Day page (`src/pages/Day`), the sidebar mini-calendar, two new persisted slices (`dayNotes`, `location`) and a weather API. Not restructured: the Month grid, Agenda panel, Home's Bottom sheet, the event form modal and the event data model. Only small supporting edits reach them (the Agenda panel context provider moved, `Main`, `ChangeMonthControl` and `SwipeSlide` were adjusted, see §4).
 
 ## 1. Problems and decisions
 
@@ -76,7 +76,7 @@ Rows in Home's Agenda panel recipe (calendar bar, title, mono calendar and descr
 - Blocks, in order, in `DayContextBlocks`; each is a square hairline card and returns `null` when it has nothing to show.
   - **AI insights**: the existing Groq holiday plus "Did you know" fact, in a gradient-framed card. The response parse is guarded; partial content keeps the valid half. Disabled, failing or malformed: nothing.
   - **Conditions**: info-tinted card with temperature range, a weather description, precipitation, wind, sunrise, sunset and moon phase. Open-Meteo forecast for about 92 days back to 15 ahead, the archive host for older days, hidden beyond. The moon phase is computed locally. Location: the saved one (device position rounded to 2 decimals, or a searched city, in `localStorage`), else an **Approximate location** from the browser's time zone (`redux/location/timeZones.ts`, generated from the IANA `zone.tab`; shown at once as "Kyiv · approx.", never stored). The device position is still asked once and replaces it when it arrives. "Change" on the card reopens the city search, which also has **Use my location**: it asks the browser again and says why it failed (blocked, no fix, timeout, unsupported). See `docs/adr/0001-open-meteo-for-day-conditions.md` for the provider and privacy trade-off.
-  - **Upcoming**: a timeline of the next 3 days with events within 30 days after the Viewed day. Each day has its date, "Tomorrow" / "in N days" (counted from today, within a week) and event count, then up to 3 events with a calendar-coloured bar and title, then "+N more"; 6 events in all at most. Every link opens that day, and on mobile following one closes the sheet. Empty: "Nothing in the next 30 days".
+  - **Upcoming**: a timeline of the next 3 days with events within 30 days after the Viewed day. Each day has its date, "Tomorrow" / "in N days" (counted from today, up to 7 days ahead) and event count, then up to 3 events with a calendar-coloured bar and title, then "+N more"; 6 events in all at most. Every link opens that day, and on mobile following one closes the sheet. Empty: "Nothing in the next 30 days".
   - **Day note**: a dashed "+ Add a note" line until used, then one always-editable card with a textarea that grows from 3 to 10 lines. It saves 600ms after typing stops, on blur and on unmount (so swapping the drawer for the sheet mid-edit loses nothing), with a "Saving…" / "Saved" status (`role="status"`); an emptied note is removed and the card returns to the dashed line.
 
 ### Keyboard shortcuts (`hooks/useDayShortcuts`, `components/ShortcutsHint`)
@@ -110,7 +110,7 @@ At desktop width and a 390px viewport, with seeded events in all four calendars:
 ## 9. Open follow-ups
 
 - Event times and durations (timeline, "next up", free time), and a done state for events.
-- A multi-day forecast in Conditions; switching back from a city to the device location.
+- A multi-day forecast in Conditions. (Switching back from a city to the device location is done through "Use my location" in the city search.)
 - Day-level swipe on mobile.
 - Delete has no confirmation or undo, on Home and the Day page alike.
 - `ui/Tooltip/NewTooltip.tsx` is unused; finish adopting it or remove it.

@@ -3,16 +3,17 @@ import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router';
 
+import {getDayCellLabel} from '@/pages/Day/helpers';
 import {selectAllEventsByDate, selectEventsById} from '@/redux/events/selectors';
 import {getCalendarColor} from '@/services/calendars';
 import {formatEventsCount, getDayPath, getTodayKey} from '@/services/dateUtils';
+import {calendarColorStyle} from '@/services/styles';
 
-import {getDayCellLabel} from '../../../../helpers';
 import {useDayContext} from '../../DayContextState';
 import {DayContextBlock} from '../types';
 import {UPCOMING_SCAN_DAYS, getUpcomingDays} from './getUpcomingDays';
 
-const MAX_RELATIVE_DAYS = 6;
+const MAX_RELATIVE_DAYS = 7;
 
 // "Tomorrow" / "in 3 days" for the coming week, counted from today (not from the Viewed day); else null
 const getRelativeLabel = (date: string) => {
@@ -69,7 +70,7 @@ const Upcoming: DayContextBlock = ({date}) => {
                     <li key={event.id}>
                       <Link
                         {...linkProps}
-                        style={{'--calendar-color': getCalendarColor(event.eventCalendar)} as React.CSSProperties}
+                        style={calendarColorStyle(getCalendarColor(event.eventCalendar))}
                         className="group flex min-h-9 items-stretch gap-2.5 border border-line bg-surface-base transition-colors hover:border-line-strong md:min-h-8 focus-visible:-outline-offset-2">
                         <span aria-hidden className="w-1 shrink-0 bg-(--calendar-color)" />
                         <span className="flex min-w-0 flex-1 flex-col justify-center py-1 pr-2">

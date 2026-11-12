@@ -5,3 +5,7 @@ export const HAIRLINE_CONTROL_BASE_CLASS =
 
 // The labelled variant: mono uppercase text, 44px high on mobile, 36px from md
 export const HAIRLINE_CONTROL_CLASS = `${HAIRLINE_CONTROL_BASE_CLASS} inline-flex h-11 gap-2 px-3 text-[11px] uppercase tracking-wider md:h-9 md:text-xs`;
+
+// Exposes a calendar's colour to Tailwind as `(--calendar-color)`
+export const calendarColorStyle = (color: string | undefined): React.CSSProperties =>
+  ({'--calendar-color': color}) as React.CSSProperties;
