@@ -4,10 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-- `npm run dev` — Vite dev server
-- `npm run build` — `tsc -b && vite build` (type-check is part of the build)
-- `npm run lint:all` / `npm run format:check:all` — what CI runs (CI actually runs `format:all`, which writes, then `lint:all` with `--max-warnings 0`, then `build`)
-- `npm run lint:file -- <path>` / `npm run format:file -- <path>` — single file
+- CI runs `format:check:all`, `lint:all` (`--max-warnings 0`) and `build`; `lint:file -- <path>` / `format:file -- <path>` target a single file.
 - Husky pre-commit runs `lint-staged` (prettier + eslint --fix) **and a full `npm run build`**, so commits fail on any type error.
 - There is no test runner configured.
 
@@ -21,17 +18,13 @@ React 18 + TypeScript + Vite SPA (calendar / event manager). Tailwind for stylin
 
 **Persistence is via listener middleware, not the reducers.** Events are normalized as `eventsById` + `eventsByDate` (date → id list). `redux/listenersMiddleware/eventsListener.ts` writes both to `localStorage` (keys in `StorageKeys`) after `addEvent`/`editEvent`/`deleteEvent`. `dayNotesListener` (Day notes, a date → text map) and `locationListener` (the Conditions location) persist the same way; those two slices hydrate themselves from `localStorage` in their initial state. Register new listeners with `startAppListening` from `redux/listenerMiddleware.ts` and import the file in `listenersMiddleware/index.ts`. Initial hydration and the per-month per-calendar event-count map (`myCalendars`) are built in `components/layout/DataInitWrapper` from `localStorage` via `getLocalStoredValues`; keep that map in sync using `handleEventsCountChangeInMap` (`redux/myCalendars/helpers.ts`).
 
-**AI holiday info**: `redux/dateHolidaysGenerator/holidaysApi.tsx` is an RTK Query API calling the Groq chat-completions endpoint for the Day page's AI insights block (`pages/Day/components/DayContext/blocks/AIInsights`). It needs `VITE_REACT_APP_GROQ_API_KEY` and is toggled by `VITE_REACT_APP_IS_GROQ_ENABLED` in `.env` (client-side key; don't commit real values).
-
-**Day conditions**: `redux/conditions/conditionsApi.ts` is an RTK Query API calling Open-Meteo (forecast, archive and geocoding hosts, no key) for the Conditions block, using the location from the `location` slice. See `docs/adr/0001-open-meteo-for-day-conditions.md`.
-
-**Day page**: `pages/Day` is the redesigned page (Masthead with Week strip, Day summary, Quick add, events list, Day context drawer / Bottom sheet). Design decisions are in `docs/design/day-redesign.md`; domain terms in `GLOSSARY.md`.
+**Day page** (`pages/Day`, incl. AI insights via Groq and Conditions via Open-Meteo): read `docs/design/day-redesign.md` first; `docs/design/overview.md` indexes the other design docs. Domain terms in `GLOSSARY.md`; Open-Meteo rationale in `docs/adr/0001-open-meteo-for-day-conditions.md`. The Groq API (`redux/dateHolidaysGenerator/holidaysApi.tsx`) needs `VITE_REACT_APP_GROQ_API_KEY` and `VITE_REACT_APP_IS_GROQ_ENABLED` in `.env` (client-side key; don't commit real values).
 
 **Components**: `components/common` (feature-aware reusable pieces: Modal, EventForm, MonthSmallCalendar, inputs, `formInputs/*Control` react-hook-form wrappers), `components/layout`, `components/ui` (presentational: icons, `Tooltip/NewTooltip.tsx` with `hooks/useTooltipTimers`, currently unused). Components typically sit in `Name/index.tsx` with a sibling `types.ts`.
 
 ## Conventions
 
-Prettier config (`.prettierrc`) uses `@trivago/prettier-plugin-sort-imports`, so import order is enforced by formatting; no bracket spacing (`{foo}`), single quotes. Use `cx` from `@/services/utils` for class merging.
+Formatting (import order, quotes, bracket spacing) is enforced by Prettier. Class merging goes through `cx` from `@/services/utils` (ESLint bans importing `classnames` directly).
 
 ## Agent skills
 

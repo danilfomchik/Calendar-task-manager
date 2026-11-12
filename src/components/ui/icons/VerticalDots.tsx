@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import {cx} from '@/services/utils';
 
 import {IconProps} from './types';
 
@@ -10,7 +10,7 @@ const VerticalDots = ({size, ...restProps}: IconProps) => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={classNames('cursor-pointer', size)}
+      className={cx('cursor-pointer', size)}
       {...restProps}>
       <path
         strokeLinecap="round"

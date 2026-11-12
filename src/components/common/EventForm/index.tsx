@@ -1,5 +1,4 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import classNames from 'classnames';
 import moment from 'moment';
 import {useCallback, useMemo} from 'react';
 import {FormProvider, SubmitHandler, useForm} from 'react-hook-form';
@@ -18,6 +17,7 @@ import {useAppDispatch} from '@/redux/store';
 import {defaultCalendars} from '@/services/constants';
 import {createDate, formatDate, getDays, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
 import {createEventObj, editEventObj} from '@/services/eventUtils';
+import {cx} from '@/services/utils';
 import {FormActionType} from '@/types/eventFormTypes';
 import {CalendarsNames} from '@/types/types';
 
@@ -157,7 +157,7 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
             </div>
 
             <Button
-              className={classNames(
+              className={cx(
                 {
                   'border-[#3b5bfd] text-[#3b5bfd]': isDirty,
                 },

@@ -22,10 +22,8 @@ jobs:
       - run: npm ci
 
       - name: Check format
-        run: npm run format:all
+        run: npm run format:check:all
       - name: Lint code
         run: npm run lint:all
-      - name: Prepare
-        run: npm run prepare
       - name: Build the React app
         run: npm run build
