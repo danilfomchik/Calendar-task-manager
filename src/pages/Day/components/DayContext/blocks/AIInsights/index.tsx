@@ -1,4 +1,4 @@
-import {PropsWithChildren, useMemo} from 'react';
+import {useMemo} from 'react';
 
 import {useGetDayHolidaysInfoQuery} from '@/redux/dateHolidaysGenerator/holidaysApi';
 import {cx} from '@/services/utils';
@@ -7,12 +7,13 @@ import {BlockCard, SkeletonLine} from '../BlockCard';
 import {DayContextBlock} from '../types';
 import {IS_AI_INSIGHTS_ENABLED} from './enabled';
 import {parseAIContent} from './parseAIContent';
+import {TAIInsightsContentProps, TAIInsightsFrameProps} from './types';
 
 // Same minimum for skeleton and content so the blocks below don't jump when the answer arrives
 // (sampled answers measure 333-379px in the 320px drawer)
 const CARD_MIN_HEIGHT = 'min-h-96';
 
-const Frame = ({children, busy = false}: PropsWithChildren<{busy?: boolean}>) => (
+const Frame = ({children, busy = false}: TAIInsightsFrameProps) => (
   <div className="bg-linear-to-br from-info via-action to-info p-px">
     <BlockCard
       label="AI insights"
@@ -58,7 +59,7 @@ const AIInsightsSkeleton = () => (
   </Frame>
 );
 
-const AIInsightsContent = ({date}: {date: string}) => {
+const AIInsightsContent = ({date}: TAIInsightsContentProps) => {
   const {data, isFetching, isError} = useGetDayHolidaysInfoQuery(date);
   const insights = useMemo(() => parseAIContent(data?.choices?.[0]?.message?.content), [data]);
 

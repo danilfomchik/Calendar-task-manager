@@ -15,9 +15,10 @@ import WeekStrip from '../WeekStrip';
 import AddEventDayButton from './AddEventDayButton';
 import BackToMonth from './BackToMonth';
 import BackToViewedWeek from './BackToViewedWeek';
+import {TMastheadProps} from './types';
 
 // Day page masthead: controls row (as Home's header) above the Week strip, which is the hero
-const Masthead = ({date}: {date: string}) => {
+const Masthead = ({date}: TMastheadProps) => {
   const isSidebarOpen = useSelector(selectIsSidebarOpen);
   const isMobile = useMediaQuery({size: 'sm', direction: 'to'});
   // mobile Week strip swipe: weeks away from the Viewed day's week

@@ -17,9 +17,10 @@ const getInitialState = (): TLocationState => {
       location: stored?.location ?? null,
       geolocationStatus: toPersistedGeolocationStatus(stored?.geolocationStatus),
       geolocationFailure: null,
+      answerBeforeRequest: null,
     };
   } catch {
-    return {location: null, geolocationStatus: 'idle', geolocationFailure: null};
+    return {location: null, geolocationStatus: 'idle', geolocationFailure: null, answerBeforeRequest: null};
   }
 };
 
@@ -83,18 +84,27 @@ const locationSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(requestDeviceLocation.pending, state => {
+        state.answerBeforeRequest = state.geolocationStatus;
         state.geolocationStatus = 'pending';
         state.geolocationFailure = null;
       })
       .addCase(requestDeviceLocation.fulfilled, (state, action) => {
         state.geolocationStatus = 'granted';
+        state.answerBeforeRequest = null;
 
         // A city picked while the first prompt was open wins; a position the user asked for again replaces it
         if (action.meta.arg?.force) state.location = action.payload;
         else state.location ??= action.payload;
       })
       .addCase(requestDeviceLocation.rejected, (state, action) => {
-        state.geolocationStatus = action.payload?.status ?? 'unavailable';
+        const status = action.payload?.status ?? 'unavailable';
+        const before = state.answerBeforeRequest;
+
+        // A failed retry that is not a refusal keeps the user's earlier answer instead of erasing it
+        const keepsAnswer = status === 'unavailable' && (before === 'granted' || before === 'denied');
+
+        state.geolocationStatus = keepsAnswer ? before : status;
+        state.answerBeforeRequest = null;
         state.geolocationFailure = action.payload?.failure ?? 'no-fix';
       });
   },

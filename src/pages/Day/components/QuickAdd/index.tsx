@@ -5,8 +5,11 @@ import {addEvent} from '@/redux/events/eventsSlice';
 import {selectActiveCalendars, selectCalendarsList} from '@/redux/myCalendars/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {createEventObj} from '@/services/eventUtils';
+import {calendarColorStyle} from '@/services/styles';
 import {cx} from '@/services/utils';
 import {CalendarsNames} from '@/types/types';
+
+import {TQuickAddProps} from './types';
 
 // Calendar last used with Quick add in this session (module state: survives day navigation, not a reload)
 let lastUsedCalendar: CalendarsNames | null = null;
@@ -14,7 +17,7 @@ let lastUsedCalendar: CalendarsNames | null = null;
 // Quick add: a title plus a calendar choice; Enter adds the event on the Viewed day through `addEvent`,
 // the same action as the full form, so persistence and the calendar event-count map stay in sync.
 // Default calendar: the single Active calendar, else the last one used with Quick add, else the first calendar.
-const QuickAdd = ({date}: {date: string}) => {
+const QuickAdd = ({date}: TQuickAddProps) => {
   const dispatch = useAppDispatch();
   const activeCalendars = useSelector(selectActiveCalendars);
   const calendarsList = useSelector(selectCalendarsList);
@@ -44,7 +47,7 @@ const QuickAdd = ({date}: {date: string}) => {
     <form
       aria-label="Quick add"
       onSubmit={handleSubmit}
-      style={calendarColor ? ({'--calendar-color': calendarColor} as React.CSSProperties) : undefined}
+      style={calendarColor ? calendarColorStyle(calendarColor) : undefined}
       className="flex min-h-12 flex-wrap items-center gap-x-3 border border-(--calendar-color,var(--color-line-strong)) bg-surface-sunken pl-3 transition-colors">
       <input
         ref={inputRef}

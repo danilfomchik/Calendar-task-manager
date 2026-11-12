@@ -1,6 +1,5 @@
+import {shiftDay} from '@/pages/Day/helpers';
 import {TEvent, TEventsByDate, TEventsById} from '@/redux/events/types';
-
-import {shiftDay} from '../../../../helpers';
 
 export const UPCOMING_SCAN_DAYS = 30;
 export const UPCOMING_MAX_DAYS = 3;

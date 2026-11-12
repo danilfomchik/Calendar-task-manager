@@ -5,10 +5,13 @@ import {useEventsList} from '@/hooks/useEventsList';
 import {defaultCalendars} from '@/services/constants';
 import {formatDate} from '@/services/dateUtils';
 import {formatEventsCount} from '@/services/dateUtils';
+import {calendarColorStyle} from '@/services/styles';
+
+import {TDaySummaryProps} from './types';
 
 // Day summary: total events of the Viewed day plus one chip per calendar that has events.
 // Reads every event of the day, so the Calendar filter never changes it.
-const DaySummary = ({date}: {date: string}) => {
+const DaySummary = ({date}: TDaySummaryProps) => {
   const events = useEventsList(date);
   const total = events?.length ?? 0;
 
@@ -42,7 +45,7 @@ const DaySummary = ({date}: {date: string}) => {
             <li
               key={chip.name}
               title={`${chip.name}: ${formatEventsCount(chip.count)}`}
-              style={{'--calendar-color': chip.itemColor} as React.CSSProperties}
+              style={calendarColorStyle(chip.itemColor)}
               className="flex items-center gap-1.5 border border-line px-2 py-0.5 font-mono text-[11px] text-text-muted">
               <span aria-hidden className="size-2 rounded-full bg-(--calendar-color)" />
               <span className="uppercase">{chip.name}</span>

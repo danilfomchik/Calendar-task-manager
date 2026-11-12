@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 import {TConditionsSource} from '@/redux/conditions/types';
-import {DATE_KEY_FORMAT} from '@/services/dateUtils';
+import {DATE_KEY_FORMAT, getTodayKey} from '@/services/dateUtils';
 
 // Open-Meteo's forecast API accepts start_date from 92 days back (past_days max) to 15 days ahead (forecast_days max 16).
 // Older days come from the archive API (ERA5 reanalysis, from 1940). Later days have no data.
@@ -24,3 +24,6 @@ export const getConditionsSource = (date: string, today: string): TConditionsSou
 
   return null;
 };
+
+// The source covering the Viewed day, counted from today
+export const getConditionsSourceForToday = (date: string) => getConditionsSource(date, getTodayKey());
