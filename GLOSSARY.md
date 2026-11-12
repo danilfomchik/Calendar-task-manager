@@ -35,7 +35,7 @@ An event whose calendar is not an Active calendar while the Calendar filter is n
 The date the Day page is showing, taken from its URL (`/day/YYYY-MM-DD`). It is separate from the selected date on Home.
 
 **Week strip**:
-The row at the top of the Day page showing the Viewed day's week, Monday to Sunday. The Viewed day is expanded with its numeral, weekday, month, year and week number; the other days are compact cells showing their Event mix, and clicking one opens that day. On desktop, chevrons at either end step one day; on mobile, a swipe shows the previous or next week without changing the Viewed day.
+The row at the top of the Day page showing the Viewed day's week, Monday to Sunday. The Viewed day is expanded with its numeral, weekday, month and year; the other days are compact cells showing their Event mix, and clicking one opens that day. On desktop, chevrons at either end show the previous or next week; on mobile, a swipe does the same; neither changes the Viewed day.
 
 **Event mix**:
 The segmented bar in a compact Week strip day: one segment per event of that day, in its calendar's colour (grey on past days, a dashed line on an empty day). It counts every event and ignores the Calendar filter.
@@ -53,7 +53,7 @@ The supporting blocks for the Viewed day, in order: AI insights, Conditions, Upc
 The desktop handle of the Day context drawer. It is attached to the drawer's edge, so the drawer and its handle read as one thing, and it stays at the right edge of the screen while the drawer is closed.
 
 **Context button**:
-The mobile control that opens the Day context Bottom sheet. Closed, it looks like the top of that sheet peeking above the bottom of the screen, with a chip for each block that has something to show (weather, upcoming, note, insights), and it opens by a tap or an upward swipe.
+The mobile control that opens the Day context Bottom sheet. Closed, it looks like the top of that sheet peeking above the bottom of the screen, with a chip for each block that has something to show (weather, upcoming, note, insights) that swipe sideways when they don't all fit, and it opens by a tap or an upward swipe.
 
 **Conditions**:
 The Day context block with the weather (temperature range, conditions, precipitation, wind), sunrise, sunset and moon phase for the Viewed day at the user's location. The location is the user's saved one (the device position or a searched city), else an **Approximate location** near the browser's time zone, shown at once and labelled as approximate. The browser is asked for the device position once, and a position that arrives replaces the approximate one. The user can search for a city, or ask again for the device position, at any time. Only if no location can be found at all does the block show a "Set location" prompt; for days outside the weather service's range it is hidden.
@@ -74,4 +74,4 @@ One plain-text note per date, kept in the Day context and saved automatically as
 - An empty Calendar filter means no filtering: no event is a Dimmed event.
 - The Calendar filter does not affect the per-calendar event counts shown in the sidebar.
 - On the Day page the Calendar filter only produces Dimmed events in the events list; the Day summary, Event mix and Upcoming always count every event.
-- A Week strip swipe changes the week shown, never the Viewed day; only tapping a day (or a chevron) changes the Viewed day.
+- A Week strip swipe changes the week shown, never the Viewed day; only picking a day (a cell, the mini-calendar, the arrow keys or Today) changes the Viewed day.

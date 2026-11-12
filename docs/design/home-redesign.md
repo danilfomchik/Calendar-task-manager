@@ -1,6 +1,6 @@
 # Home page redesign: decisions and design concepts
 
-Spec: [issue #56](https://github.com/danilfomchik/Calendar-task-manager/issues/56). This document describes what shipped on `integration/home-redesign`. Domain terms (**Visible month**, **Month grid**, **Month swipe**, **Calendar filter**, **Dimmed event**, **Agenda panel**, **Bottom sheet**) are defined in `GLOSSARY.md`.
+Spec: [issue #56](https://github.com/danilfomchik/Calendar-task-manager/issues/56). This document describes what shipped on `integration/home-redesign`. Domain terms (**Visible month**, **Month grid**, **Month swipe**, **Calendar filter**, **Dimmed event**, **Agenda panel**, **Bottom sheet**) are defined in `GLOSSARY.md`. Rules shared with the Day page are collected in `docs/design/overview.md`.
 
 Scope: header, Month grid, day cells, event chips, sidebar, mobile layout. Not touched: Day page, event form modal, Redux state shape and persistence, event data model.
 
@@ -50,7 +50,7 @@ Tokens are named by role, not value, so the Day page redesign can reuse them and
 
 ### Motion and focus
 
-- 150–200 ms, transform and opacity; no animation on page load.
+- 150–200 ms, transform and opacity; no animation on page load. A base layer in `src/index.css` gives every `button`, `a[href]`, `[role=button]`, `summary` and `label` a 150 ms ease-out transition on colour, border, opacity, shadow and transform.
 - Global `:focus-visible`: 2px `--color-action` outline, 2px offset, on every interactive element.
 - Global `prefers-reduced-motion` rule zeroes transition/animation durations; motion-library animations also check `useReducedMotion`.
 
@@ -59,7 +59,7 @@ Tokens are named by role, not value, so the Day page redesign can reuse them and
 ### Header (`pages/Main/components/Header`)
 
 - Month/year is the large display title and the picker trigger (`CalendarDatePicker`).
-- Controls are demoted: hairline square buttons `‹` Today `›`. The green **+ Add event** (`AddEventButton`) is the only filled control and creates on the selected date.
+- Controls are demoted: hairline square buttons `‹` Today `›`. Today also dispatches `requestToday`, which resets the sidebar mini-calendar's month browsing. The green **+ Add event** (`AddEventButton`) is the only filled control and creates on the selected date.
 - Height `h-16` on mobile, `h-22` from `md` (exposed as `--height-home-header`).
 - Mobile: no prev/next arrows (Month swipe covers it) and no header add button (the Bottom sheet's floating button does that); Today stays; touch targets are 44px.
 - `SidebarToggle` (`components/common`): square, hairline, panel glyph with the rail filled when open, `aria-expanded`. On desktop it shows in the header only while the sidebar is closed (`md:hidden` when open) and in the sidebar header when open.
@@ -82,7 +82,7 @@ Tokens are named by role, not value, so the Day page redesign can reuse them and
 - Right-hand panel, 340px (`w-85`), sunken surface, left hairline, hidden below `md`. Height is viewport minus the home header.
 - Header: weekday (mono), 7xl day numeral, `Month YYYY · N events`, and a close `×`.
 - Body: the day's full event list (`AgendaEvent`: calendar bar, semibold title, mono `CALENDAR · description`), dimmed events per rule 5. Empty day: one "No events" line with an inline green "Add event".
-- Footer: green **+ Add event** and **Open day ↗** (link to `/day/YYYY-MM-DD`).
+- Footer: green **+ Add event** (a plain button in the same recipe as the other green actions, no longer the shared `Button`) and **Open day ↗** (link to `/day/YYYY-MM-DD`).
 - State lives in `AgendaPanelProvider`:
   - Open by default. `openFor(date)` selects the date and re-opens it; `close()` and Escape dismiss it.
   - Dismissal is the user's own choice; shrinking below `md` hides the panel without recording a dismissal, so it returns on resize back to desktop.
@@ -100,7 +100,7 @@ Tokens are named by role, not value, so the Day page redesign can reuse them and
 
 ### Sidebar (`components/layout/Aside`)
 
-Restyle only. Brand link in the display face; mini-calendar with mono month label and weekday letters, today as a blue filled square, selected day as a green outline (still non-interactive; see follow-ups). **My calendars**: dot, name, mono count; a selected row has a raised background and green left bar; keyboard `option` rows toggle with Enter/Space. **Clear filter** is a square chip showing the active count (44px min height on mobile). On mobile the sidebar is an overlay and filtering works as on desktop. It does not animate on page load.
+Restyle only. Brand link in the display face; mini-calendar with mono month label and weekday letters, today as a blue filled square, selected day as a green outline (made interactive by the Day page redesign, which also added month-step buttons here; see `day-redesign.md`). **My calendars**: dot, name, mono count; a selected row has a raised background and green left bar; keyboard `option` rows toggle with Enter/Space. **Clear filter** is a square chip showing the active count (44px min height on mobile). On mobile the sidebar is an overlay and filtering works as on desktop. It does not animate on page load.
 
 ## 5. Removals
 
@@ -116,8 +116,8 @@ At desktop width and a 390px viewport with seeded events in all four calendars: 
 
 ## 8. Open follow-ups
 
-- Make the sidebar mini-calendar clickable, or remove it.
+- ~~Make the sidebar mini-calendar clickable, or remove it.~~ Done in the Day page redesign.
 - Final tuning of the green/blue hues and the typeface pair.
 - Manual check of the Bottom sheet's expanded state and the month picker on narrow screens.
-- Day page redesign will consume the same tokens; the Day page keeps its old sidebar button until then.
+- ~~Day page redesign will consume the same tokens.~~ Done; see `day-redesign.md`.
 - Future user-chosen calendar colours rely on the two-channel rule (concept 2).
