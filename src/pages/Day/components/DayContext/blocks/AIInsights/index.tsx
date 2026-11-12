@@ -5,9 +5,8 @@ import {cx} from '@/services/utils';
 
 import {BlockCard, SkeletonLine} from '../BlockCard';
 import {DayContextBlock} from '../types';
+import {IS_AI_INSIGHTS_ENABLED} from './enabled';
 import {parseAIContent} from './parseAIContent';
-
-const isGroqEnabled = import.meta.env.VITE_REACT_APP_IS_GROQ_ENABLED === 'true';
 
 // Same minimum for skeleton and content so the blocks below don't jump when the answer arrives
 // (sampled answers measure 333-379px in the 320px drawer)
@@ -87,6 +86,6 @@ const AIInsightsContent = ({date}: {date: string}) => {
 };
 
 // AI insights (holiday + "Did you know"): nothing when the Groq flag is off, on error or on malformed content
-const AIInsights: DayContextBlock = ({date}) => (isGroqEnabled ? <AIInsightsContent date={date} /> : null);
+const AIInsights: DayContextBlock = ({date}) => (IS_AI_INSIGHTS_ENABLED ? <AIInsightsContent date={date} /> : null);
 
 export default AIInsights;

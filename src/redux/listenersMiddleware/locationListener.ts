@@ -12,7 +12,10 @@ startAppListening({
   matcher: isAnyOf(setLocation, requestDeviceLocation.fulfilled, requestDeviceLocation.rejected),
   effect: (_, listenerApi) => {
     const {location, geolocationStatus} = listenerApi.getState().locationData;
-    const stored: TLocationState = {location, geolocationStatus: toPersistedGeolocationStatus(geolocationStatus)};
+    const stored: Omit<TLocationState, 'geolocationFailure'> = {
+      location,
+      geolocationStatus: toPersistedGeolocationStatus(geolocationStatus),
+    };
 
     localStorage.setItem(StorageKeys.conditionsLocation, JSON.stringify(stored));
   },

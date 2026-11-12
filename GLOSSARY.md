@@ -47,16 +47,25 @@ The event count of the Viewed day plus one chip per calendar that has events on 
 The bar on the Day page that adds an event to the Viewed day from just a title and a calendar choice. Its calendar defaults to the single Active calendar when exactly one is chosen, otherwise the calendar last used with Quick add in this session, otherwise the first calendar. An empty title is not added. For anything more, the user opens the full event form.
 
 **Day context**:
-The supporting blocks for the Viewed day, in order: AI insights, Conditions, Upcoming and the Day note. On desktop they sit in a drawer beside the events that is open by default and can be closed; on mobile they open in a Bottom sheet from a floating Context button.
+The supporting blocks for the Viewed day, in order: AI insights, Conditions, Upcoming and the Day note. On desktop they sit in a drawer beside the events that is open by default and is opened and closed with the Context tab; on mobile they open in a Bottom sheet from the Context button.
+
+**Context tab**:
+The desktop handle of the Day context drawer. It is attached to the drawer's edge, so the drawer and its handle read as one thing, and it stays at the right edge of the screen while the drawer is closed.
+
+**Context button**:
+The mobile control that opens the Day context Bottom sheet. Closed, it looks like the top of that sheet peeking above the bottom of the screen, with a chip for each block that has something to show (weather, upcoming, note, insights), and it opens by a tap or an upward swipe.
 
 **Conditions**:
-The Day context block with the weather (temperature range, conditions, precipitation, wind), sunrise, sunset and moon phase for the Viewed day at the user's location. The location is asked from the browser once, or chosen by searching for a city, and is remembered. With no location the block shows a "Set location" prompt; for days outside the weather service's range it is hidden.
+The Day context block with the weather (temperature range, conditions, precipitation, wind), sunrise, sunset and moon phase for the Viewed day at the user's location. The location is the user's saved one (the device position or a searched city), else an **Approximate location** near the browser's time zone, shown at once and labelled as approximate. The browser is asked for the device position once, and a position that arrives replaces the approximate one. The user can search for a city, or ask again for the device position, at any time. Only if no location can be found at all does the block show a "Set location" prompt; for days outside the weather service's range it is hidden.
+
+**Approximate location**:
+The city nearest the browser's time zone, used by Conditions until a saved location exists. It is never saved and is always labelled as approximate.
 
 **Upcoming**:
-The Day context block listing the next three days after the Viewed day that have events, within 30 days. Each row shows the date, the event count and the first event's title, and opens that day. It ignores the Calendar filter.
+The Day context block listing the next three days after the Viewed day that have events, within 30 days. Each day is a group: its date and a few of its events, each in its calendar's colour, with a "+N more" for the rest; the group opens that day. It ignores the Calendar filter.
 
 **Day note**:
-One plain-text note per date, kept in the Day context and saved when the user leaves the field. An emptied note is removed. A Day note is not an event: it never appears in the Month grid, the Day summary, the Event mix or any event count.
+One plain-text note per date, kept in the Day context and saved automatically as the user writes. An emptied note is removed. A Day note is not an event: it never appears in the Month grid, the Day summary, the Event mix or any event count.
 
 ## Rules
 

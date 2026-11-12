@@ -8,7 +8,6 @@ import {TDirection} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 
 import {getWeekNumber, shiftDay} from '../../helpers';
-import DayContextToggle from '../DayContext/DayContextToggle';
 import WeekStrip from '../WeekStrip';
 import AddEventDayButton from './AddEventDayButton';
 import BackToMonth from './BackToMonth';
@@ -58,7 +57,6 @@ const Masthead = ({date}: {date: string}) => {
           </div>
 
           <div className="ml-auto max-md:hidden">
-            <DayContextToggle className="mr-3" />
             <AddEventDayButton date={date} />
           </div>
         </div>

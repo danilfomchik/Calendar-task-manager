@@ -4,8 +4,8 @@ import {getLocalStoredValues} from '@/services/utils';
 import {StorageKeys} from '@/types/types';
 
 import {SliceNames} from '../types';
-import {roundCoordinate, toPersistedGeolocationStatus} from './helpers';
-import {TGeolocationStatus, TLocation, TLocationState} from './types';
+import {roundCoordinate, toGeolocationFailure, toPersistedGeolocationStatus} from './helpers';
+import {TGeolocationFailure, TLocation, TLocationState} from './types';
 
 const GEOLOCATION_TIMEOUT_MS = 15_000;
 
@@ -16,24 +16,28 @@ const getInitialState = (): TLocationState => {
     return {
       location: stored?.location ?? null,
       geolocationStatus: toPersistedGeolocationStatus(stored?.geolocationStatus),
+      geolocationFailure: null,
     };
   } catch {
-    return {location: null, geolocationStatus: 'idle'};
+    return {location: null, geolocationStatus: 'idle', geolocationFailure: null};
   }
 };
 
 type TLocationThunkState = {[SliceNames.locationSlice]: TLocationState};
 
-// Asks the browser for the device position, once: the condition skips it while a location is known,
-// a request is in flight, or the user has already answered.
+type TRejection = {status: 'denied' | 'unavailable'; failure: TGeolocationFailure};
+
+// Asks the browser for the device position. Without `force` it runs once: the condition skips it while a location
+// is known, a request is in flight, or the user has already answered. `force` is the user asking again
+// ("Use my location"): it runs unless a request is in flight, and its result replaces a searched city.
 export const requestDeviceLocation = createAsyncThunk<
   TLocation,
-  void,
-  {state: TLocationThunkState; rejectValue: TGeolocationStatus}
+  {force?: boolean} | void,
+  {state: TLocationThunkState; rejectValue: TRejection}
 >(
   'location/requestDeviceLocation',
   async (_, {rejectWithValue}) => {
-    if (!('geolocation' in navigator)) return rejectWithValue('unavailable');
+    if (!('geolocation' in navigator)) return rejectWithValue({status: 'unavailable', failure: 'unsupported'});
 
     try {
       const {coords} = await new Promise<GeolocationPosition>((resolve, reject) =>
@@ -51,14 +55,16 @@ export const requestDeviceLocation = createAsyncThunk<
         source: 'device',
       };
     } catch (error) {
-      const isDenied = (error as GeolocationPositionError).code === 1; // PERMISSION_DENIED
+      const failure = toGeolocationFailure((error as GeolocationPositionError).code);
 
-      return rejectWithValue(isDenied ? 'denied' : 'unavailable');
+      return rejectWithValue({status: failure === 'denied' ? 'denied' : 'unavailable', failure});
     }
   },
   {
-    condition: (_, {getState}) => {
+    condition: (arg, {getState}) => {
       const {location, geolocationStatus} = getState()[SliceNames.locationSlice];
+
+      if (arg?.force) return geolocationStatus !== 'pending';
 
       return !location && geolocationStatus === 'idle';
     },
@@ -78,14 +84,18 @@ const locationSlice = createSlice({
     builder
       .addCase(requestDeviceLocation.pending, state => {
         state.geolocationStatus = 'pending';
+        state.geolocationFailure = null;
       })
       .addCase(requestDeviceLocation.fulfilled, (state, action) => {
         state.geolocationStatus = 'granted';
-        // A city picked while the prompt was open wins
-        state.location ??= action.payload;
+
+        // A city picked while the first prompt was open wins; a position the user asked for again replaces it
+        if (action.meta.arg?.force) state.location = action.payload;
+        else state.location ??= action.payload;
       })
       .addCase(requestDeviceLocation.rejected, (state, action) => {
-        state.geolocationStatus = action.payload ?? 'unavailable';
+        state.geolocationStatus = action.payload?.status ?? 'unavailable';
+        state.geolocationFailure = action.payload?.failure ?? 'no-fix';
       });
   },
 });

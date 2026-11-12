@@ -30,8 +30,8 @@ Scope: the Day page (`src/pages/Day`), the sidebar mini-calendar, two new persis
 
 ### Desktop
 
-- **Masthead** (`components/Masthead`). Top row in Home's header classes (`h-22`): `SidebarToggle` (hidden while the sidebar is open), **Back to month** (hairline control, `‹ November 2026`; returns to the month Home showed, see **Back to month rule** below), then on the right the **Day context** toggle (`aria-pressed`, `aria-controls`, green while open) and the green **+ Add event**, bound to the Viewed day rather than Home's selected date. The Week strip sits below.
-- **Body.** A main column with the Day summary, Quick add, the events list and, at the bottom, a discreet **keyboard shortcuts hint**. The Day context drawer is a 320px aside on the right.
+- **Masthead** (`components/Masthead`). Top row in Home's header classes (`h-22`): `SidebarToggle` (hidden while the sidebar is open), **Back to month** (hairline control, `‹ November 2026`; returns to the month Home showed, see **Back to month rule** below), then on the right **Today** and the green **+ Add event**, bound to the Viewed day rather than Home's selected date. The Day context toggle is no longer here: it is the **Context tab** on the drawer (see Day context). The Week strip sits below.
+- **Body.** A main column with the Day summary, Quick add, the events list and, at the bottom, a discreet **keyboard shortcuts hint**. The Day context drawer is a 320px aside on the right, with the Context tab as its first column.
 
 ### Mobile (below `md`)
 
@@ -40,7 +40,7 @@ Scope: the Day page (`src/pages/Day`), the sidebar mini-calendar, two new persis
 - Header: sidebar toggle, Back to month, a "Week N" label and, after a swipe away from the Viewed day's week, a **Back to {day}** control. The header row is full at 390px while Back is shown; below 390px the "Week N" label hides then.
 - The Week strip is the hero, with no chevrons. The Viewed day is about 2.4x wide; the six compact cells are about 44px each at 390px.
 - The Day summary shows the visible `<h1>` ("Wednesday, 11 November"), count and chips; then Quick add and the list. Bottom padding clears the floating stack.
-- A fixed bottom-right stack: the **Context** button above the floating green **+**. The Context button opens the Day context in a Bottom sheet.
+- A fixed bottom stack: the **Context button** beside the floating green **+**. The Context button is the top of the Bottom sheet peeking above the bottom of the screen (see Day context).
 
 ## 4. Components
 
@@ -69,13 +69,15 @@ Rows in Home's Agenda panel recipe (calendar bar, title, mono calendar and descr
 ### Day context (`components/DayContext`)
 
 - `DayContextProvider` holds the drawer and sheet state. The drawer is open by default; the state survives day changes. Only one of the drawer or the sheet is mounted at a time, so blocks never render twice.
+- **Context tab** (desktop, `DayContextTab`): a 36×128px vertical hairline tab, vertically centred, that is the drawer wrapper's first flex column. It touches the drawer's border while the drawer is open (green, `aria-pressed`, `aria-controls`) and sits at the right edge of the screen while it is closed, moving with the drawer's width transition. It replaces the masthead toggle so the handle and the panel read as one thing.
+- **Context button** (mobile, `ContextButton`): shaped like the sheet's header: a grab handle, "Day context" with a ⌃ chevron, and a chip per block that has something to show (weather range, N upcoming events, Note, Insights). A tap or an upward drag (24px or a 250px/s flick) opens the sheet. With no chips it falls back to "Weather · Upcoming · Note".
 - **Drawer**: `transition-[width] duration-300`, `motion-reduce:transition-none`, `inert` when closed.
 - **Bottom sheet** (mobile): `role="dialog"` over a backdrop in a surface token. It closes on backdrop click, Esc or a downward drag from its header (velocity over 250 px/s or a third of its height); otherwise it snaps back. Closed, it sits fully below the screen and is `inert`. Focus moves to Close on open and back to the Context button on close. Instant under reduced motion.
 - Blocks, in order, in `DayContextBlocks`; each is a square hairline card and returns `null` when it has nothing to show.
   - **AI insights**: the existing Groq holiday plus "Did you know" fact, in a gradient-framed card. The response parse is guarded; partial content keeps the valid half. Disabled, failing or malformed: nothing.
-  - **Conditions**: info-tinted card with temperature range, a weather description, precipitation, wind, sunrise, sunset and moon phase. Open-Meteo forecast for about 92 days back to 15 ahead, the archive host for older days, hidden beyond. The moon phase is computed locally. Location: browser geolocation asked once and rounded to 2 decimals, or a city search on submit; stored in `localStorage`. "Change" on the card reopens the city search. See `docs/adr/0001-open-meteo-for-day-conditions.md` for the provider and privacy trade-off.
-  - **Upcoming**: the next 3 days with events within 30 days after the Viewed day, each a link with the date, count and first title. On mobile, following a row closes the sheet. Empty: "Nothing in the next 30 days".
-  - **Day note**: a dashed "+ Add a note" line until used, then a textarea. Saved on blur (and on unmount, so swapping the drawer for the sheet mid-edit loses nothing); an emptied note is removed.
+  - **Conditions**: info-tinted card with temperature range, a weather description, precipitation, wind, sunrise, sunset and moon phase. Open-Meteo forecast for about 92 days back to 15 ahead, the archive host for older days, hidden beyond. The moon phase is computed locally. Location: the saved one (device position rounded to 2 decimals, or a searched city, in `localStorage`), else an **Approximate location** from the browser's time zone (`redux/location/timeZones.ts`, generated from the IANA `zone.tab`; shown at once as "Kyiv · approx.", never stored). The device position is still asked once and replaces it when it arrives. "Change" on the card reopens the city search, which also has **Use my location**: it asks the browser again and says why it failed (blocked, no fix, timeout, unsupported). See `docs/adr/0001-open-meteo-for-day-conditions.md` for the provider and privacy trade-off.
+  - **Upcoming**: a timeline of the next 3 days with events within 30 days after the Viewed day. Each day has its date, "Tomorrow" / "in N days" (counted from today, within a week) and event count, then up to 3 events with a calendar-coloured bar and title, then "+N more"; 6 events in all at most. Every link opens that day, and on mobile following one closes the sheet. Empty: "Nothing in the next 30 days".
+  - **Day note**: a dashed "+ Add a note" line until used, then one always-editable card with a textarea that grows from 3 to 10 lines. It saves 600ms after typing stops, on blur and on unmount (so swapping the drawer for the sheet mid-edit loses nothing), with a "Saving…" / "Saved" status (`role="status"`); an emptied note is removed and the card returns to the dashed line.
 
 ### Keyboard shortcuts (`hooks/useDayShortcuts`, `components/ShortcutsHint`)
 
@@ -113,3 +115,16 @@ At desktop width and a 390px viewport, with seeded events in all four calendars:
 - `ui/Tooltip/NewTooltip.tsx` is unused; finish adopting it or remove it.
 - Sidebar mini-calendar: arrow keys stop at the edge of the six weeks shown instead of paging the month. Below 360px viewports the overlay narrows with the screen and its days drop under 44px.
 - The event form modal still has the pre-redesign styling.
+
+## 10. Round 2 refinements
+
+After the redesign shipped, four things were reworked (all decided with the user; domain terms **Context tab**, **Context button** and **Approximate location** are in `GLOSSARY.md`, the location decisions in `docs/adr/0001-open-meteo-for-day-conditions.md`).
+
+| Problem                                                                                                                                                                    | Decision                                                                                                                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Upcoming showed one title per day and looked like the other cards.                                                                                                         | A timeline of day groups with up to 3 calendar-coloured events each, "+N more", 6 events in all.                                                                                                                                                    |
+| Conditions stayed on "Set location" even after the browser prompt was accepted: any failure other than a denial became a generic "unavailable", and the error was dropped. | The failure reason is kept and shown. Until a location is saved, an Approximate location near the time zone is used at once; the device position replaces it when it arrives; "Use my location" retries and can override a city or a stored denial. |
+| The Day note had three modes and a Save button.                                                                                                                            | One always-editable card with autosave and a status label; the dashed empty state is unchanged.                                                                                                                                                     |
+| The desktop Day context toggle sat in the header, apart from its drawer; the mobile Context button was a flat bar that didn't say what was inside.                         | The Context tab is attached to the drawer's edge; the Context button peeks like the sheet and shows a chip per block.                                                                                                                               |
+
+Open: the "unavailable / no fix" failure on some machines (for example macOS with Location Services off for the browser) is now reported but not fixable from the app; the fallback keeps the block useful meanwhile. No ESLint or test coverage was added for the time zone table: a zone missing from it falls through to the "Set location" prompt.

@@ -2,8 +2,8 @@ import {PropsWithChildren, ReactNode, useEffect, useState} from 'react';
 
 import {useGetDayConditionsQuery} from '@/redux/conditions/conditionsApi';
 import {TConditionsSource, TDayConditions, TPlace} from '@/redux/conditions/types';
-import {setLocation} from '@/redux/location/locationSlice';
-import {TGeolocationStatus, TLocation} from '@/redux/location/types';
+import {requestDeviceLocation, setLocation} from '@/redux/location/locationSlice';
+import {TGeolocationFailure, TGeolocationStatus, TLocation} from '@/redux/location/types';
 import {useAppDispatch} from '@/redux/store';
 import {getTodayKey} from '@/services/dateUtils';
 import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
@@ -13,6 +13,7 @@ import {BlockCard, SkeletonLine} from '../BlockCard';
 import {DayContextBlock} from '../types';
 import LocationSearch from './LocationSearch';
 import {getConditionsSource} from './conditionsRange';
+import {GEOLOCATION_FAILURE_TEXT} from './geolocationFailureText';
 import {getMoonPhase} from './moonPhase';
 import {useConditionsLocation} from './useConditionsLocation';
 import {describeWeatherCode} from './weatherCode';
@@ -78,23 +79,33 @@ const Fact = ({term, children}: PropsWithChildren<{term: string}>) => (
 // autoFocus: set when coming back from the city search, so keyboard focus lands where it started
 type TLocationTriggerProps = {onClick: () => void; autoFocus: boolean};
 
-const ChangeLocationButton = ({name, onClick, autoFocus}: TLocationTriggerProps & {name: string | null}) => (
-  <div className="flex min-w-0 items-center gap-2">
-    {name && (
-      <span className="truncate text-xs text-text-muted" title={name}>
-        {name}
-      </span>
-    )}
-    <button
-      type="button"
-      autoFocus={autoFocus}
-      onClick={onClick}
-      aria-label={name ? `Change location (${name})` : 'Change location'}
-      className={cx(HAIRLINE_CONTROL_CLASS, 'shrink-0 px-2 text-[10px] md:h-7 md:text-[10px]')}>
-      Change
-    </button>
-  </div>
-);
+const ChangeLocationButton = ({
+  name,
+  isApproximate,
+  onClick,
+  autoFocus,
+}: TLocationTriggerProps & {name: string | null; isApproximate: boolean}) => {
+  const label = name && isApproximate ? `${name} · approx.` : name;
+  const fullLabel = name && isApproximate ? `Near ${name} · approximate` : name;
+
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      {label && (
+        <span className="truncate text-xs text-text-muted" title={fullLabel ?? undefined}>
+          {label}
+        </span>
+      )}
+      <button
+        type="button"
+        autoFocus={autoFocus}
+        onClick={onClick}
+        aria-label={fullLabel ? `Change location (${fullLabel})` : 'Change location'}
+        className={cx(HAIRLINE_CONTROL_CLASS, 'shrink-0 px-2 text-[10px] md:h-7 md:text-[10px]')}>
+        Change
+      </button>
+    </div>
+  );
+};
 
 const LOCATION_STATUS_TEXT: Partial<Record<TGeolocationStatus, string>> = {
   denied: 'Location access is off.',
@@ -104,13 +115,16 @@ const LOCATION_STATUS_TEXT: Partial<Record<TGeolocationStatus, string>> = {
 
 const SetLocationPrompt = ({
   geolocationStatus,
+  geolocationFailure,
   onClick,
   autoFocus,
-}: TLocationTriggerProps & {geolocationStatus: TGeolocationStatus}) => (
+}: TLocationTriggerProps & {geolocationStatus: TGeolocationStatus; geolocationFailure: TGeolocationFailure | null}) => (
   <Frame>
     <p className="text-sm text-text-muted">
-      {LOCATION_STATUS_TEXT[geolocationStatus] ?? 'Your location isn’t available.'} Choose a city to see the weather,
-      sunrise and sunset for this day.
+      {(geolocationFailure && GEOLOCATION_FAILURE_TEXT[geolocationFailure]) ??
+        LOCATION_STATUS_TEXT[geolocationStatus] ??
+        'Your location isn’t available.'}{' '}
+      Choose a city to see the weather, sunrise and sunset for this day.
     </p>
     <button
       type="button"
@@ -126,11 +140,19 @@ type TConditionsCardProps = {
   date: string;
   location: TLocation;
   source: TConditionsSource;
+  isApproximate: boolean;
   onChangeLocation: () => void;
   focusChange: boolean;
 };
 
-const ConditionsCard = ({date, location, source, onChangeLocation, focusChange}: TConditionsCardProps) => {
+const ConditionsCard = ({
+  date,
+  location,
+  source,
+  isApproximate,
+  onChangeLocation,
+  focusChange,
+}: TConditionsCardProps) => {
   const {latitude, longitude} = location;
   const {data, isFetching, isError} = useGetDayConditionsQuery({date, latitude, longitude, source});
 
@@ -141,7 +163,15 @@ const ConditionsCard = ({date, location, source, onChangeLocation, focusChange}:
   const moon = getMoonPhase(date);
 
   return (
-    <Frame label={<ChangeLocationButton name={location.name} onClick={onChangeLocation} autoFocus={focusChange} />}>
+    <Frame
+      label={
+        <ChangeLocationButton
+          name={location.name}
+          isApproximate={isApproximate}
+          onClick={onChangeLocation}
+          autoFocus={focusChange}
+        />
+      }>
       <div className="flex items-end justify-between gap-3">
         <p className="font-display text-4xl leading-none font-extrabold">
           <span className="sr-only">Low </span>
@@ -171,14 +201,14 @@ const ConditionsCard = ({date, location, source, onChangeLocation, focusChange}:
   );
 };
 
-// Conditions: weather, sunrise/sunset and moon phase for the Viewed day at the user's location.
-// Hidden outside Open-Meteo's range and on failure. Without a location (denied, unavailable, or no answer
-// within DEVICE_LOCATION_WAIT_MS) it shows a "Set location" prompt that opens a city search; a picked city is
-// persisted and can be changed from the card.
+// Conditions: weather, sunrise/sunset and moon phase for the Viewed day at the user's location, else at an
+// Approximate location near the browser's time zone. Hidden outside Open-Meteo's range and on failure. Only with
+// neither (an unknown time zone, and no position within DEVICE_LOCATION_WAIT_MS) does it show a "Set location"
+// prompt that opens a city search; a picked city is persisted and can be changed from the card.
 const Conditions: DayContextBlock = ({date}) => {
   const dispatch = useAppDispatch();
   const source = getConditionsSource(date, getTodayKey());
-  const {location, geolocationStatus} = useConditionsLocation(source !== null);
+  const {location, isApproximate, geolocationStatus, geolocationFailure} = useConditionsLocation(source !== null);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -204,12 +234,25 @@ const Conditions: DayContextBlock = ({date}) => {
     closeSearch();
   };
 
+  // The user asking the browser again; resolves to why it failed, or null once the position is saved
+  const locateDevice = async (): Promise<TGeolocationFailure | null> => {
+    const result = await dispatch(requestDeviceLocation({force: true}));
+
+    if (requestDeviceLocation.fulfilled.match(result)) {
+      closeSearch();
+
+      return null;
+    }
+
+    return result.payload?.failure ?? 'no-fix';
+  };
+
   if (!source) return null;
 
   if (isSearching) {
     return (
       <Frame>
-        <LocationSearch onPick={pickPlace} onCancel={closeSearch} />
+        <LocationSearch onPick={pickPlace} onLocateDevice={locateDevice} onCancel={closeSearch} />
       </Frame>
     );
   }
@@ -220,6 +263,7 @@ const Conditions: DayContextBlock = ({date}) => {
         date={date}
         location={location}
         source={source}
+        isApproximate={isApproximate}
         onChangeLocation={openSearch}
         focusChange={hasSearched}
       />
@@ -228,7 +272,14 @@ const Conditions: DayContextBlock = ({date}) => {
 
   if (isWaitingForDevice && !hasWaitedTooLong) return <ConditionsSkeleton />;
 
-  return <SetLocationPrompt geolocationStatus={geolocationStatus} onClick={openSearch} autoFocus={hasSearched} />;
+  return (
+    <SetLocationPrompt
+      geolocationStatus={geolocationStatus}
+      geolocationFailure={geolocationFailure}
+      onClick={openSearch}
+      autoFocus={hasSearched}
+    />
+  );
 };
 
 export default Conditions;

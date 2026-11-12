@@ -2,24 +2,42 @@ import {FormEvent, useId, useState} from 'react';
 
 import {useSearchPlacesQuery} from '@/redux/conditions/conditionsApi';
 import {TPlace} from '@/redux/conditions/types';
+import {TGeolocationFailure} from '@/redux/location/types';
 import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
+
+import {GEOLOCATION_FAILURE_TEXT} from './geolocationFailureText';
 
 // Open-Meteo returns nothing for 0-1 characters, so don't send those
 const MIN_QUERY_LENGTH = 2;
 
 type TLocationSearchProps = {
   onPick: (place: TPlace) => void;
+  // asks the browser for the device position again; resolves to why it failed, or null when it worked
+  onLocateDevice: () => Promise<TGeolocationFailure | null>;
   onCancel: () => void;
 };
 
 // City search for the Conditions location: type a name, submit, pick one of up to 5 places.
 // Searches on submit (Enter or the button), not per keystroke, so typing sends nothing.
-const LocationSearch = ({onPick, onCancel}: TLocationSearchProps) => {
+const LocationSearch = ({onPick, onLocateDevice, onCancel}: TLocationSearchProps) => {
   const inputId = useId();
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
   const [isTooShort, setIsTooShort] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+  const [deviceFailure, setDeviceFailure] = useState<TGeolocationFailure | null>(null);
+
+  const locateDevice = async () => {
+    setIsLocating(true);
+    setDeviceFailure(null);
+
+    const failure = await onLocateDevice();
+
+    // on success the search is closed and this component is gone
+    setIsLocating(false);
+    setDeviceFailure(failure);
+  };
 
   const {data: places, isFetching, isError, refetch} = useSearchPlacesQuery(query, {skip: !query});
 
@@ -36,7 +54,9 @@ const LocationSearch = ({onPick, onCancel}: TLocationSearchProps) => {
   };
 
   let message = '';
-  if (isTooShort) message = `Type at least ${MIN_QUERY_LENGTH} letters.`;
+  if (isLocating) message = 'Waiting for your device…';
+  else if (deviceFailure) message = GEOLOCATION_FAILURE_TEXT[deviceFailure];
+  else if (isTooShort) message = `Type at least ${MIN_QUERY_LENGTH} letters.`;
   else if (isFetching) message = 'Searching…';
   else if (isError) message = 'Couldn’t reach the city search. Check your connection and try again.';
   else if (places?.length === 0) message = `No places found for “${query}”. Check the spelling or try a nearby city.`;
@@ -66,6 +86,14 @@ const LocationSearch = ({onPick, onCancel}: TLocationSearchProps) => {
           </button>
         </div>
       </form>
+
+      <button
+        type="button"
+        disabled={isLocating}
+        onClick={locateDevice}
+        className={cx(HAIRLINE_CONTROL_CLASS, 'self-start disabled:cursor-default disabled:opacity-60')}>
+        <span aria-hidden>◎</span> Use my location
+      </button>
 
       <p role="status" className="text-sm text-text-muted empty:hidden">
         {message}
