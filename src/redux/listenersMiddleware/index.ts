@@ -1,2 +1,3 @@
+import './dayNotesListener';
 import './eventsListener';
-import './selectedCalendarListener';
+import './locationListener';

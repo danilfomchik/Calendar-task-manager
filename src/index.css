@@ -1,7 +1,24 @@
 @import 'tailwindcss';
 
 @theme {
-  --height-header: 77px;
+  /* Role-named design tokens (dark only). Calendar colours are never used by chrome. */
+  --color-surface-base: #0b0c0e;
+  --color-surface-sunken: #08090a;
+  --color-surface-raised: #121417;
+  --color-surface-overlay: #181b1f;
+  --color-line: #22262b;
+  --color-line-strong: #343a41;
+  --color-text: #f3f5f7;
+  --color-text-muted: #a3acb6;
+  --color-text-faint: #7d8791;
+  --color-action: #35e08a;
+  --color-action-ink: #04140b;
+  --color-info: #5aa2ff;
+  --color-info-ink: #04101f;
+
+  --font-display: 'Inter Tight', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
   --secondary-bg-color: #1a1a1a;
   --overlay-color: #1a1a1af0;
 
@@ -10,9 +27,18 @@
   --color-secondaryBackgroundColorHover: #161c22a3;
   --color-overlay: var(--overlay-color);
 
-  --height-header: 77px;
-
   --grid-template-columns-auto-fill: repeat(auto-fill, minmax(330px, 1fr));
+}
+
+/* home page header: h-16 on mobile, h-22 from md (matches the prototype) */
+:root {
+  --height-home-header: 4rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --height-home-header: 5.5rem;
+  }
 }
 
 body {
@@ -29,7 +55,7 @@ body,
   max-height: 100vh;
   max-height: 100svh;
   width: 100vw;
-  @apply bg-[#0a0a0a] text-white box-border;
+  @apply bg-surface-base text-text box-border font-display;
 }
 
 #root {
@@ -49,7 +75,7 @@ body,
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-sky-500 rounded-xl;
+  @apply bg-line-strong rounded-xl;
 }
 
 .horizontal-divider {
@@ -69,6 +95,7 @@ body,
     justify-content: center;
     gap: 20px;
     color: #2e2e2e;
+    width: 100%;
 
     &::after,
     &::before {
@@ -89,4 +116,43 @@ body,
   50% {
     opacity: 0.3;
   }
+}
+
+@layer base {
+  button,
+  a[href],
+  [role='button'],
+  summary,
+  label {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-action);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility animate-fade-in {
+  animation: fade-in 300ms ease-out;
 }

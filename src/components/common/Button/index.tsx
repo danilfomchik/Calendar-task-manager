@@ -16,41 +16,45 @@ const Button = ({
   children,
   ...restProps
 }: TButtonProps) => {
-  const btnContent = (
-    <button
-      tabIndex={0}
-      className={cx(
-        'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition duration-500 ease-in-out disabled:hover:border-secondary-background-color disabled:text-secondary-background-color disabled:hover:text-secondary-background-color disabled:cursor-auto',
-        buttonVariants[variant],
-        className,
-      )}
-      {...restProps}>
+  const classes = cx(
+    'w-auto p-3 flex justify-center items-center gap-2 cursor-pointer border rounded-lg transition-colors duration-150 ease-out disabled:hover:border-line disabled:text-text-faint disabled:hover:text-text-faint disabled:cursor-auto',
+    buttonVariants[variant],
+    className,
+  );
+
+  const content = (
+    <>
       <div
         className={cx('flex items-center justify-center w-full', {
           'gap-2': (startIcon || endIcon) && text,
         })}>
         {startIcon ? <span className="font-medium block truncate">{startIcon}</span> : null}
 
-        <span className="font-medium block truncate">{text}</span>
+        <div className="font-medium block truncate">{text}</div>
 
         {endIcon ? <span className="font-medium block truncate">{endIcon}</span> : null}
       </div>
 
       {children}
-    </button>
+    </>
   );
 
+  // a link is a single focusable anchor styled like a button (no nested button)
   if (kind === 'link') {
     const {to, ...linkProps} = restProps as TLinkKindProps;
 
     return (
-      <Link to={to} tabIndex={-1} {...linkProps}>
-        {btnContent}
+      <Link to={to} className={classes} {...linkProps}>
+        {content}
       </Link>
     );
   }
 
-  return btnContent;
+  return (
+    <button tabIndex={0} className={classes} {...restProps}>
+      {content}
+    </button>
+  );
 };
 
 export default memo(Button);

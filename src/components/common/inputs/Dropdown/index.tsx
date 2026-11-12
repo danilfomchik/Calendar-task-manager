@@ -1,4 +1,4 @@
-import {KeyboardEvent, memo, useCallback, useEffect, useRef, useState} from 'react';
+import {KeyboardEvent, PropsWithChildren, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import ArrowDown from '@/components/ui/icons/ArrowDown';
 import CheckIcon from '@/components/ui/icons/CheckIcon';
@@ -8,6 +8,8 @@ import {cx} from '@/services/utils';
 import Button from '../../Button';
 import {TDropdownProps} from './types';
 
+// TODO: refactor component and props.
+// currently selectedOption looks weird
 const Dropdown = ({
   field,
   selectedOption,
@@ -15,13 +17,28 @@ const Dropdown = ({
   options,
   placeholder = 'Choose an option',
   className = '',
+  wrapperClassName = '',
+  triggerClassName = '',
   customOption,
-}: TDropdownProps) => {
+  children,
+}: PropsWithChildren<TDropdownProps>) => {
   const [currentValue, setCurrentValue] = useState(selectedOption);
   const [focusedIndex, setFocusedIndex] = useState(0);
 
   const {isOpen, handleClose, handleToggle} = useOpeningItem();
   const activeOptionRef = useRef<HTMLLIElement>(null);
+
+  const btnText = useMemo(() => {
+    if (!currentValue) return placeholder;
+    if (!customOption) return currentValue;
+
+    return customOption(currentValue);
+  }, [currentValue, customOption, placeholder]);
+
+  const dropdownClassName = cx(
+    'absolute mt-1 w-full bg-mainBackgroundColor border border-secondary-background-color shadow-lg max-h-55 rounded-md text-sm ring-opacity-5 overflow-auto focus:outline-none z-101',
+    className,
+  );
 
   const handleChange = useCallback(
     (option: string) => {
@@ -75,18 +92,16 @@ const Dropdown = ({
   }, [isOpen, activeOptionRef]);
 
   return (
-    <div className={cx('w-full relative', className)}>
+    <div className={cx('w-full relative', wrapperClassName)}>
       <Button
         className={cx(
-          'py-2 w-full h-full text-left border-secondary-background-color z-30 outline-none focus:border-sky-500',
+          'py-2 w-full h-full text-left border-line z-30 outline-none focus:border-action',
           {
-            'border-sky-500 text-sky-500': isOpen,
+            'border-action text-action': isOpen,
           },
-          {
-            'flex-row-reverse [&>div]:w-auto': customOption,
-          },
+          triggerClassName,
         )}
-        text={customOption ? '' : currentValue ? currentValue : placeholder}
+        text={btnText}
         endIcon={
           <div
             className={cx('transition-transform', {
@@ -96,9 +111,8 @@ const Dropdown = ({
           </div>
         }
         onClick={handleToggle}
-        type="button">
-        {customOption ? customOption(currentValue || '') : null}
-      </Button>
+        type="button"
+      />
 
       {isOpen && (
         <>
@@ -111,32 +125,38 @@ const Dropdown = ({
             className="fixed w-full h-full inset-0 z-100"
           />
 
-          <ul
-            role="listbox"
-            aria-label={field?.name ? `${field.name} dropdown list` : 'Dropdown list'}
-            className="absolute mt-1 w-full bg-mainBackgroundColor border border-secondary-background-color shadow-lg max-h-55 rounded-md text-sm ring-opacity-5 overflow-auto focus:outline-none z-101">
-            {options.map((option, index) => (
-              <li
-                id={`list-item-${index}`}
-                ref={currentValue === option ? activeOptionRef : null}
-                key={option}
-                tabIndex={focusedIndex === index ? 0 : -1}
-                role="option"
-                aria-selected={focusedIndex === index}
-                onKeyDown={e => handleOptionKeyDown(e, index)}
-                className={cx(
-                  {
-                    'bg-secondary-background-color': currentValue === option,
-                  },
-                  'transition-all flex items-center justify-between gap-1 cursor-pointer text-white select-none relative py-2 px-3 hover:bg-secondary-background-color focus:bg-secondary-background-color outline-none',
-                )}
-                onClick={() => handleChange(option)}>
-                {customOption ? customOption(option) : <span className="font-normal block truncate">{option}</span>}
+          {children ? (
+            <div className={dropdownClassName}>{children}</div>
+          ) : (
+            <ul
+              role="listbox"
+              aria-label={field?.name ? `${field.name} dropdown list` : 'Dropdown list'}
+              className={dropdownClassName}>
+              {options.map((option, index) => (
+                <li
+                  id={`list-item-${index}`}
+                  ref={currentValue === option ? activeOptionRef : null}
+                  key={option}
+                  tabIndex={focusedIndex === index ? 0 : -1}
+                  role="option"
+                  aria-selected={focusedIndex === index}
+                  onKeyDown={e => handleOptionKeyDown(e, index)}
+                  className={cx(
+                    {
+                      'bg-secondary-background-color': currentValue === option,
+                    },
+                    'transition-all flex items-center justify-between gap-1 cursor-pointer text-white select-none relative py-2 px-3 hover:bg-secondary-background-color focus:bg-secondary-background-color outline-none',
+                  )}
+                  onClick={() => handleChange(option)}>
+                  {customOption ? customOption(option) : <span className="font-normal block truncate">{option}</span>}
 
-                {currentValue === option && <CheckIcon className="absolute right-2 top-1/2 -translate-y-1/2 size-3" />}
-              </li>
-            ))}
-          </ul>
+                  {currentValue === option && (
+                    <CheckIcon className="absolute right-2 top-1/2 -translate-y-1/2 size-3" />
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </>
       )}
     </div>

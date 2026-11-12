@@ -1,8 +1,8 @@
-import {CalendarsNames, Nullable, TCalendarsList} from '@/types/types';
+import {CalendarsNames, TCalendarsList} from '@/types/types';
 
 export type TMyCalendarsState = {
   calendarsList: TCalendarsList;
-  selectedCalendar: Nullable<CalendarsNames>;
+  activeCalendars: CalendarsNames[];
   calendarsMap: Record<string, Record<CalendarsNames, number>>;
 };
 

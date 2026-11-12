@@ -5,9 +5,8 @@ import {useOpeningItem} from '@/hooks/useOpeningItem';
 import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
 import {cx} from '@/services/utils';
 
-import AddEvent from './AddEvent';
+import AddEventButton from './AddEventButton';
 import ChangeMonthControl from './ChangeMonthControl';
-import ChangeViewControl from './ChangeViewControl';
 
 const Controls = () => {
   const {ref: menuRef, refId, handleClose} = useOpeningItem();
@@ -30,25 +29,17 @@ const Controls = () => {
 
       <div
         className={cx('flex items-center gap-2 md:gap-4 z-20', {
-          'flex flex-col border border-secondaryBackgroundColor bg-mainBackgroundColor p-4 mt-2 rounded visible':
-            isMenuOpen && isMobileScreen,
+          'flex flex-col border border-line bg-surface-base p-4 mt-2 rounded visible': isMenuOpen && isMobileScreen,
         })}>
         <div
           className={cx('flex flex-row gap-2.5', {
             'flex-col': isMenuOpen && isMobileScreen,
           })}>
           <ChangeMonthControl />
-          <ChangeViewControl />
         </div>
 
-        <div className="max-md:hidden self-stretch my-2 border-t border-s border-gray-200 dark:border-neutral-700 max-md:w-[40%] max-md:mx-auto"></div>
-
-        <AddEvent
-          showText={!isMobileScreen}
-          className={cx({
-            'max-md:w-8 max-md:h-8 rounded-full max-md:p-0': isMobileScreen,
-          })}
-        />
+        {/* on mobile the Bottom sheet's floating button adds events */}
+        {!isMobileScreen && <AddEventButton />}
       </div>
     </div>
   );

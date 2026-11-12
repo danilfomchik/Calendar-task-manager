@@ -20,14 +20,21 @@ const reducers = {
   ) => {
     state.calendarsMap = action.payload;
   },
-  setSelectedCalendar: (state: TMyCalendarsState, action: PayloadAction<CalendarsNames | null>) => {
-    state.selectedCalendar = action.payload;
+  toggleActiveCalendar: (state: TMyCalendarsState, action: PayloadAction<CalendarsNames>) => {
+    const name = action.payload;
+
+    state.activeCalendars = state.activeCalendars.includes(name)
+      ? state.activeCalendars.filter(calendar => calendar !== name)
+      : [...state.activeCalendars, name];
+  },
+  clearActiveCalendars: (state: TMyCalendarsState) => {
+    state.activeCalendars = [];
   },
 };
 
 const initialState: TMyCalendarsState = {
   calendarsList: defaultCalendars,
-  selectedCalendar: null,
+  activeCalendars: [],
   calendarsMap: {},
 };
 
@@ -83,5 +90,5 @@ const myCalendarsSlice = createSlice({
   },
 });
 
-export const {setSelectedCalendar, setCalendarsList, setCalendarsMap} = myCalendarsSlice.actions;
+export const {toggleActiveCalendar, clearActiveCalendars, setCalendarsList, setCalendarsMap} = myCalendarsSlice.actions;
 export default myCalendarsSlice;

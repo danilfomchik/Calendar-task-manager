@@ -1,4 +1,4 @@
-import {ButtonHTMLAttributes, HTMLAttributes, ReactElement} from 'react';
+import {ButtonHTMLAttributes, HTMLAttributes, ReactElement, ReactNode} from 'react';
 import {LinkProps} from 'react-router';
 
 import {Nullable} from '@/types/types';
@@ -13,22 +13,24 @@ export enum ButtonVariants {
   transparent = 'transparent',
 }
 
+type TButtonText = string | ReactNode;
+
 type TButton =
   | {
       startIcon?: Nullable<ReactElement> | never;
-      text: string;
+      text: TButtonText;
     }
   | {
       endIcon?: Nullable<ReactElement> | never;
-      text: string;
+      text: TButtonText;
     }
   | {
       endIcon: Nullable<ReactElement>;
-      text?: string | never;
+      text?: TButtonText | never;
     }
   | {
       startIcon: Nullable<ReactElement>;
-      text?: string | never;
+      text?: TButtonText | never;
     };
 
 type TButtonKindProps = {

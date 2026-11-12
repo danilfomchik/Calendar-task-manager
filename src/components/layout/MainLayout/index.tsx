@@ -4,6 +4,7 @@ import {Outlet} from 'react-router';
 
 import Loading from '@/components/ui/Loading';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
+import {AgendaPanelProvider} from '@/pages/Main/AgendaPanelContext';
 import {setEventFormData} from '@/redux/events/eventsSlice';
 import {selectEventFormData} from '@/redux/events/selectors';
 import {selectOpenedItems} from '@/redux/overflow/selectors';
@@ -17,6 +18,14 @@ import DataInitWrapper from '../DataInitWrapper';
 
 const Modal = lazy(() => import('@/components/common/Modal'));
 const EventForm = lazy(() => import('@/components/common/EventForm'));
+
+// separate branches TODO
+// check "return back" btn
+// popover for event details for desktop
+// add correct selectedDate handling (on refresh) - on separate branch
+// replace momentjs with date-fns or dayjs
+// update ci/cd pipelne to call lint, prettier, build after merge to develop/main and before deploy
+// theme switch (https://chatgpt.com/share/699c086a-5894-800e-b965-4532a24a7fc5)
 
 const MainLayout = () => {
   const dispatch = useAppDispatch();
@@ -44,12 +53,12 @@ const MainLayout = () => {
   }, [openedItems]);
 
   return (
-    <>
+    <AgendaPanelProvider>
       <DataInitWrapper />
 
       <Aside />
       <main
-        className={cx('ml-0 h-full flex-1 overflow-y-auto transition-all duration-300 ease-in-out', {
+        className={cx('ml-0 h-full flex-1 overflow-y-auto', {
           'md:ml-60': isSidebarOpen,
         })}>
         <Suspense fallback={<Loading />}>
@@ -67,7 +76,7 @@ const MainLayout = () => {
           </Modal>
         </Suspense>
       )}
-    </>
+    </AgendaPanelProvider>
   );
 };
 

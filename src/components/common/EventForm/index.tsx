@@ -14,7 +14,6 @@ import EditIcon from '@/components/ui/icons/EditIcon';
 import PlusIcon from '@/components/ui/icons/PlusIcon';
 import {selectDay, selectMonth, selectYear} from '@/redux/date/selectors';
 import {addEvent, editEvent} from '@/redux/events/eventsSlice';
-import {selectSelectedCalendar} from '@/redux/myCalendars/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {defaultCalendars} from '@/services/constants';
 import {createDate, formatDate, getDays, getMonthsOptions, getYearsOptions} from '@/services/dateUtils';
@@ -30,7 +29,6 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
   const year = useSelector(selectYear);
   const month = useSelector(selectMonth);
   const day = useSelector(selectDay);
-  const selectedCalendar = useSelector(selectSelectedCalendar);
 
   const defaultValues = {
     eventTitle: event?.title ?? '',
@@ -74,7 +72,6 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
       date: createDate(+eventYear, eventMonth, +eventDay),
       description: eventDescription,
       eventCalendar,
-      isDisabled: !selectedCalendar ? false : selectedCalendar !== eventCalendar,
     });
 
     dispatch(addEvent(newEvent));
@@ -90,7 +87,6 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
         date: createDate(+eventYear, eventMonth, +eventDay),
         description: eventDescription,
         eventCalendar,
-        isDisabled: !selectedCalendar ? event?.isDisabled || false : selectedCalendar !== eventCalendar,
       },
     });
 
@@ -122,7 +118,7 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
     <div>
       <Button
         startIcon={<CloseIcon size="size-5" />}
-        className="absolute right-2 top-2 p-1 text-sm cursor-pointer hover:text-sky-500"
+        className="absolute right-2 top-2 p-1 text-sm cursor-pointer hover:text-[#3b5bfd]"
         onClick={handleModalClose}
       />
 
@@ -143,6 +139,7 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
                   options={calendarOptions}
                   name="eventCalendar"
                   customOption={customEventCalendarOption}
+                  triggerClassName="flex-row-reverse [&>div]:w-auto"
                 />
               </div>
             ) : (
@@ -162,7 +159,7 @@ const EventForm = ({actionType = FormActionType.create, event, date, handleModal
             <Button
               className={classNames(
                 {
-                  'border-sky-500 text-sky-500': isDirty,
+                  'border-[#3b5bfd] text-[#3b5bfd]': isDirty,
                 },
                 'text-sm p-2 max-md:w-full',
               )}

@@ -1,25 +1,23 @@
-import Divider from '@/components/ui/Divider';
-import {useCalendarContext} from '@/hooks/useCalendarContext';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 
-import MobileDateInfo from '../MobileDateInfo';
-import DaysList from './DaysList';
+import BottomSheet from '../BottomSheet';
+import {SHEET_PEEK} from '../BottomSheet/constants';
+import MonthGrid from './MonthGrid';
 import WeekDays from './WeekDays';
 
 const Calendar = () => {
-  const containerRef = useCalendarContext();
+  const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col w-full items-center overflow-x-auto max-md:pb-5 h-[calc(100vh-var(--height-header))]">
-      <div className="flex flex-col w-full md:h-full gap-2 items-center px-3 md:px-0 pt-2 overflow-hidden">
+    <div className="relative flex flex-col w-full items-center overflow-x-auto h-[calc(100svh-var(--height-home-header))]">
+      <div
+        className="flex flex-col w-full md:h-full items-center md:px-0 overflow-hidden max-md:flex-1 max-md:min-h-0"
+        style={isMobileScreen ? {paddingBottom: SHEET_PEEK} : undefined}>
         <WeekDays />
-        <DaysList />
+        <MonthGrid />
       </div>
 
-      <Divider className="mb-4 md:hidden" />
-
-      <MobileDateInfo />
+      {isMobileScreen && <BottomSheet />}
     </div>
   );
 };

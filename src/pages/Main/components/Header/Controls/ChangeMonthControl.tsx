@@ -1,61 +1,44 @@
-import moment from 'moment';
-import {useSelector} from 'react-redux';
-
-import Button from '@/components/common/Button';
-import ArrowLeft from '@/components/ui/icons/ArrowLeft';
-import ArrowRight from '@/components/ui/icons/ArrowRight';
-import {setFullDate} from '@/redux/date/dateSlice';
-import {selectFullDate} from '@/redux/date/selectors';
+import {requestToday, setFullDate, shiftMonth} from '@/redux/date/dateSlice';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate, getDate} from '@/services/dateUtils';
+import {cx} from '@/services/utils';
 
-enum MonthDirection {
-  NEXT = 'next',
-  PREV = 'prev',
-}
+const SIZE_CLASS = 'h-11 min-w-11 md:h-9 md:min-w-9';
+const CONTROL_CLASS =
+  'cursor-pointer items-center justify-center border border-line-strong font-mono text-text-muted transition-colors hover:border-text-muted hover:text-text';
 
 const ChangeMonthControl = () => {
   const dispatch = useAppDispatch();
-  const fullDate = useSelector(selectFullDate);
 
-  const onChangeMonth = (type: MonthDirection) => {
-    let monthIndex = 0;
-
-    if (type === MonthDirection.NEXT) {
-      monthIndex = 1;
-    } else {
-      monthIndex = -1;
-    }
-
-    const changedDate = moment(fullDate).add(monthIndex, 'M');
-    const changedFullDate = formatDate(changedDate, 'YYYY-MM-DD');
-
-    dispatch(setFullDate(changedFullDate));
-  };
-
-  const onSwithToToday = () => {
+  const onSwitchToToday = () => {
     const currentFullDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
 
     dispatch(setFullDate(currentFullDate));
+    dispatch(requestToday());
   };
 
   return (
-    <div className="flex max-md:gap-1">
-      <Button
-        startIcon={<ArrowLeft size="size-4" />}
-        className="p-2 rounded-lg md:rounded-none md:rounded-s-lg md:border-r-0 outline-none focus:border-sky-500"
-        onClick={() => onChangeMonth(MonthDirection.PREV)}
-      />
-      <Button
-        text="today"
-        className="rounded-none text-sm py-2 px-2.5 max-md:hidden outline-none focus:border-sky-500"
-        onClick={onSwithToToday}
-      />
-      <Button
-        endIcon={<ArrowRight size="size-4" />}
-        className="p-2 rounded-lg md:rounded-none md:rounded-e-lg md:border-l-0 outline-none focus:border-sky-500"
-        onClick={() => onChangeMonth(MonthDirection.NEXT)}
-      />
+    <div className="flex items-center gap-1.5">
+      <button
+        type="button"
+        aria-label="Previous month"
+        className={cx(CONTROL_CLASS, SIZE_CLASS, 'hidden md:flex')}
+        onClick={() => dispatch(shiftMonth(-1))}>
+        ‹
+      </button>
+      <button
+        type="button"
+        className={cx(CONTROL_CLASS, SIZE_CLASS, 'flex px-2 text-[11px] uppercase tracking-wider md:px-3 md:text-xs')}
+        onClick={onSwitchToToday}>
+        Today
+      </button>
+      <button
+        type="button"
+        aria-label="Next month"
+        className={cx(CONTROL_CLASS, SIZE_CLASS, 'hidden md:flex')}
+        onClick={() => dispatch(shiftMonth(1))}>
+        ›
+      </button>
     </div>
   );
 };

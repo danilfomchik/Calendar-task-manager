@@ -11,6 +11,8 @@ export enum MonthParts {
 export enum StorageKeys {
   eventsById = 'eventsById',
   eventsByDate = 'eventsByDate',
+  dayNotes = 'dayNotes',
+  conditionsLocation = 'conditionsLocation',
 }
 
 export enum RouterPaths {

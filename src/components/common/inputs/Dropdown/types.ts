@@ -5,14 +5,23 @@ export type Option = {
   value: string;
 };
 
-export type TDropdownProps = {
-  field?: ControllerRenderProps<FieldValues, string>;
-  selectedOption?: string;
-  onChange: (option: string) => void;
+// TODO: add correct types:
+// if children passed -> no need options
+// etc (check for other types)
+
+export type TDropdownBaseProps = {
   name?: string;
   options: string[];
-  placeholder?: string;
+  selectedOption?: string;
+  customOption?: (option: string) => string | ReactNode;
   className?: string;
-  setDropDownRef?: (node: HTMLDivElement | null) => void;
-  customOption?: (option: string) => ReactNode;
+  wrapperClassName?: string;
+  triggerClassName?: string;
 };
+
+export type TDropdownProps = {
+  field?: ControllerRenderProps<FieldValues, string>;
+  onChange?: (option: string) => void;
+  placeholder?: string;
+  setDropDownRef?: (node: HTMLDivElement | null) => void;
+} & TDropdownBaseProps;

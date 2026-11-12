@@ -78,3 +78,15 @@ const generateDatesArrayByFullDate = (date: Moment) => {
 
   return dates;
 };
+
+export type TDirection = 1 | -1;
+
+// The date key used in URLs, the events maps and the date slice
+export const DATE_KEY_FORMAT = 'YYYY-MM-DD';
+
+export const getTodayKey = () => formatDate(getDate(new Date()), DATE_KEY_FORMAT);
+
+// Route of the Day page for a date key (RouterPaths.day)
+export const getDayPath = (date: string) => `/day/${date}`;
+
+export const formatEventsCount = (count: number) => (count === 1 ? '1 event' : `${count} events`);

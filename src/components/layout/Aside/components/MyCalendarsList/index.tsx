@@ -3,8 +3,8 @@ import {KeyboardEvent} from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectFullDate} from '@/redux/date/selectors';
-import {setSelectedCalendar} from '@/redux/myCalendars/myCalendarsSlice';
-import {selectCalendarsList, selectCalendarsMap, selectSelectedCalendar} from '@/redux/myCalendars/selectors';
+import {clearActiveCalendars, toggleActiveCalendar} from '@/redux/myCalendars/myCalendarsSlice';
+import {selectActiveCalendars, selectCalendarsList, selectCalendarsMap} from '@/redux/myCalendars/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
@@ -13,38 +13,49 @@ import {CalendarsNames} from '@/types/types';
 const MyCalendarsList = () => {
   const dispatch = useAppDispatch();
   const calendarsList = useSelector(selectCalendarsList);
-  const selectedCalendar = useSelector(selectSelectedCalendar);
+  const activeCalendars = useSelector(selectActiveCalendars);
   const calendarsMap = useSelector(selectCalendarsMap);
   const fullDate = useSelector(selectFullDate);
 
   const yearMonthKey = formatDate(moment(fullDate), 'YYYY-MM');
   const currentCalendarsData = calendarsMap[yearMonthKey];
+  const hasActiveCalendars = activeCalendars.length > 0;
 
-  const selectCalendar = (name: CalendarsNames) => {
-    if (selectedCalendar === name) {
-      dispatch(setSelectedCalendar(null));
-    } else {
-      dispatch(setSelectedCalendar(name));
-    }
+  const toggleCalendar = (name: CalendarsNames) => {
+    dispatch(toggleActiveCalendar(name));
   };
 
   const handleOptionKeyDown = (event: KeyboardEvent<HTMLLIElement>, index: number) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      selectCalendar(calendarsList[index].name);
-      return;
-    } else {
-      return; // Ignore other keys
+      toggleCalendar(calendarsList[index].name);
     }
   };
 
   return (
     <div className="px-4 py-5">
-      <p className="uppercase text-xs text-[#444444] mb-2.5">My calendars</p>
+      <div className="flex items-center justify-between mb-2.5 min-h-5">
+        <p className="uppercase font-mono text-[11px] tracking-widest text-text-faint">My calendars</p>
 
-      <ul role="list">
+        {hasActiveCalendars && (
+          <button
+            type="button"
+            onClick={() => dispatch(clearActiveCalendars())}
+            className="group flex h-6 max-md:min-h-11 cursor-pointer items-center gap-1.5 border border-line-strong px-2 font-mono text-[11px] uppercase leading-none tracking-wider text-text-muted transition-colors hover:border-text-muted hover:text-text">
+            <span className="flex items-center justify-center bg-surface-overlay px-1 py-px text-[10px] text-text">
+              {activeCalendars.length}
+            </span>
+            Clear
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+              <path d="M1 1l6 6M7 1L1 7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      <ul role="listbox" aria-multiselectable="true" aria-label="My calendars">
         {calendarsList?.map(({name, itemColor}, index) => {
-          const isSelected = selectedCalendar === name;
+          const isSelected = activeCalendars.includes(name);
           const count = currentCalendarsData?.[name];
 
           return (
@@ -54,22 +65,23 @@ const MyCalendarsList = () => {
               tabIndex={0}
               aria-selected={isSelected}
               className={cx(
-                'flex items-center gap-2 py-1 px-2 rounded-lg cursor-pointer transition-all hover:bg-[#0f0f0f] select-none outline-none focus:bg-[#0f0f0f]',
+                'relative flex min-h-11 md:min-h-9 items-center gap-2.5 px-2.5 cursor-pointer transition-colors hover:bg-surface-raised select-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-action',
                 {
-                  'bg-[#0f0f0f]': isSelected,
+                  'bg-surface-raised before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-action':
+                    isSelected,
                 },
               )}
-              onClick={() => selectCalendar(name)}
+              onClick={() => toggleCalendar(name)}
               onKeyDown={e => handleOptionKeyDown(e, index)}>
               <div
-                className="w-1.75 h-1.75 rounded-full"
+                className="size-2 rounded-full"
                 style={{
                   backgroundColor: itemColor,
-                  boxShadow: isSelected ? `0 0 0 2px #0a0a0a, 0 0 0 3px ${itemColor}` : '',
+                  boxShadow: isSelected ? `0 0 0 2px var(--color-surface-raised), 0 0 0 3px ${itemColor}` : '',
                 }}></div>
-              <p className="text-gray-400 text-[15px]">{name}</p>
+              <p className={cx('text-[15px]', isSelected ? 'text-text' : 'text-text-muted')}>{name}</p>
 
-              {!!count && <span className="text-[#444444] text-sm/[1] ml-auto">{count}</span>}
+              {!!count && <span className="text-text-faint font-mono text-xs/[1] ml-auto">{count}</span>}
             </li>
           );
         })}

@@ -1,25 +1,19 @@
-import {motion} from 'framer-motion';
 import moment from 'moment';
 import {memo, useRef} from 'react';
 import {useSelector} from 'react-redux';
 import {useSearchParams} from 'react-router';
 
-import Button from '@/components/common/Button';
 import DottedEventsList from '@/components/common/DottedEventsList';
-import AddIcon from '@/components/ui/icons/AddIcon';
-import ExternalPage from '@/components/ui/icons/ExternalPage';
 import {useEventsList} from '@/hooks/useEventsList';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {setSelectedDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectSelectedDate} from '@/redux/date/selectors';
-import {setEventFormData} from '@/redux/events/eventsSlice';
-import {onOpenItem} from '@/redux/overflow/overflowSlice';
 import {useAppDispatch} from '@/redux/store';
-import {CURRENT_DATE_PARAMS_KEY, EVENT_FORM_ID} from '@/services/constants';
+import {CURRENT_DATE_PARAMS_KEY} from '@/services/constants';
 import {formatDate, getDate} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
-import {FormActionType} from '@/types/eventFormTypes';
 
+import {useAgendaPanel} from '../../../AgendaPanelContext';
 import DayEventsList from './DayEventsList';
 import {TDayProps} from './types';
 
@@ -27,6 +21,7 @@ const Day = ({date}: TDayProps) => {
   const [, setSearchParams] = useSearchParams();
 
   const dispatch = useAppDispatch();
+  const {openFor} = useAgendaPanel();
 
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
@@ -39,10 +34,15 @@ const Day = ({date}: TDayProps) => {
   const dateMonth = formatDate(moment(date), 'M');
 
   const currentDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
-  const day = formatDate(getDate(date), 'DD');
+  // mobile numerals have no leading zero (matches the prototype)
+  const day = formatDate(getDate(date), isMobileScreen ? 'D' : 'DD');
 
   const handleDayClick = () => {
-    if (!isMobileScreen) return;
+    if (!isMobileScreen) {
+      openFor(date);
+
+      return;
+    }
 
     const isCurrentDate = date === fullDate;
 
@@ -50,60 +50,52 @@ const Day = ({date}: TDayProps) => {
     setSearchParams(isCurrentDate ? '' : `?${CURRENT_DATE_PARAMS_KEY}=${date}`);
   };
 
-  const handleOpen = () => {
-    dispatch(onOpenItem(EVENT_FORM_ID));
-    dispatch(setEventFormData({actionType: FormActionType.create, date}));
-  };
-
   return (
-    <motion.div
-      tabIndex={-1}
-      role="button"
+    <div
       ref={dayRef}
       onClick={handleDayClick}
-      initial={{opacity: 0}}
-      animate={{opacity: 1}}
-      transition={{duration: 0.5, ease: 'easeOut'}}
       className={cx(
-        'group flex flex-col gap-1.5 relative justify-between not-nth-[7n]:border-r border-b border-secondary-background-color p-1 lg:p-3 transition-all cursor-default',
+        'group flex flex-col gap-1 relative min-h-0 min-w-0 border-r border-b border-line p-1.5 transition-colors cursor-default',
         {
-          'bg-mainBackgroundColor': dateMonth !== currentMonth,
+          'bg-surface-sunken': dateMonth !== currentMonth,
+          'md:hover:bg-surface-raised': true,
+          'z-10 outline-2 -outline-offset-2 outline-action': date === selectedDate,
         },
-        'max-md:bg-transparent max-md:border-none max-md:items-center',
+        'max-md:border-none max-md:items-center max-md:justify-start max-md:min-h-11 max-md:gap-1.5 max-md:p-0 max-md:pt-1.5',
       )}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center md:gap-2 text-xs sm:text-base">
-          <span
+      <div className="flex items-center justify-between md:h-7 shrink-0">
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            tabIndex={isMobileScreen ? -1 : 0}
+            aria-pressed={date === selectedDate}
+            aria-label={`${formatDate(getDate(date), 'dddd D MMMM')}, ${events.length === 1 ? '1 event' : `${events.length} events`}`}
+            onClick={e => {
+              e.stopPropagation();
+              handleDayClick();
+            }}
             className={cx(
-              'rounded-full p-1 w-8 h-8 lg:w-8 lg:h-8 flex items-center justify-center text-white border border-transparent transition-colors',
+              'cursor-pointer font-display font-extrabold tracking-tight text-xl md:text-[22px] leading-none px-1 min-w-8 h-8 md:min-w-7 md:h-7 flex items-center justify-center text-text transition-colors',
               {
-                'border-blue-500': date === selectedDate && isMobileScreen,
-                'text-[#444444]': dateMonth !== currentMonth,
-                'bg-blue-600 border-none text-white': currentDate === date,
+                'underline decoration-action decoration-2 underline-offset-4':
+                  date === selectedDate && currentDate !== date,
+                'text-text-faint': dateMonth !== currentMonth,
+                'bg-info text-info-ink': currentDate === date,
               },
             )}>
             <time dateTime={date}>{day}</time>
-          </span>
-
-          <Button
-            title="Open day page"
-            kind="link"
-            to={`/day/${date}`}
-            className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
-            startIcon={<ExternalPage size="size-5" />}
-          />
+          </button>
         </div>
 
-        <Button
-          title="Create event"
-          className="p-0 bg-transparent border-none max-md:hidden invisible opacity-0 transition-all md:group-hover:visible md:group-hover:opacity-100"
-          startIcon={<AddIcon size="size-5" />}
-          onClick={handleOpen}
-        />
+        {events.length > 0 && !isMobileScreen && (
+          <span className="font-mono border border-line-strong px-1 text-[10px] leading-4 text-text-muted">
+            {events.length}
+          </span>
+        )}
       </div>
 
       {isMobileScreen ? <DottedEventsList events={events} /> : <DayEventsList date={date} events={events} />}
-    </motion.div>
+    </div>
   );
 };
 
