@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import {getDayCellLabel, getWeekNumber} from '../../helpers';
+import {getDayCellLabel} from '../../helpers';
 import MixBar from './MixBar';
 import {useEventMix} from './useEventMix';
 
@@ -11,33 +11,29 @@ const ViewedDayCell = ({date, isToday}: {date: string; isToday: boolean}) => {
   const day = moment(date);
 
   return (
-    <li
-      aria-current="date"
-      className="relative flex min-w-0 flex-[2.4] flex-col justify-between gap-2 border-x border-info/60 bg-linear-to-b from-info/20 to-info/5 px-2 py-2.5 md:flex-[2.6] md:bg-linear-to-br md:from-info/20 md:via-info/8 md:to-transparent md:px-5 md:py-3">
+    <div className="animate-fade-in relative flex w-full min-w-0 flex-col justify-between gap-2 border-x border-info/60 bg-linear-to-b from-info/20 to-info/5 px-2 py-2.5 md:bg-linear-to-br md:from-info/20 md:via-info/8 md:to-transparent md:px-5 md:py-3">
       <span aria-hidden className="absolute inset-x-0 top-0 h-0.5 bg-info" />
       <span className="sr-only">
         {getDayCellLabel(date, colors.length)}
         {isToday && ', today'}, viewed day
       </span>
 
-      <div aria-hidden className="flex items-end gap-2 md:gap-4">
+      <div aria-hidden className="flex flex-col gap-1.5 md:flex-row md:items-end md:gap-4">
         <time
           dateTime={date}
           className="font-display text-[52px] leading-[0.78] font-extrabold tracking-tighter text-info md:text-7xl">
           {day.format('D')}
         </time>
 
-        <div className="flex min-w-0 flex-col">
-          <span className="truncate text-sm leading-none font-semibold md:hidden">{day.format('ddd')}</span>
+        <div className="flex min-w-0 flex-col max-md:flex-row max-md:flex-wrap max-md:items-baseline max-md:gap-x-1.5">
+          <span className="text-sm leading-none font-semibold whitespace-nowrap md:hidden">{day.format('dddd')}</span>
           {isToday && (
-            <span className="mt-1 font-mono text-[10px] font-medium tracking-wider text-info uppercase md:hidden">
+            <span className="font-mono text-[10px] font-medium tracking-wider text-info uppercase md:hidden">
               Today
             </span>
           )}
           <span className="truncate text-xl leading-tight font-semibold max-md:hidden">{day.format('dddd')}</span>
-          <span className="truncate text-sm text-text-muted max-md:hidden">
-            {day.format('MMMM YYYY')}, week {getWeekNumber(date)}
-          </span>
+          <span className="truncate text-sm text-text-muted max-md:hidden">{day.format('MMMM YYYY')}</span>
         </div>
 
         {isToday && (
@@ -48,7 +44,7 @@ const ViewedDayCell = ({date, isToday}: {date: string; isToday: boolean}) => {
       </div>
 
       <MixBar colors={colors} tall />
-    </li>
+    </div>
   );
 };
 

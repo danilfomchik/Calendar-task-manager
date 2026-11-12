@@ -1,4 +1,4 @@
-import {setFullDate, shiftMonth} from '@/redux/date/dateSlice';
+import {requestToday, setFullDate, shiftMonth} from '@/redux/date/dateSlice';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate, getDate} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
@@ -14,6 +14,7 @@ const ChangeMonthControl = () => {
     const currentFullDate = formatDate(getDate(new Date()), 'YYYY-MM-DD');
 
     dispatch(setFullDate(currentFullDate));
+    dispatch(requestToday());
   };
 
   return (

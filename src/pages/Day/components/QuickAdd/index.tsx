@@ -27,6 +27,7 @@ const QuickAdd = ({date}: {date: string}) => {
   const defaultCalendar =
     activeCalendars.length === 1 ? activeCalendars[0] : (lastUsedCalendar ?? calendarsList[0].name);
   const calendar = picked?.filterKey === filterKey ? picked.calendar : defaultCalendar;
+  const calendarColor = calendarsList.find(({name}) => name === calendar)?.itemColor;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -43,7 +44,8 @@ const QuickAdd = ({date}: {date: string}) => {
     <form
       aria-label="Quick add"
       onSubmit={handleSubmit}
-      className="flex min-h-12 flex-wrap items-center gap-x-3 border border-line-strong bg-surface-sunken pl-3 transition-colors focus-within:border-text-muted has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-2 has-[>input:focus-visible]:outline-action">
+      style={calendarColor ? ({'--calendar-color': calendarColor} as React.CSSProperties) : undefined}
+      className="flex min-h-12 flex-wrap items-center gap-x-3 border border-(--calendar-color,var(--color-line-strong)) bg-surface-sunken pl-3 transition-colors">
       <input
         ref={inputRef}
         value={title}
@@ -68,7 +70,7 @@ const QuickAdd = ({date}: {date: string}) => {
               key={name}
               title={name}
               style={{'--calendar-color': itemColor} as React.CSSProperties}
-              className="flex size-11 cursor-pointer items-center justify-center md:size-8">
+              className="flex h-11 w-7 cursor-pointer items-center justify-center md:size-8">
               <input
                 type="radio"
                 name="quick-add-calendar"

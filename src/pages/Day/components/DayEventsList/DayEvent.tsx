@@ -11,8 +11,14 @@ import {EVENT_FORM_ID} from '@/services/constants';
 import {cx} from '@/services/utils';
 import {FormActionType} from '@/types/eventFormTypes';
 
-const CONTROL_CLASS =
-  'flex size-11 shrink-0 cursor-pointer items-center justify-center text-text-muted transition-colors disabled:cursor-not-allowed disabled:opacity-40 md:size-9';
+const CONTROL_BASE_CLASS =
+  'flex size-11 shrink-0 cursor-pointer items-center justify-center border border-line text-text-muted transition-colors disabled:cursor-not-allowed disabled:opacity-40 md:size-9';
+const CONTROL_CLASS = cx(CONTROL_BASE_CLASS, 'enabled:hover:border-action enabled:hover:text-action');
+// Delete uses the design system red (the Button red variants' red-400)
+const DELETE_CONTROL_CLASS = cx(
+  CONTROL_BASE_CLASS,
+  'text-red-400 enabled:hover:border-red-400 enabled:hover:bg-red-400/10',
+);
 
 // One row of the Day events list: Home's Agenda row plus explicit edit and delete controls.
 // A Dimmed event stays visible (dashed, hollow bar, italic) but its controls are disabled.
@@ -66,14 +72,14 @@ const DayEvent = ({event, isDimmed}: {event: TEvent; isDimmed: boolean}) => {
         </span>
       </div>
 
-      <div className="flex shrink-0 items-center self-center pr-1">
+      <div className="flex shrink-0 items-center gap-1.5 self-center pr-2">
         <button
           type="button"
           disabled={isDimmed}
           onClick={handleEdit}
           aria-label={`Edit ${event.title}`}
           title="Edit event"
-          className={cx(CONTROL_CLASS, 'enabled:hover:text-action')}>
+          className={CONTROL_CLASS}>
           <EditIcon className="size-4" aria-hidden />
         </button>
         <button
@@ -82,7 +88,7 @@ const DayEvent = ({event, isDimmed}: {event: TEvent; isDimmed: boolean}) => {
           onClick={handleDelete}
           aria-label={`Delete ${event.title}`}
           title="Delete event"
-          className={cx(CONTROL_CLASS, 'enabled:hover:text-text')}>
+          className={DELETE_CONTROL_CLASS}>
           <DeleteIcon className="size-4" aria-hidden />
         </button>
       </div>

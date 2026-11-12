@@ -6,7 +6,7 @@ import {useMatch, useNavigate} from 'react-router';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useAgendaPanel} from '@/pages/Main/AgendaPanelContext';
 import {setFullDate} from '@/redux/date/dateSlice';
-import {selectFullDate, selectMonth, selectSelectedDate, selectYear} from '@/redux/date/selectors';
+import {selectFullDate, selectSelectedDate, selectTodayRequests} from '@/redux/date/selectors';
 import {selectAllEventsByDate} from '@/redux/events/selectors';
 import {setIsOpenSidebar} from '@/redux/sidebar/sidebarSlice';
 import {useAppDispatch} from '@/redux/store';
@@ -51,22 +51,20 @@ const MonthSmallCalendar = ({className = ''}) => {
 
   const fullDate = useSelector(selectFullDate);
   const selectedDate = useSelector(selectSelectedDate);
-  const year = useSelector(selectYear);
-  const month = useSelector(selectMonth);
   const eventsByDate = useSelector(selectAllEventsByDate);
 
   const viewedDay = useViewedDay();
+  const todayRequests = useSelector(selectTodayRequests);
 
-  // On the Day page the shown month follows the Viewed day (the URL), not the date slice, so browsing
-  // here never moves Home's Month grid. The offset from the month-step buttons resets when the Viewed day changes.
-  const [monthOffset, setMonthOffset] = useState({viewedDay, by: 0});
-  const offset = monthOffset.viewedDay === viewedDay ? monthOffset.by : 0;
+  // The shown month starts from the Viewed day (Day page) or Home's visible month, and the month-step buttons
+  // browse from there without moving Home's Month grid. The offset resets when that anchor changes or Today is requested.
+  const anchor = viewedDay ?? fullDate;
+  const [monthOffset, setMonthOffset] = useState({anchor, todayRequests, by: 0});
+  const offset = monthOffset.anchor === anchor && monthOffset.todayRequests === todayRequests ? monthOffset.by : 0;
 
-  const shownMonth = viewedDay
-    ? moment(viewedDay, DATE_KEY_FORMAT).add(offset, 'M')
-    : moment(fullDate, DATE_KEY_FORMAT);
-  const shownYear = viewedDay ? formatDate(shownMonth, 'YYYY') : (year as string);
-  const shownMonthName = viewedDay ? formatDate(shownMonth, 'MMMM') : (month as string);
+  const shownMonth = moment(anchor, DATE_KEY_FORMAT).add(offset, 'M');
+  const shownYear = formatDate(shownMonth, 'YYYY');
+  const shownMonthName = formatDate(shownMonth, 'MMMM');
 
   const dates = generateDatesArray(shownYear, shownMonthName);
   const weekDays = getWeekDays();
@@ -83,7 +81,7 @@ const MonthSmallCalendar = ({className = ''}) => {
     formatDate(shownMonth.clone().startOf('month'), DATE_KEY_FORMAT);
   const dayButtons = useRef(new Map<string, HTMLButtonElement>());
 
-  const shiftShownMonth = (by: number) => setMonthOffset({viewedDay, by: offset + by});
+  const shiftShownMonth = (by: number) => setMonthOffset({anchor, todayRequests, by: offset + by});
 
   const handleDayClick = (date: string) => {
     if (viewedDay) {
@@ -95,9 +93,9 @@ const MonthSmallCalendar = ({className = ''}) => {
       return;
     }
 
-    // Home: select the date and open the Agenda panel for it, as a Month grid cell does; a day of a
-    // neighbouring month also brings that month into view
-    if (!moment(date).isSame(shownMonth, 'month')) dispatch(setFullDate(date));
+    // Home: select the date and open the Agenda panel for it, as a Month grid cell does; a day outside the
+    // grid's month also brings its month into view
+    if (!moment(date).isSame(fullDate, 'month')) dispatch(setFullDate(date));
 
     openFor(date);
   };
@@ -124,24 +122,22 @@ const MonthSmallCalendar = ({className = ''}) => {
           {shownMonthName} {shownYear}
         </p>
 
-        {viewedDay && (
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              aria-label="Previous month"
-              className={MONTH_CONTROL_CLASS}
-              onClick={() => shiftShownMonth(-1)}>
-              ‹
-            </button>
-            <button
-              type="button"
-              aria-label="Next month"
-              className={MONTH_CONTROL_CLASS}
-              onClick={() => shiftShownMonth(1)}>
-              ›
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            aria-label="Previous month"
+            className={MONTH_CONTROL_CLASS}
+            onClick={() => shiftShownMonth(-1)}>
+            ‹
+          </button>
+          <button
+            type="button"
+            aria-label="Next month"
+            className={MONTH_CONTROL_CLASS}
+            onClick={() => shiftShownMonth(1)}>
+            ›
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-7 gap-px" onKeyDown={handleGridKeyDown}>

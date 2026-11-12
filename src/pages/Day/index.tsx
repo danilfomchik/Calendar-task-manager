@@ -31,7 +31,8 @@ const DayPage = () => {
         <DayContext date={viewedDate} />
       </div>
 
-      <div className="fixed right-4 bottom-4 left-4 z-30 flex items-end gap-2 md:hidden">
+      {/* a solid docked bar, so events scrolling underneath never show through around the buttons */}
+      <div className="fixed inset-x-0 bottom-0 z-30 flex items-end gap-2 border-t border-line bg-surface-sunken px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] md:hidden">
         <ContextButton date={viewedDate} />
         <AddEventDayButton date={viewedDate} floating />
       </div>

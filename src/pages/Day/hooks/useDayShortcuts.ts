@@ -3,6 +3,7 @@ import {useSelector} from 'react-redux';
 import {useNavigate} from 'react-router';
 
 import {useMediaQuery} from '@/hooks/useMediaQuery';
+import {requestToday} from '@/redux/date/dateSlice';
 import {setEventFormData} from '@/redux/events/eventsSlice';
 import {onOpenItem} from '@/redux/overflow/overflowSlice';
 import {selectOpenedItems} from '@/redux/overflow/selectors';
@@ -39,7 +40,10 @@ export const useDayShortcuts = (date: string) => {
     const actions: Record<string, () => void> = {
       arrowleft: () => navigate(getDayPath(shiftDay(date, -1))),
       arrowright: () => navigate(getDayPath(shiftDay(date, 1))),
-      t: () => navigate(getDayPath(getTodayKey())),
+      t: () => {
+        dispatch(requestToday());
+        navigate(getDayPath(getTodayKey()));
+      },
       n: openAddEvent,
     };
 

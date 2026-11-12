@@ -1,13 +1,16 @@
 import {useState} from 'react';
 import {useSelector} from 'react-redux';
+import {useNavigate} from 'react-router';
 
 import SidebarToggle from '@/components/common/SidebarToggle';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
+import {requestToday} from '@/redux/date/dateSlice';
 import {selectIsSidebarOpen} from '@/redux/sidebar/selectors';
-import {TDirection} from '@/services/dateUtils';
+import {useAppDispatch} from '@/redux/store';
+import {TDirection, getDayPath, getTodayKey} from '@/services/dateUtils';
+import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
 
-import {getWeekNumber, shiftDay} from '../../helpers';
 import WeekStrip from '../WeekStrip';
 import AddEventDayButton from './AddEventDayButton';
 import BackToMonth from './BackToMonth';
@@ -27,8 +30,15 @@ const Masthead = ({date}: {date: string}) => {
     setSwipeOffset(0);
   }
 
-  // desktop has no swipe, so it always shows the Viewed day's week
-  const weekOffset = isMobile ? swipeOffset : 0;
+  const weekOffset = swipeOffset;
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const handleToday = () => {
+    setSwipeOffset(0);
+    dispatch(requestToday());
+    navigate(getDayPath(getTodayKey()));
+  };
 
   const handleSwipe = (direction: TDirection) => setSwipeOffset(offset => offset + direction);
 
@@ -43,26 +53,25 @@ const Masthead = ({date}: {date: string}) => {
         <div className="flex flex-1 items-center gap-3 md:gap-4">
           <BackToMonth date={date} />
 
-          <div className="ml-auto flex items-center gap-3 md:hidden">
-            {/* below 390px the row can't also fit "Back to {day}"; the Week strip's nav label still names the week */}
-            <span
-              className={cx(
-                'font-mono text-[11px] tracking-wider whitespace-nowrap text-text-faint uppercase',
-                weekOffset !== 0 && 'max-[389px]:hidden',
-              )}>
-              Week {getWeekNumber(shiftDay(date, weekOffset * 7))}
-            </span>
+          {weekOffset !== 0 && (
+            <BackToViewedWeek date={date} onClick={() => setSwipeOffset(0)} className="max-md:ml-auto" />
+          )}
 
-            {weekOffset !== 0 && <BackToViewedWeek date={date} onClick={() => setSwipeOffset(0)} />}
-          </div>
-
-          <div className="ml-auto max-md:hidden">
+          <div className="ml-auto flex items-center gap-3 max-md:hidden">
+            <button type="button" onClick={handleToday} className={HAIRLINE_CONTROL_CLASS}>
+              Today
+            </button>
             <AddEventDayButton date={date} />
           </div>
         </div>
       </div>
 
-      <WeekStrip date={date} weekOffset={weekOffset} onSwipe={isMobile ? handleSwipe : undefined} />
+      <WeekStrip
+        date={date}
+        weekOffset={weekOffset}
+        onStep={handleSwipe}
+        onSwipe={isMobile ? handleSwipe : undefined}
+      />
     </header>
   );
 };

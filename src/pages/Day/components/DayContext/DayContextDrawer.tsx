@@ -19,7 +19,7 @@ const DayContextDrawer = ({date}: {date: string}) => {
         aria-label="Day context"
         {...inertProps(!isDrawerOpen)}
         className={cx(
-          'shrink-0 overflow-hidden border-line transition-[width] duration-300 ease-out motion-reduce:transition-none',
+          'shrink-0 overflow-hidden border-action transition-[width] duration-300 ease-out motion-reduce:transition-none',
           isDrawerOpen ? 'w-80 border-l' : 'w-0',
         )}>
         <div className="h-full w-80 overflow-y-auto p-4">

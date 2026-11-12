@@ -1,5 +1,5 @@
 import {PanInfo, motion} from 'motion/react';
-import {ReactNode, useMemo} from 'react';
+import {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import {useGetDayConditionsQuery} from '@/redux/conditions/conditionsApi';
@@ -7,6 +7,7 @@ import {useGetDayHolidaysInfoQuery} from '@/redux/dateHolidaysGenerator/holidays
 import {selectDayNote} from '@/redux/dayNotes/selectors';
 import {selectAllEventsByDate, selectEventsById} from '@/redux/events/selectors';
 import {getTodayKey} from '@/services/dateUtils';
+import {cx} from '@/services/utils';
 
 import {useDayContext} from './DayContextState';
 import {IS_AI_INSIGHTS_ENABLED} from './blocks/AIInsights/enabled';
@@ -16,13 +17,14 @@ import {useConditionsLocation} from './blocks/Conditions/useConditionsLocation';
 import {describeWeatherCode} from './blocks/Conditions/weatherCode';
 import {getUpcomingDays} from './blocks/Upcoming/getUpcomingDays';
 import {DAY_CONTEXT_BUTTON_ID, DAY_CONTEXT_SHEET_ID} from './constants';
+import {InsightIcon, NoteIcon, PanelBottomIcon} from './icons';
 
 // An upward drag this long (px) or this fast (px/s) opens the sheet, like the sheet's own downward flick to close
 const OPEN_DRAG_DISTANCE = 24;
 const OPEN_FLICK_VELOCITY = 250;
 
 const Chip = ({children}: {children: ReactNode}) => (
-  <span className="shrink-0 border border-line bg-surface-base px-1.5 py-0.5 font-mono text-[11px] tracking-wide whitespace-nowrap text-text-muted">
+  <span className="inline-flex shrink-0 items-center gap-1.5 border border-line bg-surface-raised px-2 py-0.5 font-mono text-[11px] leading-4 tracking-wide whitespace-nowrap text-text-muted">
     {children}
   </span>
 );
@@ -54,7 +56,7 @@ const useChips = (date: string) => {
       key: 'weather',
       label: (
         <>
-          <span aria-hidden>{describeWeatherCode(conditions.weatherCode).glyph}</span>{' '}
+          <span aria-hidden>{describeWeatherCode(conditions.weatherCode).glyph}</span>
           {Math.round(conditions.temperatureMax)}°/{Math.round(conditions.temperatureMin)}°
         </>
       ),
@@ -67,7 +69,7 @@ const useChips = (date: string) => {
       key: 'note',
       label: (
         <>
-          <span aria-hidden>📝</span> Note
+          <NoteIcon className="text-action" /> Note
         </>
       ),
     });
@@ -76,7 +78,7 @@ const useChips = (date: string) => {
       key: 'insights',
       label: (
         <>
-          <span aria-hidden>✦</span> Insights
+          <InsightIcon className="text-action" /> Insights
         </>
       ),
     });
@@ -85,11 +87,28 @@ const useChips = (date: string) => {
 };
 
 // Mobile Context button (fills the bar to the left of the floating Add event). Closed, it is the top of the Bottom
-// sheet peeking above the screen's bottom: a grab handle, the title with an up chevron and a chip per block that
-// has something to show. A tap or an upward drag opens the sheet.
+// sheet peeking above the screen's bottom: a grab handle, the title and a chip per block that
+// has something to show. A tap or an upward drag opens the sheet; the chips swipe sideways.
 const ContextButton = ({date}: {date: string}) => {
   const {isSheetOpen, openSheet} = useDayContext();
   const chips = useChips(date);
+  const chipsRef = useRef<HTMLSpanElement>(null);
+  // the right-edge fade only shows while more chips are hidden past it
+  const [hasMore, setHasMore] = useState(false);
+
+  const updateHasMore = useCallback(() => {
+    const el = chipsRef.current;
+    if (el) setHasMore(el.scrollWidth - el.clientWidth - el.scrollLeft > 1);
+  }, []);
+
+  useEffect(() => {
+    const el = chipsRef.current;
+    if (!el) return;
+    updateHasMore();
+    const observer = new ResizeObserver(updateHasMore);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [updateHasMore, chips.length]);
 
   const onPanEnd = (_: PointerEvent, {offset, velocity}: PanInfo) => {
     if (offset.y < -OPEN_DRAG_DISTANCE || velocity.y < -OPEN_FLICK_VELOCITY) openSheet();
@@ -104,21 +123,22 @@ const ContextButton = ({date}: {date: string}) => {
       aria-haspopup="dialog"
       onClick={openSheet}
       onPanEnd={onPanEnd}
-      className="relative flex h-18 min-w-0 flex-1 cursor-pointer touch-none flex-col justify-end gap-1.5 border border-line-strong bg-surface-base px-3 pb-2.5 text-left shadow-lg active:bg-surface-overlay">
-      <span aria-hidden className="absolute top-1.5 left-1/2 h-1 w-10 -translate-x-1/2 bg-line-strong" />
-      <span className="flex items-center justify-between font-mono text-[11px] tracking-widest text-action uppercase">
-        <span>
-          <span aria-hidden>✦</span> Day context
-        </span>
-        <span aria-hidden className="text-base leading-none">
-          ⌃
-        </span>
+      className="relative flex h-14 min-w-0 flex-1 cursor-pointer touch-pan-x flex-col justify-end gap-1 border border-line-strong bg-surface-base px-3 pb-1.5 text-left shadow-lg active:bg-surface-overlay">
+      <span aria-hidden className="absolute top-1 left-1/2 h-0.75 w-8 -translate-x-1/2 bg-line-strong" />
+      <span className="flex items-center gap-2 font-mono text-[11px] leading-none tracking-widest text-action uppercase">
+        <PanelBottomIcon />
+        Day context
       </span>
-      <span className="flex min-h-6 w-full gap-1.5 overflow-hidden">
+      <span
+        ref={chipsRef}
+        onScroll={updateHasMore}
+        className={cx('flex min-h-5.5 w-full gap-1.5 overflow-x-auto overscroll-x-contain scrollbar-none', {
+          'mask-[linear-gradient(to_right,#000_calc(100%-24px),transparent)]': hasMore,
+        })}>
         {chips.length ? (
           chips.map(chip => <Chip key={chip.key}>{chip.label}</Chip>)
         ) : (
-          <span className="font-mono text-[11px] tracking-wide text-text-faint">Weather · Upcoming · Note</span>
+          <span className="font-mono text-[11px] tracking-wide text-text-faint">Weather, upcoming, note</span>
         )}
       </span>
     </motion.button>

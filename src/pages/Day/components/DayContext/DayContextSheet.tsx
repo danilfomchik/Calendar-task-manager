@@ -7,6 +7,7 @@ import DayContextBlocks from './DayContextBlocks';
 import {useDayContext} from './DayContextState';
 import {DAY_CONTEXT_BUTTON_ID, DAY_CONTEXT_SHEET_ID} from './constants';
 import {inertProps} from './helpers';
+import {PanelBottomIcon} from './icons';
 
 const FLICK_VELOCITY = 250;
 // a click right after a drag is the tail of that same gesture, not a tap
@@ -103,10 +104,8 @@ const DayContextSheet = ({date}: {date: string}) => {
         <div onPointerDown={startDrag} className="shrink-0 cursor-grab touch-none">
           <span aria-hidden className="mx-auto mt-2 block h-1 w-10 bg-line-strong" />
           <div className="flex items-center justify-between gap-3 pl-4">
-            <h2 className="font-mono text-[11px] tracking-widest text-text-faint uppercase">
-              <span aria-hidden className="mr-2 text-action">
-                ✦
-              </span>
+            <h2 className="flex items-center gap-2 font-mono text-[11px] tracking-widest text-action uppercase">
+              <PanelBottomIcon />
               Day context
             </h2>
             <button
