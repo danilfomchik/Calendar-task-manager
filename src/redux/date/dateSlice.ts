@@ -28,6 +28,12 @@ const reducers = {
   setSelectedDate: (state: TDateState, action: PayloadAction<string>) => {
     state.selectedDate = action.payload;
   },
+  requestToday: (state: TDateState) => {
+    state.todayRequests += 1;
+  },
+  markMonthGridShown: (state: TDateState) => {
+    state.hasShownMonthGrid = true;
+  },
 };
 
 const currentDate = getDate(new Date());
@@ -38,6 +44,8 @@ const initialState: TDateState = {
   month: formatDate(currentDate, 'MMMM'),
   day: formatDate(currentDate, 'DD'),
   selectedDate: formatDate(currentDate, 'YYYY-MM-DD'),
+  hasShownMonthGrid: false,
+  todayRequests: 0,
 };
 
 const dateSlice = createSlice({
@@ -46,5 +54,5 @@ const dateSlice = createSlice({
   reducers,
 });
 
-export const {setFullDate, setSelectedDate, shiftMonth} = dateSlice.actions;
+export const {setFullDate, setSelectedDate, shiftMonth, markMonthGridShown, requestToday} = dateSlice.actions;
 export default dateSlice;

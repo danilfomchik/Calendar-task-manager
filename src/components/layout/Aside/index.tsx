@@ -24,9 +24,11 @@ const Aside = () => {
 
       <aside
         className={cx(
-          'fixed left-0 top-0 bottom-0 w-60 py-5 border-r border-line bg-surface-sunken transition-transform duration-200 ease-out translate-x-0 z-70 max-w-60',
+          // Below md the sidebar is an overlay, wide enough for 44px mini-calendar days (7 x 44 + gaps + padding);
+          // from md it is the 240px column the page is offset by (md:ml-60)
+          'fixed left-0 top-0 bottom-0 w-86 max-w-[calc(100vw-1rem)] md:w-60 md:max-w-60 py-5 border-r border-line bg-surface-sunken transition-transform duration-200 ease-out translate-x-0 z-70',
           {
-            '-translate-x-60': !isOpen,
+            '-translate-x-full': !isOpen,
           },
         )}>
         <div className="flex items-center justify-between gap-3 px-4 pb-5">

@@ -12,10 +12,12 @@ interface ISwipeSlideProps {
   slideKey: string;
   onSwipe: (direction: TDirection) => void;
   className?: string;
+  // false: animates the slide change but ignores drags (desktop, where the chevrons step the week)
+  isDraggable?: boolean;
   children: ReactNode;
 }
 
-const SwipeSlide = ({slideKey, onSwipe, className, children}: ISwipeSlideProps) => {
+const SwipeSlide = ({slideKey, onSwipe, className, isDraggable = true, children}: ISwipeSlideProps) => {
   // 1 - next (slides in from the right), -1 - previous (slides in from the left)
   const directionRef = useRef<TDirection>(1);
   const prevKeyRef = useRef(slideKey);
@@ -41,7 +43,7 @@ const SwipeSlide = ({slideKey, onSwipe, className, children}: ISwipeSlideProps) 
   return (
     <motion.div
       key={slideKey}
-      drag="x"
+      drag={isDraggable ? 'x' : false}
       dragSnapToOrigin
       dragElastic={0.2}
       dragConstraints={{left: 0, right: 0}}
