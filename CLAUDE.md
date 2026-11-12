@@ -4,10 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-- `npm run dev` — Vite dev server
-- `npm run build` — `tsc -b && vite build` (type-check is part of the build)
-- `npm run lint:all` / `npm run format:check:all` — what CI runs (CI actually runs `format:all`, which writes, then `lint:all` with `--max-warnings 0`, then `build`)
-- `npm run lint:file -- <path>` / `npm run format:file -- <path>` — single file
+- CI runs `format:check:all`, `lint:all` (`--max-warnings 0`) and `build`; `lint:file -- <path>` / `format:file -- <path>` target a single file.
 - Husky pre-commit runs `lint-staged` (prettier + eslint --fix) **and a full `npm run build`**, so commits fail on any type error.
 - There is no test runner configured.
 

@@ -25,8 +25,13 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'no-console': 'warn',
+      'no-restricted-imports': [
+        'error',
+        {paths: [{name: 'classnames', message: "Use `cx` from '@/services/utils' for class merging."}]},
+      ],
       'react-refresh/only-export-components': ['warn', {allowConstantExport: true}],
       'prettier/prettier': 'warn',
     },
   },
+  {files: ['src/services/utils.ts'], rules: {'no-restricted-imports': 'off'}},
 );
