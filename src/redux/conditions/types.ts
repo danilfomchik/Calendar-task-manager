@@ -57,3 +57,14 @@ export type TOpenMeteoGeocodingResponse = {
     admin1?: string;
   }[];
 };
+
+// Raw BigDataCloud reverse-geocode row (only what we read)
+export type TReverseGeocodeResponse = {
+  city?: string;
+  locality?: string;
+  principalSubdivision?: string;
+  countryName?: string;
+};
+
+// A position to look a place name up for
+export type TPlaceNameQueryArgs = {latitude: number; longitude: number};

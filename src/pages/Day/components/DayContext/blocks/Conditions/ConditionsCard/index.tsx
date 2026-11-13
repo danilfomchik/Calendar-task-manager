@@ -1,4 +1,4 @@
-import {useGetDayConditionsQuery} from '@/redux/conditions/conditionsApi';
+import {useGetDayConditionsQuery, useGetPlaceNameQuery} from '@/redux/conditions/conditionsApi';
 import {TDayConditions} from '@/redux/conditions/types';
 
 import ChangeLocationButton from '../ChangeLocationButton';
@@ -31,6 +31,8 @@ const ConditionsCard = ({
 }: TConditionsCardProps) => {
   const {latitude, longitude} = location;
   const {data, isFetching, isError} = useGetDayConditionsQuery({date, latitude, longitude, source});
+  // A device position has no name of its own: look the city up (the card shows the weather meanwhile)
+  const {data: placeName} = useGetPlaceNameQuery({latitude, longitude}, {skip: location.source !== 'device'});
 
   if (isFetching) return <ConditionsSkeleton />;
   if (isError || !data) return null;
@@ -42,7 +44,7 @@ const ConditionsCard = ({
     <ConditionsFrame
       label={
         <ChangeLocationButton
-          name={location.name}
+          name={location.name ?? placeName ?? null}
           isApproximate={isApproximate}
           onClick={onChangeLocation}
           autoFocus={focusChange}

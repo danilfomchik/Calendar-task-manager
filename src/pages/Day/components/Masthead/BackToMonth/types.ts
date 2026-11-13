@@ -1,1 +1,1 @@
-export type TBackToMonthProps = {date: string};
+export type TBackToMonthProps = {date: string; compact?: boolean};

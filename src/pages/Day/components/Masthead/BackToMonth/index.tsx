@@ -6,6 +6,7 @@ import {setFullDate, setSelectedDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectHasShownMonthGrid} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
+import {cx} from '@/services/utils';
 import {RouterPaths} from '@/types/types';
 
 import {TBackToMonthProps} from './types';
@@ -15,7 +16,7 @@ import {TBackToMonthProps} from './types';
 // On a direct load (or reload) of a Day URL there is no such month, so show the Viewed day's month with the
 // Viewed day selected. Not navigate(-1): after stepping between days that would land on the previous day,
 // and on a direct load it would leave the app.
-const BackToMonth = ({date}: TBackToMonthProps) => {
+const BackToMonth = ({date, compact = false}: TBackToMonthProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const hasShownMonthGrid = useSelector(selectHasShownMonthGrid);
@@ -33,7 +34,8 @@ const BackToMonth = ({date}: TBackToMonthProps) => {
 
   return (
     <button type="button" onClick={handleClick} aria-label={`Back to ${monthLabel}`} className={HAIRLINE_CONTROL_CLASS}>
-      <span aria-hidden>‹</span> {monthLabel}
+      <span aria-hidden>‹</span>
+      <span className={cx({'max-md:hidden': compact})}>{monthLabel}</span>
     </button>
   );
 };
