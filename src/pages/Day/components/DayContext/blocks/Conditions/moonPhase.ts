@@ -8,22 +8,21 @@ const PRINCIPAL_TOLERANCE = 1 / SYNODIC_MONTH_DAYS;
 export type TMoonPhase = {
   fraction: number; // 0 new, 0.25 first quarter, 0.5 full, 0.75 last quarter (as Open-Meteo's moon_phase)
   name: string;
-  glyph: string;
 };
 
 const PRINCIPAL_PHASES = [
-  {at: 0, name: 'New moon', glyph: '🌑'},
-  {at: 0.25, name: 'First quarter', glyph: '🌓'},
-  {at: 0.5, name: 'Full moon', glyph: '🌕'},
-  {at: 0.75, name: 'Last quarter', glyph: '🌗'},
-  {at: 1, name: 'New moon', glyph: '🌑'},
+  {at: 0, name: 'New moon'},
+  {at: 0.25, name: 'First quarter'},
+  {at: 0.5, name: 'Full moon'},
+  {at: 0.75, name: 'Last quarter'},
+  {at: 1, name: 'New moon'},
 ];
 
 const INTERMEDIATE_PHASES = [
-  {name: 'Waxing crescent', glyph: '🌒'},
-  {name: 'Waxing gibbous', glyph: '🌔'},
-  {name: 'Waning gibbous', glyph: '🌖'},
-  {name: 'Waning crescent', glyph: '🌘'},
+  {name: 'Waxing crescent'},
+  {name: 'Waxing gibbous'},
+  {name: 'Waning gibbous'},
+  {name: 'Waning crescent'},
 ];
 
 // Moon phase at noon UTC of a YYYY-MM-DD day, from the mean synodic month (good to well under a day,
@@ -35,7 +34,7 @@ export const getMoonPhase = (date: string): TMoonPhase => {
   const fraction = lunations - Math.floor(lunations);
 
   const principal = PRINCIPAL_PHASES.find(phase => Math.abs(fraction - phase.at) <= PRINCIPAL_TOLERANCE);
-  const {name, glyph} = principal ?? INTERMEDIATE_PHASES[Math.floor(fraction * 4)];
+  const {name} = principal ?? INTERMEDIATE_PHASES[Math.floor(fraction * 4)];
 
-  return {fraction, name, glyph};
+  return {fraction, name};
 };

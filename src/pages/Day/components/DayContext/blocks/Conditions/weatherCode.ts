@@ -35,3 +35,18 @@ const WEATHER_CODES: Record<number, TWeatherDescription> = {
 const UNKNOWN: TWeatherDescription = {label: 'Unknown', glyph: '🌡️'};
 
 export const describeWeatherCode = (code: number): TWeatherDescription => WEATHER_CODES[code] ?? UNKNOWN;
+
+// Which Sky scene stands for a WMO code; 'night' is the scene for when there is no weather yet
+export type TSkyKind = 'clear' | 'partly' | 'overcast' | 'fog' | 'rain' | 'snow' | 'storm' | 'night';
+
+export const getSkyKind = (code: number): Exclude<TSkyKind, 'night'> => {
+  if (code <= 1) return 'clear';
+  if (code === 2) return 'partly';
+  if (code === 3) return 'overcast';
+  if (code === 45 || code === 48) return 'fog';
+  if (code >= 95) return 'storm';
+  if ((code >= 71 && code <= 77) || code === 85 || code === 86) return 'snow';
+  if (code >= 51) return 'rain';
+
+  return 'overcast';
+};

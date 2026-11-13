@@ -7,7 +7,6 @@ import {useAppDispatch} from '@/redux/store';
 
 import {DayContextBlock} from '../types';
 import ConditionsCard from './ConditionsCard';
-import ConditionsFrame from './ConditionsFrame';
 import ConditionsSkeleton from './ConditionsSkeleton';
 import LocationSearch from './LocationSearch';
 import SetLocationPrompt from './SetLocationPrompt';
@@ -68,11 +67,7 @@ const Conditions: DayContextBlock = ({date}) => {
   if (!source) return null;
 
   if (isSearching) {
-    return (
-      <ConditionsFrame>
-        <LocationSearch onPick={pickPlace} onLocateDevice={locateDevice} onCancel={closeSearch} />
-      </ConditionsFrame>
-    );
+    return <LocationSearch onPick={pickPlace} onLocateDevice={locateDevice} onCancel={closeSearch} />;
   }
 
   if (location) {
