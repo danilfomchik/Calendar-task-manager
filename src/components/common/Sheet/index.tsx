@@ -40,6 +40,8 @@ const Sheet = ({
   const layerRef = useRef<HTMLDivElement>(null);
   const [layerHeight, setLayerHeight] = useState(0);
   const y = useMotionValue(0);
+  // mirrors `collapsedY` as a motion value so values derived from `y` never hold a stale range
+  const collapsedYValue = useMotionValue(0);
   // the state the sheet has been sent to, so a prop change that only echoes our own settle doesn't re-animate
   const settledRef = useRef(isOpen);
   const animationRef = useRef<AnimationPlaybackControls | null>(null);
@@ -72,8 +74,9 @@ const Sheet = ({
   // place without animating on first measure / resize; before paint, so a closed sheet never flashes open
   useLayoutEffect(() => {
     animationRef.current?.stop();
+    collapsedYValue.set(collapsedY);
     y.set(settledRef.current ? 0 : collapsedY);
-  }, [collapsedY, y]);
+  }, [collapsedY, collapsedYValue, y]);
 
   // opened or closed from outside (a trigger button, a route change)
   useEffect(() => {
@@ -104,7 +107,9 @@ const Sheet = ({
   }, [modal, isOpen, settle]);
 
   // The backdrop follows the sheet, so it fades with the slide and with the finger
-  const backdropOpacity = useTransform(y, [collapsedY, 0], [0, 1]);
+  const backdropOpacity = useTransform([y, collapsedYValue], ([latestY, latestCollapsedY]: number[]) =>
+    latestCollapsedY > 0 ? Math.min(1, Math.max(0, 1 - latestY / latestCollapsedY)) : 0,
+  );
 
   const api: TSheetApi = {
     isOpen,

@@ -16,7 +16,8 @@ const DayContextSheet = ({date}: TDayContextSheetProps) => {
 
   useEffect(() => {
     if (isSheetOpen) {
-      closeButtonRef.current?.focus();
+      // the sheet is still sliding in: without preventScroll the browser scrolls the clipped layer to reach the button
+      closeButtonRef.current?.focus({preventScroll: true});
     } else if (document.getElementById(DAY_CONTEXT_SHEET_ID)?.contains(document.activeElement)) {
       document.getElementById(DAY_CONTEXT_BUTTON_ID)?.focus();
     }
