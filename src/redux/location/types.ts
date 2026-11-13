@@ -14,8 +14,9 @@ export type TLocation = {
 // may try again)
 export type TGeolocationStatus = 'idle' | 'pending' | 'granted' | 'denied' | 'unavailable';
 
-// Why the last device position request failed, so the UI can say it (session only)
-export type TGeolocationFailure = 'denied' | 'no-fix' | 'timeout' | 'unsupported';
+// Why the last device position request failed, so the UI can say it (session only). refused: the browser says the
+// site is allowed yet still would not give a position (seen in desktop Chrome)
+export type TGeolocationFailure = 'denied' | 'refused' | 'no-fix' | 'timeout' | 'unsupported';
 
 export type TLocationState = {
   location: TLocation | null;

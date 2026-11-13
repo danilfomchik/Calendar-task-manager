@@ -57,7 +57,7 @@ const useChips = (date: string) => {
       label: (
         <>
           <span aria-hidden>{describeWeatherCode(conditions.weatherCode).glyph}</span>
-          {Math.round(conditions.temperatureMax)}°/{Math.round(conditions.temperatureMin)}°
+          {Math.round(conditions.temperatureMin)}°/{Math.round(conditions.temperatureMax)}°
         </>
       ),
     });

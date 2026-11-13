@@ -52,17 +52,19 @@ const Masthead = ({date}: TMastheadProps) => {
         <SidebarToggle className={cx({'md:hidden': isSidebarOpen})} />
 
         <div className="flex flex-1 items-center gap-3 md:gap-4">
-          <BackToMonth date={date} />
+          <BackToMonth date={date} compact={weekOffset !== 0} />
 
           {weekOffset !== 0 && (
             <BackToViewedWeek date={date} onClick={() => setSwipeOffset(0)} className="max-md:ml-auto" />
           )}
 
-          <div className="ml-auto flex items-center gap-3 max-md:hidden">
-            <button type="button" onClick={handleToday} className={HAIRLINE_CONTROL_CLASS}>
+          <div className={cx('flex items-center gap-3 md:ml-auto', {'max-md:ml-auto': weekOffset === 0})}>
+            <button type="button" onClick={handleToday} className={cx(HAIRLINE_CONTROL_CLASS, 'shrink-0')}>
               Today
             </button>
-            <AddEventDayButton date={date} />
+            <div className="max-md:hidden">
+              <AddEventDayButton date={date} />
+            </div>
           </div>
         </div>
       </div>

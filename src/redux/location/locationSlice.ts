@@ -28,17 +28,35 @@ type TLocationThunkState = {[SliceNames.locationSlice]: TLocationState};
 
 type TRejection = {status: 'denied' | 'unavailable'; failure: TGeolocationFailure};
 
-// Asks the browser for the device position. Without `force` it runs once: the condition skips it while a location
-// is known, a request is in flight, or the user has already answered. `force` is the user asking again
-// ("Use my location"): it runs unless a request is in flight, and its result replaces a searched city.
+const readPermissionState = async (): Promise<PermissionState | null> => {
+  try {
+    return (await navigator.permissions.query({name: 'geolocation'})).state;
+  } catch {
+    return null;
+  }
+};
+
+// Asks the browser for the device position. Without `force` it runs once per session: the condition skips it while
+// a location is known or a request is in flight, and a stored refusal only goes through if the browser now allows
+// it. `force` is the user asking again ("Use my location"): it runs unless a request is in flight, and its result
+// replaces a searched city.
 export const requestDeviceLocation = createAsyncThunk<
   TLocation,
   {force?: boolean} | void,
   {state: TLocationThunkState; rejectValue: TRejection}
 >(
   'location/requestDeviceLocation',
-  async (_, {rejectWithValue}) => {
+  async (arg, {getState, rejectWithValue}) => {
     if (!('geolocation' in navigator)) return rejectWithValue({status: 'unavailable', failure: 'unsupported'});
+
+    // A stored refusal is only re-checked, never re-prompted: the browser is asked again only once the user has
+    // allowed the site (e.g. in its settings) since then
+    // (the pending reducer has already run, so the stored answer is the one it set aside)
+    const isStoredRefusal = !arg?.force && getState()[SliceNames.locationSlice].answerBeforeRequest === 'denied';
+
+    if (isStoredRefusal && (await readPermissionState()) !== 'granted') {
+      return rejectWithValue({status: 'denied', failure: 'denied'});
+    }
 
     try {
       const {coords} = await new Promise<GeolocationPosition>((resolve, reject) =>
@@ -58,6 +76,11 @@ export const requestDeviceLocation = createAsyncThunk<
     } catch (error) {
       const failure = toGeolocationFailure((error as GeolocationPositionError).code);
 
+      // A refusal while the browser reports the site as allowed is not the user's "no": it is not stored as one
+      if (failure === 'denied' && (await readPermissionState()) === 'granted') {
+        return rejectWithValue({status: 'unavailable', failure: 'refused'});
+      }
+
       return rejectWithValue({status: failure === 'denied' ? 'denied' : 'unavailable', failure});
     }
   },
@@ -67,7 +90,7 @@ export const requestDeviceLocation = createAsyncThunk<
 
       if (arg?.force) return geolocationStatus !== 'pending';
 
-      return !location && geolocationStatus === 'idle';
+      return !location && (geolocationStatus === 'idle' || geolocationStatus === 'denied');
     },
   },
 );

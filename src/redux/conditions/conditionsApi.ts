@@ -1,8 +1,9 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
 import {parseConditions} from './parseConditions';
+import {parsePlaceName} from './parsePlaceName';
 import {parsePlaces} from './parsePlaces';
-import {TConditionsQueryArgs, TConditionsSource, TDayConditions, TPlace} from './types';
+import {TConditionsQueryArgs, TConditionsSource, TDayConditions, TPlace, TPlaceNameQueryArgs} from './types';
 
 // Open-Meteo: free, no API key, CORS-enabled (see docs/adr/0001-open-meteo-for-day-conditions.md)
 const ENDPOINTS: Record<TConditionsSource, string> = {
@@ -13,6 +14,9 @@ const ENDPOINTS: Record<TConditionsSource, string> = {
 // City search for the location fallback (#76). Only the typed text is sent, never a position.
 const GEOCODING_ENDPOINT = 'https://geocoding-api.open-meteo.com/v1/search';
 const PLACE_RESULTS = 5;
+
+// Name for the device position (BigDataCloud, free, no key, CORS). Only the position rounded to ~1 km is sent.
+const REVERSE_GEOCODING_ENDPOINT = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
 
 const COMMON_DAILY = [
   'weather_code',
@@ -59,7 +63,16 @@ export const conditionsApi = createApi({
       }),
       transformResponse: parsePlaces,
     }),
+    // The city a (rounded) position is in, to label the device location. null = no usable name
+    getPlaceName: builder.query<string | null, TPlaceNameQueryArgs>({
+      query: ({latitude, longitude}) => ({
+        url: REVERSE_GEOCODING_ENDPOINT,
+        params: {latitude, longitude, localityLanguage: 'en'},
+      }),
+      transformResponse: parsePlaceName,
+      keepUnusedDataFor: 86_400,
+    }),
   }),
 });
 
-export const {useGetDayConditionsQuery, useSearchPlacesQuery} = conditionsApi;
+export const {useGetDayConditionsQuery, useSearchPlacesQuery, useGetPlaceNameQuery} = conditionsApi;

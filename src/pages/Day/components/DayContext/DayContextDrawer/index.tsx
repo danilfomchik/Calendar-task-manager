@@ -1,10 +1,9 @@
-import {cx} from '@/services/utils';
+import {cx, inertProps} from '@/services/utils';
 
 import DayContextBlocks from '../DayContextBlocks';
 import {useDayContext} from '../DayContextState';
 import DayContextTab from '../DayContextTab';
 import {DAY_CONTEXT_DRAWER_ID} from '../constants';
-import {inertProps} from '../helpers';
 import {TDayContextDrawerProps} from './types';
 
 // Desktop right-hand drawer with its Context tab. The width animates (CSS transition, none under reduced motion);
