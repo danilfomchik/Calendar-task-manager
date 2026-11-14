@@ -125,7 +125,8 @@ const DayNoteEditor = ({date, variant = 'row'}: TDayNoteProps) => {
         onFocus={() => setIsEditing(true)}
         onBlur={onBlur}
         className={cx(
-          'min-w-0 flex-1 resize-none bg-transparent text-sm leading-5 text-text placeholder:text-text-faint',
+          // the row's green border is the focus style; `!` because the global :focus-visible outline is unlayered
+          'min-w-0 flex-1 resize-none bg-transparent text-sm leading-5 text-text placeholder:text-text-faint focus-visible:outline-none!',
           isCollapsed && 'overflow-hidden',
         )}
       />
