@@ -15,6 +15,7 @@ import {FormActionType} from '@/types/eventFormTypes';
 
 import {useAgendaPanel} from '../../AgendaPanelContext';
 import AgendaEvent from './AgendaEvent';
+import AgendaHolidayLine from './AgendaHolidayLine';
 
 const AgendaPanel = () => {
   const dispatch = useAppDispatch();
@@ -51,6 +52,7 @@ const AgendaPanel = () => {
           <p className="font-mono mt-2 text-xs text-text-muted">
             {day.format('MMMM YYYY')} · {events.length} {events.length === 1 ? 'event' : 'events'}
           </p>
+          <AgendaHolidayLine date={selectedDate} className="mt-2" />
         </div>
 
         <button
