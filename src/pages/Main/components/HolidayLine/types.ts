@@ -1,4 +1,4 @@
-import {ButtonHTMLAttributes} from 'react';
+import {ButtonHTMLAttributes, Ref} from 'react';
 
 import {TAIInsights} from '@/redux/dateHolidaysGenerator/parseAIContent';
 
@@ -11,6 +11,8 @@ export type THolidayLineProps = Omit<
   isLoading: boolean;
   name: string | null;
   className?: string;
+  // The always-mounted row around the chip; a popover returns focus here when the chip itself has gone
+  slotRef?: Ref<HTMLDivElement>;
 };
 
 export type THolidayLineState = {

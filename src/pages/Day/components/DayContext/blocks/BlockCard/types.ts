@@ -9,5 +9,3 @@ export type TBlockCardProps = PropsWithChildren<{
   // surface, border and min height; skeleton and content of a block share it so the blocks below don't jump
   className: string;
 }>;
-
-export type TSkeletonLineProps = {className: string};

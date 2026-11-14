@@ -2,12 +2,13 @@ import moment from 'moment';
 
 import DayNote from '@/components/common/DayNote';
 
-import AgendaHolidayLine from '../AgendaHolidayLine';
+import HolidayLinePopover from '../../HolidayLinePopover';
 import {TAgendaHeaderProps} from './types';
 
-// Agenda panel header (variant D): weekday, day number, "Month YYYY · N events", Holiday line, then the Day note row.
-// The close button stays top-right. The Day note is keyed by date, so a pending draft is saved to its own day
-// before the selected date changes (and when the panel closes).
+// Agenda panel header: weekday, day number, "Month YYYY · N events", Holiday line, then the Day note row.
+// The close button stays top-right. The header is mounted only while the panel is open, so a closed panel never asks
+// for the holiday. The Day note is keyed by date, so a pending draft is saved to its own day before the selected
+// date changes (and when the panel closes).
 const AgendaHeader = ({date, eventsCount, onClose}: TAgendaHeaderProps) => {
   const day = moment(date);
 
@@ -22,7 +23,7 @@ const AgendaHeader = ({date, eventsCount, onClose}: TAgendaHeaderProps) => {
           <p className="font-mono mt-2 text-xs text-text-muted">
             {day.format('MMMM YYYY')} · {eventsCount} {eventsCount === 1 ? 'event' : 'events'}
           </p>
-          <AgendaHolidayLine date={date} className="mt-2" />
+          <HolidayLinePopover date={date} className="mt-2" />
         </div>
 
         <button

@@ -80,7 +80,9 @@ Tokens are named by role, not value, so the Day page redesign can reuse them and
 ### Agenda panel (`AgendaPanel`, `AgendaPanelContext`)
 
 - Right-hand panel, 340px (`w-85`), sunken surface, left hairline, hidden below `md`. Height is viewport minus the home header.
-- Header: weekday (mono), 7xl day numeral, `Month YYYY · N events`, and a close `×`.
+- Header (`AgendaHeader`): weekday (mono), 7xl day numeral, `Month YYYY · N events`, the **Holiday line**, a close `×`, then the **Day note** row.
+  - **Holiday line** (`HolidayLinePopover`): a 32px row reserved only while AI insights are enabled. Skeleton while the selected date settles (400 ms) and loads, the holiday name as a gradient-edged chip when there is one, blank otherwise. Hover/focus slide the gradient edge, grow the glows, rotate the sparkle and slide in a green ↗, all motion-safe only; under reduced motion only the lighter fill and a static green ring remain. Selecting the chip opens a popover (`components/common/Popover`: portalled, right-aligned under the chip, about 340px, flips up when there is no room, one at a time, below modals) with the full AI answer in an editorial layout. It closes on outside click, Esc, focus leaving it, a modal opening and a date change; focus moves in on open and returns to the chip on close (to the Holiday line row if the chip has gone), except when focus itself moved to another control.
+  - **Day note**: the shared Day note input row (see `docs/design/day-redesign.md`).
 - Body: the day's full event list (`AgendaEvent`: calendar bar, semibold title, mono `CALENDAR · description`), dimmed events per rule 5. Empty day: one "No events" line with an inline green "Add event".
 - Footer: green **+ Add event** (a plain button in the same recipe as the other green actions, no longer the shared `Button`) and **Open day ↗** (link to `/day/YYYY-MM-DD`).
 - State lives in `AgendaPanelProvider`:
@@ -93,9 +95,10 @@ Tokens are named by role, not value, so the Day page redesign can reuse them and
 
 - Layer over the Month grid, `md:hidden`. The calendar reserves `SHEET_PEEK` (232px) of bottom padding so the grid is never covered while collapsed.
 - Two snap positions: collapsed (peek) and expanded (layer height minus a 72px top gap).
-- Drag starts from the 44px grab handle or the date header; release with velocity beyond ±250 px/s snaps in that direction, otherwise to the nearest half. Settling uses a spring; instant under reduced motion. A click within 150 ms of a drag end is ignored so a drag doesn't also toggle.
-- The handle is also a button (`aria-expanded`, "Expand/Collapse events").
-- Content: big numeral, weekday, `MMM YYYY · N events`, **Open day ↗**, then the scrollable list (same `AgendaEvent` rows, same dimmed rule) or the empty-day line.
+- Drag starts from the grab handle or the date header; release with velocity beyond ±250 px/s snaps in that direction, otherwise to the nearest half. Settling uses a spring; instant under reduced motion. A click within 150 ms of a drag end is ignored so a drag doesn't also toggle.
+- The handle is also a button (`aria-expanded`, "Expand/Collapse events"). It is 24px tall in the layout, but a pseudo-element extends its hit area to 44px, overlapping the top of the date row (itself a drag area), so the peek budget stays intact.
+- Content: big numeral, weekday, `MMM YYYY · N events`, **Open day ↗**, then the Holiday line (with its popover, portalled out of the sheet) and the Day note row, then the scrollable list (same `AgendaEvent` rows, same dimmed rule) or the empty-day line.
+- The Holiday line and Day note block is not a drag area: it stops pointer-down so tapping, typing or scrolling never moves the sheet, and the sheet does not move when the keyboard opens. While the sheet is collapsed the note stays on one line until focused, so at a 390px viewport the first event still fits in the 232px peek; expanded, it is the full 1 to 6 line row. If the header grows, cut padding before dropping anything.
 - **Floating add button**: 56px green square on the sheet's top-right edge; creates on the selected date. Replaces the pill button and the collapse chevron.
 
 ### Sidebar (`components/layout/Aside`)

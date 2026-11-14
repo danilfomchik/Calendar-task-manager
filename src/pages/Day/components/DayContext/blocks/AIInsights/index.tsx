@@ -1,8 +1,9 @@
 import AIInsightsBody from '@/components/common/AIInsightsBody';
+import SkeletonLine from '@/components/ui/SkeletonLine';
 import {IS_AI_INSIGHTS_ENABLED} from '@/redux/dateHolidaysGenerator/enabled';
 import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 
-import {BlockCard, SkeletonLine} from '../BlockCard';
+import {BlockCard} from '../BlockCard';
 import {DayContextBlock} from '../types';
 import {TAIInsightsContentProps, TAIInsightsFrameProps} from './types';
 
