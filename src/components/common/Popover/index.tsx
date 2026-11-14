@@ -67,12 +67,14 @@ const Popover = ({isOpen, anchorRef, onClose, label, id, width = 340, className,
       onCloseRef.current();
     };
 
-    document.addEventListener('pointerdown', onPointerDown);
+    // capture: a container that stops pointerdown in React (the Bottom sheet's note block) also stops the native
+    // event bubbling to document, so a bubble listener would miss taps there
+    document.addEventListener('pointerdown', onPointerDown, true);
     window.addEventListener('keydown', onKeyDown, true);
     document.addEventListener('focusin', onFocusIn);
 
     return () => {
-      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('pointerdown', onPointerDown, true);
       window.removeEventListener('keydown', onKeyDown, true);
       document.removeEventListener('focusin', onFocusIn);
     };
