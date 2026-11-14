@@ -99,7 +99,7 @@ const DayNoteEditor = ({date, variant = 'row'}: TDayNoteProps) => {
           setIsEditing(true);
           setShouldFocus(true);
         }}
-        className="flex min-h-11 w-full cursor-pointer items-center gap-2 border border-dashed border-line px-3 text-left font-mono text-[11px] tracking-widest text-text-faint uppercase transition-colors hover:border-line-strong hover:text-text-muted">
+        className="flex min-h-11 w-full cursor-pointer items-center gap-2 border border-dashed border-line px-3 text-left font-mono text-[11px] tracking-widest text-text-faint uppercase transition-colors hover:border-line-strong hover:text-text-muted focus-visible:border-action focus-visible:text-text-muted focus-visible:outline-none!">
         <span aria-hidden>+</span> Add a note
       </button>
     );
@@ -125,7 +125,7 @@ const DayNoteEditor = ({date, variant = 'row'}: TDayNoteProps) => {
         onFocus={() => setIsEditing(true)}
         onBlur={onBlur}
         className={cx(
-          // the row's green border is the focus style; `!` because the global :focus-visible outline is unlayered
+          // the row's border shows focus instead of the global outline
           'min-w-0 flex-1 resize-none bg-transparent text-sm leading-5 text-text placeholder:text-text-faint focus-visible:outline-none!',
           isCollapsed && 'overflow-hidden',
         )}
