@@ -14,10 +14,10 @@ The full 6×7 view of the Visible month, including dimmed days from neighbouring
 A horizontal gesture on the Month grid, on mobile only, that moves the Visible month to the previous or next month. It changes the Visible month and does not change the selected date.
 
 **Agenda panel**:
-The desktop panel beside the Month grid that lists the events of the selected day and lets the user open that day or add an event to it. It can be closed.
+The desktop panel beside the Month grid that lists the events of the selected day and lets the user open that day, add an event to it, or edit its Day note in place. Its header shows the Holiday line and the Day note. It can be closed.
 
 **Bottom sheet**:
-The mobile sheet over the Month grid that lists the events of the selected day. The user can pull it up to read more or push it down to see more of the calendar. On the Day page, the mobile sheet that holds the Day context; it opens from the Context button and closes on its backdrop, Esc or a downward drag.
+The mobile sheet over the Month grid that lists the events of the selected day, with the same Holiday line and Day note as the Agenda panel. The user can pull it up to read more or push it down to see more of the calendar. On the Day page, the mobile sheet that holds the Day context; it opens from the Context button and closes on its backdrop, Esc or a downward drag.
 
 **Calendar filter**:
 The set of Active calendars chosen in the sidebar. A user can have several Active calendars at once. Lives for the session only.
@@ -70,8 +70,11 @@ The city nearest the browser's time zone, used by Conditions until a saved locat
 **Upcoming**:
 The Day context block listing the next three days after the Viewed day that have events, within 30 days. Each day is a group: its date and a few of its events, each in its calendar's colour, with a "+N more" for the rest; the group opens that day. It ignores the Calendar filter.
 
+**Holiday line**:
+The one line in the header of the Agenda panel and the Bottom sheet that names the selected day's holiday, taken from the same answer as AI insights. It shows only the name; selecting it opens a popover with that answer in full (name, description and the fact). It is blank when the day has no holiday, the answer fails or AI insights are switched off. Its space is kept free whenever AI insights are on, so the events below do not move when a day is selected.
+
 **Day note**:
-One plain-text note per date, kept in the Day context and saved automatically as the user writes. An emptied note is removed. A Day note is not an event: it never appears in the Month grid, the Day summary, the Event mix or any event count.
+One plain-text note per date, kept in the Day context and saved automatically as the user writes. It is also written in place in the header of the Agenda panel and the Bottom sheet, as a single row that grows with the text; the note is the same one in both places. An emptied note is removed. A Day note is not an event: it never appears in the Month grid, the Day summary, the Event mix or any event count.
 
 ## Rules
 
