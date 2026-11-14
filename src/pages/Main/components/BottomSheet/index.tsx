@@ -3,6 +3,7 @@ import {useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
+import DayNote from '@/components/common/DayNote';
 import Sheet from '@/components/common/Sheet';
 import {useEventsList} from '@/hooks/useEventsList';
 import {selectSelectedDate} from '@/redux/date/selectors';
@@ -56,11 +57,11 @@ const BottomSheet = () => {
             aria-label={isOpen ? 'Collapse events' : 'Expand events'}
             onPointerDown={startDrag}
             onClick={guardClick(toggle)}
-            className="flex h-11 w-full shrink-0 cursor-grab touch-none items-center justify-center">
+            className="flex h-6 w-full shrink-0 cursor-grab touch-none items-center justify-center">
             <span aria-hidden className="h-1 w-10 bg-line-strong" />
           </button>
 
-          <div onPointerDown={startDrag} className="flex shrink-0 touch-none items-end gap-3 px-4 pb-3">
+          <div onPointerDown={startDrag} className="flex shrink-0 touch-none items-end gap-3 px-4 pb-2">
             <span className="font-display text-6xl font-extrabold leading-[0.85] text-text">{day.format('DD')}</span>
 
             <div className="flex min-w-0 flex-1 flex-col gap-0.5 pb-0.5">
@@ -78,6 +79,12 @@ const BottomSheet = () => {
               text="Open day ↗"
               className="h-8 shrink-0 rounded-none border-line-strong bg-transparent p-0 px-2.5 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
             />
+          </div>
+
+          {/* Not a drag area: taps, typing and scrolling the note must never move the sheet, so this block has no
+              touch-none and stops pointerdown. The Holiday line goes here, above the note. */}
+          <div onPointerDown={e => e.stopPropagation()} className="flex shrink-0 flex-col gap-1.5 px-4 pb-2">
+            <DayNote date={selectedDate} variant="compact" />
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">

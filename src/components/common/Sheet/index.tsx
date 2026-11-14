@@ -123,8 +123,10 @@ const Sheet = ({
     },
   };
 
+  // `overflow-clip`, not `hidden`: a hidden layer is still scrollable by script, so focusing a field in the sheet
+  // (or the keyboard opening) could scroll it and leave the sheet shifted
   return (
-    <div ref={layerRef} className={cx('pointer-events-none absolute inset-0 overflow-hidden', layerClassName)}>
+    <div ref={layerRef} className={cx('pointer-events-none absolute inset-0 overflow-clip', layerClassName)}>
       {layerHeight > 0 && (
         <>
           {modal && (
