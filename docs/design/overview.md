@@ -26,7 +26,7 @@ The tokens, the two type faces and the motion rules are defined in [home-redesig
 
 - **Tokens** (`@theme`): surfaces `surface-base/-sunken/-raised/-overlay`, lines `line/line-strong`, text `text/-muted/-faint`, `action`, `info`. Use them as Tailwind utilities; do not hard-code hex values.
 - **Type**: `font-display` (Inter Tight 800) for numerals and titles, `font-mono` (JetBrains Mono) for counts, labels, calendar names and button labels.
-- **Focus**: global 2px green `:focus-visible` outline on every interactive element.
+- **Focus**: global 2px green `:focus-visible` outline on every interactive element. Deviation: inside the Agenda panel and Bottom sheet headers and in popovers, the Holiday line chip, the Day note row and the popover show focus with a green border (plus a 1px green ring) instead, so there is no double or clashing ring; the global outline itself stays in the stylesheet.
 - **Motion**: 150-300 ms, transform and opacity, nothing on page load. A global base layer gives every `button`, `a[href]`, `[role=button]`, `summary` and `label` a 150 ms ease-out transition on colour, border, opacity, shadow and transform, so hover and press states never snap. `animate-fade-in` (300 ms opacity) is available for content that appears. Reduced motion zeroes all of it, and motion-library animations also check `useReducedMotion`.
 - **Icons**: small 16px square-cap line icons that follow `currentColor` (the Day context icons in `pages/Day/components/DayContext/icons.tsx`). A panel icon whose rail is filled means "open".
 
@@ -36,7 +36,7 @@ The tokens, the two type faces and the motion rules are defined in [home-redesig
 - **Week and month browsing without selecting.** The Day page Week strip (chevrons on desktop, swipe on mobile) and the sidebar mini-calendar's month buttons browse without changing the Viewed day or Home's Month grid. A **Back to {day}** control returns to the viewed week; **Today** drops all browsing. See "Today" below.
 - **Today.** The Today actions (header Today on Home, masthead Today and the `T` shortcut on the Day page) all dispatch `requestToday` from the date slice. That bumps `todayRequests`, which the sidebar mini-calendar watches to drop its own month browsing; the Day masthead also resets its week offset. Any new Today control must do the same.
 - **Sidebar mini-calendar** (`components/common/MonthSmallCalendar`). One component on both pages. The shown month starts from the Viewed day (Day) or Home's visible month and the month-step buttons browse from there on both pages. Day buttons carry labels and event dots; the grid is one tab stop with arrow-key movement. A click opens the day (Day) or selects it and re-opens the Agenda panel (Home).
-- **Blocks fail silently.** Optional data blocks (AI insights, Conditions) render nothing on error or an unsupported date, show a fixed-height skeleton while loading, and prompt only for a deliberate state such as "Set location".
+- **Blocks fail silently.** Optional data blocks (AI insights, Conditions) render nothing on error or an unsupported date, show a skeleton while loading (loaded AI insights take their natural height), and prompt only for a deliberate state such as "Set location".
 - **Persistence stays out of the reducers.** Slices persist through listener middleware (see `CLAUDE.md`); a new feature that stores data adds a listener, not storage calls in components.
 
 ## 4. Accessibility baseline
