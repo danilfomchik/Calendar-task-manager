@@ -56,7 +56,13 @@ The desktop handle of the Day context drawer. It is attached to the drawer's edg
 The mobile control that opens the Day context Bottom sheet. Closed, it looks like the top of that sheet peeking above the bottom of the screen, with a chip for each block that has something to show (weather, upcoming, note, insights) that swipe sideways when they don't all fit, and it opens by a tap or an upward swipe.
 
 **Conditions**:
-The Day context block with the weather (temperature range, conditions, precipitation, wind), sunrise, sunset and moon phase for the Viewed day at the user's location. The location is the user's saved one (the device position or a searched city), else an **Approximate location** near the browser's time zone, shown at once and labelled as approximate. The browser is asked for the device position once, and a position that arrives replaces the approximate one. The user can search for a city, or ask again for the device position, at any time. Only if no location can be found at all does the block show a "Set location" prompt; for days outside the weather service's range it is hidden.
+The Day context block with the weather (temperature range, rain or snow, wind), daylight, sunrise, sunset and moon phase for the Viewed day at the user's location. The weather itself is shown as a **Dial** rather than written out. The location is the user's saved one (the device position or a searched city), else an **Approximate location** near the browser's time zone, shown at once and labelled as approximate. The browser is asked for the device position once, and a position that arrives replaces the approximate one. The user can search for a city, or ask again for the device position, at any time. Only if no location can be found at all does the block show a "Set location" prompt; for days outside the weather service's range it is hidden.
+
+**Dial**:
+The round instrument at the left of Conditions. Its ring fills with the chance of rain (left empty for days that only have recorded rainfall, never a forecast), a pointer on the ring marks the direction the wind comes from, and its face holds the **Sky scene** with the day's high and low over it.
+
+**Sky scene**:
+The illustration inside the Dial that stands for the day's weather: clear, partly cloudy, overcast, fog, rain, snow or storm. A night sky with stars stands in when there is no weather to show. It moves gently, and stands still for people who ask for less motion.
 
 **Approximate location**:
 The city nearest the browser's time zone, used by Conditions until a saved location exists. It is never saved and is always labelled as approximate.

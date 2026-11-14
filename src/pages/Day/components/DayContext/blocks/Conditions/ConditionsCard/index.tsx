@@ -1,25 +1,16 @@
 import {useGetDayConditionsQuery, useGetPlaceNameQuery} from '@/redux/conditions/conditionsApi';
-import {TDayConditions} from '@/redux/conditions/types';
 
 import ChangeLocationButton from '../ChangeLocationButton';
 import ConditionsFrame from '../ConditionsFrame';
 import ConditionsSkeleton from '../ConditionsSkeleton';
-import Fact from '../Fact';
+import Dial from '../Dial';
+import SideFacts from '../SideFacts';
+import SkyScene from '../SkyScene';
+import SunMoonRow from '../SunMoonRow';
+import Temperatures from '../Temperatures';
 import {getMoonPhase} from '../moonPhase';
-import {describeWeatherCode} from '../weatherCode';
-import {formatWindDirection} from '../wind';
+import {describeWeatherCode, getSkyKind} from '../weatherCode';
 import {TConditionsCardProps} from './types';
-
-const formatTemperature = (value: number) => `${Math.round(value)}°`;
-
-const formatPrecipitation = ({precipitationSum, precipitationProbability}: TDayConditions) => {
-  const amount = `${Math.round(precipitationSum * 10) / 10} mm`;
-
-  return precipitationProbability === null ? amount : `${amount} · ${precipitationProbability}%`;
-};
-
-const formatWind = ({windSpeedMax, windDirection}: TDayConditions) =>
-  [`${Math.round(windSpeedMax)} km/h`, formatWindDirection(windDirection)].filter(Boolean).join(' ');
 
 const ConditionsCard = ({
   date,
@@ -37,9 +28,6 @@ const ConditionsCard = ({
   if (isFetching) return <ConditionsSkeleton />;
   if (isError || !data) return null;
 
-  const weather = describeWeatherCode(data.weatherCode);
-  const moon = getMoonPhase(date);
-
   return (
     <ConditionsFrame
       label={
@@ -50,31 +38,16 @@ const ConditionsCard = ({
           autoFocus={focusChange}
         />
       }>
-      <div className="flex items-end justify-between gap-3">
-        <p className="font-display text-4xl leading-none font-extrabold">
-          <span className="sr-only">Low </span>
-          {formatTemperature(data.temperatureMin)}
-          <span className="text-text-faint" aria-hidden>
-            {' / '}
-          </span>
-          <span className="sr-only">, high </span>
-          {formatTemperature(data.temperatureMax)}
-        </p>
-        <span aria-hidden className="text-3xl leading-none">
-          {weather.glyph}
-        </span>
+      <div className="flex items-center gap-4">
+        <Dial
+          rainChance={data.precipitationProbability}
+          windDirection={data.windDirection}
+          face={<SkyScene kind={getSkyKind(data.weatherCode)} label={describeWeatherCode(data.weatherCode).label} />}>
+          <Temperatures high={data.temperatureMax} low={data.temperatureMin} />
+        </Dial>
+        <SideFacts data={data} />
       </div>
-      <p className="text-sm text-text-muted">{weather.label}</p>
-      <dl className="flex flex-col font-mono text-[11px] tracking-wider uppercase">
-        <Fact term="Precip">{formatPrecipitation(data)}</Fact>
-        <Fact term="Wind">{formatWind(data)}</Fact>
-        <Fact term="Sunrise">{data.sunrise ?? '—'}</Fact>
-        <Fact term="Sunset">{data.sunset ?? '—'}</Fact>
-        <Fact term="Moon">
-          <span aria-hidden>{moon.glyph} </span>
-          {moon.name}
-        </Fact>
-      </dl>
+      <SunMoonRow data={data} moon={getMoonPhase(date)} isSouthern={latitude < 0} />
     </ConditionsFrame>
   );
 };

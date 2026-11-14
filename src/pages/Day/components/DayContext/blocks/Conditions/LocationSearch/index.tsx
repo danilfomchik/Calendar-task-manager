@@ -2,10 +2,13 @@ import {FormEvent, useId, useState} from 'react';
 
 import {useSearchPlacesQuery} from '@/redux/conditions/conditionsApi';
 import {TGeolocationFailure} from '@/redux/location/types';
-import {HAIRLINE_CONTROL_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
 
+import ConditionsFrame from '../ConditionsFrame';
+import {formatCoordinates} from '../conditionsFormat';
 import {GEOLOCATION_FAILURE_TEXT} from '../geolocationFailureText';
+import CompassIcon from './CompassIcon';
+import CrosshairIcon from './CrosshairIcon';
 import {TLocationSearchProps} from './types';
 
 // Open-Meteo returns nothing for 0-1 characters, so don't send those
@@ -47,8 +50,7 @@ const LocationSearch = ({onPick, onLocateDevice, onCancel}: TLocationSearchProps
   };
 
   let message = '';
-  if (isLocating) message = 'Waiting for your device…';
-  else if (deviceFailure) message = GEOLOCATION_FAILURE_TEXT[deviceFailure];
+  if (deviceFailure) message = GEOLOCATION_FAILURE_TEXT[deviceFailure];
   else if (isTooShort) message = `Type at least ${MIN_QUERY_LENGTH} letters.`;
   else if (isFetching) message = 'Searching…';
   else if (isError) message = 'Couldn’t reach the city search. Check your connection and try again.';
@@ -57,12 +59,21 @@ const LocationSearch = ({onPick, onLocateDevice, onCancel}: TLocationSearchProps
   const showPlaces = !isTooShort && !isFetching && !isError && !!places?.length;
 
   return (
-    <div className="flex flex-col gap-3">
-      <form role="search" onSubmit={onSubmit} className="flex flex-col gap-2">
-        <label htmlFor={inputId} className="text-sm text-text-muted">
+    <ConditionsFrame
+      label={
+        <button
+          type="button"
+          onClick={onCancel}
+          className="h-8 cursor-pointer px-1 text-xs text-text-muted underline-offset-2 hover:text-text hover:underline">
+          Cancel
+        </button>
+      }>
+      <form role="search" onSubmit={onSubmit} className="flex flex-col gap-1.5">
+        <label htmlFor={inputId} className="text-xs text-text-muted">
           Find a city for the weather
         </label>
-        <div className="flex gap-2">
+        <div className="flex h-11 border border-line-strong bg-surface-base/90 focus-within:border-info md:h-10">
+          <CompassIcon className="ml-3 size-4 shrink-0 self-center text-text-faint" />
           <input
             id={inputId}
             type="search"
@@ -71,10 +82,12 @@ const LocationSearch = ({onPick, onLocateDevice, onCancel}: TLocationSearchProps
             enterKeyHint="search"
             value={text}
             onChange={e => setText(e.target.value)}
-            placeholder="e.g. Lisbon"
-            className="h-11 min-w-0 flex-1 border border-line-strong bg-surface-base px-3 text-sm placeholder:text-text-faint md:h-9"
+            placeholder="Lisbon, Osaka, Quito…"
+            className="min-w-0 flex-1 bg-transparent px-2 text-sm outline-none focus-visible:outline-none! placeholder:text-text-faint"
           />
-          <button type="submit" className={cx(HAIRLINE_CONTROL_CLASS, 'shrink-0')}>
+          <button
+            type="submit"
+            className="shrink-0 cursor-pointer bg-info px-3 text-xs font-semibold text-info-ink hover:brightness-110">
             Search
           </button>
         </div>
@@ -84,39 +97,37 @@ const LocationSearch = ({onPick, onLocateDevice, onCancel}: TLocationSearchProps
         type="button"
         disabled={isLocating}
         onClick={locateDevice}
-        className={cx(HAIRLINE_CONTROL_CLASS, 'self-start disabled:cursor-default disabled:opacity-60')}>
-        <span aria-hidden>◎</span> Use my location
+        className="flex h-10 w-full cursor-pointer items-center gap-2 border border-line px-3 text-left text-sm hover:bg-surface-overlay disabled:cursor-default">
+        <CrosshairIcon className={cx('size-4 shrink-0', isLocating && 'animate-pulse motion-reduce:animate-none')} />
+        <span className="flex-1">{isLocating ? 'Waiting for your device…' : 'Use my location'}</span>
       </button>
 
-      <p role="status" className="text-sm text-text-muted empty:hidden">
+      <p role="status" className="text-xs text-text-muted empty:hidden">
         {message}
       </p>
 
       {showPlaces && (
-        <ul aria-label="Places" className="flex flex-col">
+        <ul aria-label="Places" className="-mx-1 flex flex-col">
           {places.map(place => (
             <li key={place.id}>
               <button
                 type="button"
                 onClick={() => onPick(place)}
-                className="flex min-h-11 w-full cursor-pointer flex-col justify-center border-b border-line px-1 py-1.5 text-left transition-colors hover:bg-surface-overlay">
-                <span className="text-sm font-semibold">{place.name}</span>
-                {place.region && (
-                  <span className="font-mono text-[11px] tracking-wider text-text-faint uppercase">{place.region}</span>
-                )}
+                className="group flex min-h-11 w-full cursor-pointer items-center gap-3 border-b border-line px-1 py-1.5 text-left hover:bg-surface-overlay">
+                <span className="flex min-w-0 flex-1 flex-col">
+                  <span className="truncate text-sm font-semibold">{place.name}</span>
+                  {place.region && <span className="truncate text-xs text-text-faint">{place.region}</span>}
+                </span>
+                <span className="flex shrink-0 flex-col font-mono text-[10px] text-text-faint tabular-nums group-hover:text-info">
+                  <span>{formatCoordinates(place.latitude, place.longitude).latitude}</span>
+                  <span>{formatCoordinates(place.latitude, place.longitude).longitude}</span>
+                </span>
               </button>
             </li>
           ))}
         </ul>
       )}
-
-      <button
-        type="button"
-        onClick={onCancel}
-        className="min-h-11 cursor-pointer self-start font-mono text-[11px] tracking-wider text-text-faint uppercase underline-offset-2 hover:text-text hover:underline md:min-h-8">
-        Cancel
-      </button>
-    </div>
+    </ConditionsFrame>
   );
 };
 

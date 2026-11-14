@@ -156,3 +156,82 @@ body,
 @utility animate-fade-in {
   animation: fade-in 300ms ease-out;
 }
+
+/* Conditions Sky scene motion; every animation stops under prefers-reduced-motion and the still frame stays complete */
+.sky-drift {
+  animation: sky-drift ease-in-out infinite alternate;
+}
+.sky-rain {
+  animation: sky-rain linear infinite;
+}
+.sky-snow {
+  animation: sky-snow linear infinite;
+}
+.sky-flash {
+  animation: sky-flash 7s infinite;
+}
+.sky-twinkle {
+  animation: sky-twinkle ease-in-out infinite alternate;
+}
+
+@keyframes sky-drift {
+  from {
+    transform: translateX(-14px);
+  }
+  to {
+    transform: translateX(14px);
+  }
+}
+@keyframes sky-rain {
+  from {
+    transform: translate(57px, -200px);
+  }
+  to {
+    transform: translate(-57px, 200px);
+  }
+}
+@keyframes sky-snow {
+  from {
+    transform: translate(-8px, -200px);
+  }
+  to {
+    transform: translate(8px, 200px);
+  }
+}
+@keyframes sky-flash {
+  0%,
+  86%,
+  100% {
+    opacity: 0;
+  }
+  87% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.15;
+  }
+  89.5% {
+    opacity: 0.8;
+  }
+  91% {
+    opacity: 0;
+  }
+}
+@keyframes sky-twinkle {
+  from {
+    opacity: 0.15;
+  }
+  to {
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-scene * {
+    animation: none !important;
+  }
+  /* the flash only exists mid-animation; without it the overlay and bolt would stay on */
+  .sky-scene .sky-flash {
+    opacity: 0;
+  }
+}

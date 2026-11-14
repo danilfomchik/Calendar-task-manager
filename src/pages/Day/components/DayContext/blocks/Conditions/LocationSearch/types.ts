@@ -7,3 +7,5 @@ export type TLocationSearchProps = {
   onLocateDevice: () => Promise<TGeolocationFailure | null>;
   onCancel: () => void;
 };
+
+export type TIconProps = {className?: string};
