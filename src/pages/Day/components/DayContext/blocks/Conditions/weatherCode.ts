@@ -39,14 +39,21 @@ export const describeWeatherCode = (code: number): TWeatherDescription => WEATHE
 // Which Sky scene stands for a WMO code; 'night' is the scene for when there is no weather yet
 export type TSkyKind = 'clear' | 'partly' | 'overcast' | 'fog' | 'rain' | 'snow' | 'storm' | 'night';
 
-export const getSkyKind = (code: number): Exclude<TSkyKind, 'night'> => {
-  if (code <= 1) return 'clear';
-  if (code === 2) return 'partly';
-  if (code === 3) return 'overcast';
-  if (code === 45 || code === 48) return 'fog';
-  if (code >= 95) return 'storm';
-  if ((code >= 71 && code <= 77) || code === 85 || code === 86) return 'snow';
-  if (code >= 51) return 'rain';
+type TWeatherSkyKind = Exclude<TSkyKind, 'night'>;
 
-  return 'overcast';
-};
+const SKY_KIND_CODES: [number[], TWeatherSkyKind][] = [
+  [[0, 1], 'clear'],
+  [[2], 'partly'],
+  [[3], 'overcast'],
+  [[45, 48], 'fog'],
+  [[51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82], 'rain'],
+  [[71, 73, 75, 77, 85, 86], 'snow'],
+  [[95, 96, 99], 'storm'],
+];
+
+// Flattened to code → kind so a lookup is a single get (array keys can't be looked up by value)
+const SKY_KIND_BY_CODE = new Map<number, TWeatherSkyKind>(
+  SKY_KIND_CODES.flatMap(([codes, kind]) => codes.map((code): [number, TWeatherSkyKind] => [code, kind])),
+);
+
+export const getSkyKind = (code: number): TWeatherSkyKind => SKY_KIND_BY_CODE.get(code) ?? 'overcast';
