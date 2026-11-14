@@ -15,6 +15,7 @@ import {FormActionType} from '@/types/eventFormTypes';
 
 import {useAgendaPanel} from '../../AgendaPanelContext';
 import AgendaEvent from './AgendaEvent';
+import AgendaHeader from './AgendaHeader';
 
 const AgendaPanel = () => {
   const dispatch = useAppDispatch();
@@ -42,26 +43,7 @@ const AgendaPanel = () => {
       transition={{duration: 0.18, ease: 'easeOut'}}
       onKeyDown={e => e.key === 'Escape' && close()}
       className="max-md:hidden flex w-85 shrink-0 flex-col border-l border-line bg-surface-sunken h-[calc(100svh-var(--height-home-header))]">
-      <div className="flex items-start gap-3 border-b border-line p-5">
-        <div className="min-w-0 flex-1">
-          <p className="font-mono text-[11px] uppercase tracking-widest text-text-faint">{day.format('dddd')}</p>
-          <p className="font-display font-extrabold tracking-tight text-7xl leading-none text-text">
-            {day.format('DD')}
-          </p>
-          <p className="font-mono mt-2 text-xs text-text-muted">
-            {day.format('MMMM YYYY')} · {events.length} {events.length === 1 ? 'event' : 'events'}
-          </p>
-        </div>
-
-        <button
-          type="button"
-          aria-label="Close agenda"
-          title="Close agenda"
-          onClick={close}
-          className="flex size-8 shrink-0 cursor-pointer items-center justify-center border border-line-strong font-mono text-text-muted transition-colors hover:text-text">
-          ×
-        </button>
-      </div>
+      <AgendaHeader date={selectedDate} eventsCount={events.length} onClose={close} />
 
       <div className="min-h-0 flex-1 overflow-y-auto p-5">
         {events.length === 0 ? (
