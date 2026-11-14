@@ -6,6 +6,7 @@ import Button from '@/components/common/Button';
 import DayNote from '@/components/common/DayNote';
 import Sheet from '@/components/common/Sheet';
 import {useEventsList} from '@/hooks/useEventsList';
+import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {selectSelectedDate} from '@/redux/date/selectors';
 import {setEventFormData} from '@/redux/events/eventsSlice';
 import {isEventDimmed} from '@/redux/myCalendars/helpers';
@@ -16,6 +17,7 @@ import {EVENT_FORM_ID} from '@/services/constants';
 import {FormActionType} from '@/types/eventFormTypes';
 
 import AgendaEvent from '../AgendaPanel/AgendaEvent';
+import HolidayLinePopover from '../HolidayLinePopover';
 import {SHEET_PEEK} from './constants';
 
 const BottomSheet = () => {
@@ -24,6 +26,8 @@ const BottomSheet = () => {
   const activeCalendars = useSelector(selectActiveCalendars);
   const events = useEventsList(selectedDate);
   const [isExpanded, setIsExpanded] = useState(false);
+  // the sheet stays mounted but hidden from md up; only ask for the holiday where the sheet is actually shown
+  const isSheetShown = useMediaQuery({size: 'sm', direction: 'to'});
 
   const handleAddEvent = () => {
     dispatch(onOpenItem(EVENT_FORM_ID));
@@ -82,8 +86,9 @@ const BottomSheet = () => {
           </div>
 
           {/* Not a drag area: taps, typing and scrolling the note must never move the sheet, so this block has no
-              touch-none and stops pointerdown. The Holiday line goes here, above the note. */}
+              touch-none and stops pointerdown (the Popover listens in the capture phase, so it still closes). */}
           <div onPointerDown={e => e.stopPropagation()} className="flex shrink-0 flex-col gap-1.5 px-4 pb-2">
+            {isSheetShown && <HolidayLinePopover date={selectedDate} />}
             <DayNote date={selectedDate} variant="compact" />
           </div>
 
