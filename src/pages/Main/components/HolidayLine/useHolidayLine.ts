@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 
-import {IS_AI_INSIGHTS_ENABLED} from '@/redux/dateHolidaysGenerator/enabled';
 import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 
 import {THolidayLineState} from './types';
@@ -26,9 +25,9 @@ export const useHolidayLine = (date: string): THolidayLineState => {
   const settled = useSettledDate(date);
   const isSettled = settled === date;
 
-  const {insights, isFetching} = useAIInsights(settled, {skip: !isSettled});
+  const {isEnabled, insights, isFetching} = useAIInsights(settled, {skip: !isSettled});
 
-  if (!IS_AI_INSIGHTS_ENABLED) return {isEnabled: false, isLoading: false, insights: null, name: null};
+  if (!isEnabled) return {isEnabled: false, isLoading: false, insights: null, name: null};
 
   if (!isSettled || isFetching) return {isEnabled: true, isLoading: true, insights: null, name: null};
 

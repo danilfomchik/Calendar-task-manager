@@ -1,18 +1,9 @@
-import {ButtonHTMLAttributes, Ref} from 'react';
-
 import {TAIInsights} from '@/redux/dateHolidaysGenerator/parseAIContent';
 
-// Extra button attributes (onClick, aria-expanded, aria-haspopup, aria-controls...) are passed to the chip so a
-// caller can turn it into a popover trigger; the ref is forwarded to the same button
-export type THolidayLineProps = Omit<
-  ButtonHTMLAttributes<HTMLButtonElement>,
-  'children' | 'className' | 'type' | 'name'
-> & {
-  isLoading: boolean;
-  name: string | null;
+export type THolidayLineProps = {
+  // The selected date; changing it closes the popover
+  date: string;
   className?: string;
-  // The always-mounted row around the chip; a popover returns focus here when the chip itself has gone
-  slotRef?: Ref<HTMLDivElement>;
 };
 
 export type THolidayLineState = {

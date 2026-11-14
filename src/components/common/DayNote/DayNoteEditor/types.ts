@@ -1,6 +1,3 @@
-import {TDayNoteVariant} from '../types';
+import {TDayNoteProps} from '../types';
 
-export type TDayNoteEditorProps = {
-  date: string;
-  variant?: TDayNoteVariant;
-};
+export type TDayNoteEditorProps = TDayNoteProps;

@@ -1,8 +1,9 @@
 import moment from 'moment';
 
 import DayNote from '@/components/common/DayNote';
+import {formatEventsCount} from '@/services/dateUtils';
 
-import HolidayLinePopover from '../../HolidayLinePopover';
+import HolidayLine from '../../HolidayLine';
 import {TAgendaHeaderProps} from './types';
 
 // Agenda panel header: weekday, day number, "Month YYYY · N events", Holiday line, then the Day note row.
@@ -21,9 +22,9 @@ const AgendaHeader = ({date, eventsCount, onClose}: TAgendaHeaderProps) => {
             {day.format('DD')}
           </p>
           <p className="font-mono mt-2 text-xs text-text-muted">
-            {day.format('MMMM YYYY')} · {eventsCount} {eventsCount === 1 ? 'event' : 'events'}
+            {day.format('MMMM YYYY')} · {formatEventsCount(eventsCount)}
           </p>
-          <HolidayLinePopover date={date} className="mt-2" />
+          <HolidayLine date={date} className="mt-2" />
         </div>
 
         <button

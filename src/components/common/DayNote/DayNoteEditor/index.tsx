@@ -100,8 +100,11 @@ const DayNoteEditor = ({date, variant = 'row'}: TDayNoteEditorProps) => {
           setIsEditing(true);
           setShouldFocus(true);
         }}
-        className="flex min-h-11 w-full cursor-pointer items-center gap-2 border border-dashed border-line px-3 text-left font-mono text-[11px] tracking-widest text-text-faint uppercase transition-colors hover:border-line-strong hover:text-text-muted focus-visible:border-action focus-visible:text-text-muted focus-visible:outline-none!">
-        <span aria-hidden>+</span> Add a note
+        className="flex min-h-11 w-full cursor-pointer items-center gap-2.5 border border-dashed border-line px-3 text-left font-mono text-sm text-text-faint transition-colors hover:border-line-strong hover:text-text-muted focus-visible:border-action focus-visible:text-text-muted focus-visible:outline-none!">
+        <span aria-hidden className="inline-flex items-center justify-center w-4">
+          +
+        </span>
+        Add a note
       </button>
     );
   }
@@ -110,7 +113,9 @@ const DayNoteEditor = ({date, variant = 'row'}: TDayNoteEditorProps) => {
     <label
       htmlFor={textareaId}
       className={cx(
-        'group flex cursor-text items-start gap-2.5 border border-line bg-surface-sunken px-3 py-2.5 transition-colors hover:border-line-strong',
+        // top-aligned so the icon and "Saved" stay on the first line as the note grows; 1px border + 11px padding +
+        // one 20px line = 44px, the same height as the dashed "Add a note" line
+        'group flex min-h-11 cursor-text items-start gap-2.5 border border-line bg-surface-sunken px-3 py-2.75 transition-colors hover:border-line-strong',
         'focus-within:border-action focus-within:bg-surface-raised focus-within:shadow-[0_0_0_1px_var(--color-action)]',
       )}>
       <NoteIcon className="mt-0.5 size-4 shrink-0 text-text-faint transition-colors group-focus-within:text-action" />

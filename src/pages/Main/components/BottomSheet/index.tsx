@@ -14,10 +14,11 @@ import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
 import {onOpenItem} from '@/redux/overflow/overflowSlice';
 import {useAppDispatch} from '@/redux/store';
 import {EVENT_FORM_ID} from '@/services/constants';
+import {formatEventsCount} from '@/services/dateUtils';
 import {FormActionType} from '@/types/eventFormTypes';
 
 import AgendaEvent from '../AgendaPanel/AgendaEvent';
-import HolidayLinePopover from '../HolidayLinePopover';
+import HolidayLine from '../HolidayLine';
 import {SHEET_PEEK} from './constants';
 
 const BottomSheet = () => {
@@ -75,7 +76,7 @@ const BottomSheet = () => {
                 {day.format('dddd')}
               </span>
               <span className="font-mono text-xs text-text-faint">
-                {day.format('MMM YYYY')} · {eventsCount} {eventsCount === 1 ? 'event' : 'events'}
+                {day.format('MMM YYYY')} · {formatEventsCount(eventsCount)}
               </span>
             </div>
 
@@ -91,7 +92,7 @@ const BottomSheet = () => {
           {/* Not a drag area: taps, typing and scrolling the note must never move the sheet, so this block has no
               touch-none and stops pointerdown (the Popover listens in the capture phase, so it still closes). */}
           <div onPointerDown={e => e.stopPropagation()} className="flex shrink-0 flex-col gap-1.5 px-4 pb-2">
-            {isSheetShown && <HolidayLinePopover date={selectedDate} />}
+            {isSheetShown && <HolidayLine date={selectedDate} />}
             {/* one line while the sheet is peeking, so the first event stays in view; full row once expanded */}
             <DayNote date={selectedDate} variant={isOpen ? 'row' : 'compact'} />
           </div>

@@ -6,8 +6,6 @@ export type TAIInsightsBodyVariant = 'block' | 'editorial';
 export type TAIInsightsVariantClasses = {
   name: string;
   description: string;
-  // block: the "Did you know" callout; editorial: the pull-quote
-  fact: string;
   footnote: string;
 };
 

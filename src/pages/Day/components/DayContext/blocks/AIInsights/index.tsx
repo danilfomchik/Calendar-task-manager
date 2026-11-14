@@ -1,11 +1,10 @@
 import AIInsightsBody from '@/components/common/AIInsightsBody';
 import SkeletonLine from '@/components/ui/SkeletonLine';
-import {IS_AI_INSIGHTS_ENABLED} from '@/redux/dateHolidaysGenerator/enabled';
 import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 
 import {BlockCard} from '../BlockCard';
 import {DayContextBlock} from '../types';
-import {TAIInsightsContentProps, TAIInsightsFrameProps} from './types';
+import {TAIInsightsFrameProps} from './types';
 
 const Frame = ({children, busy = false}: TAIInsightsFrameProps) => (
   <div className="bg-linear-to-br from-info via-action to-info p-px">
@@ -53,9 +52,11 @@ const AIInsightsSkeleton = () => (
   </Frame>
 );
 
-const AIInsightsContent = ({date}: TAIInsightsContentProps) => {
-  const {insights, isFetching, isError} = useAIInsights(date);
+// AI insights (holiday + "Did you know"): nothing when the Groq flag is off, on error or on malformed content
+const AIInsights: DayContextBlock = ({date}) => {
+  const {isEnabled, insights, isFetching, isError} = useAIInsights(date);
 
+  if (!isEnabled) return null;
   if (isFetching) return <AIInsightsSkeleton />;
   if (isError || !insights) return null;
 
@@ -65,8 +66,5 @@ const AIInsightsContent = ({date}: TAIInsightsContentProps) => {
     </Frame>
   );
 };
-
-// AI insights (holiday + "Did you know"): nothing when the Groq flag is off, on error or on malformed content
-const AIInsights: DayContextBlock = ({date}) => (IS_AI_INSIGHTS_ENABLED ? <AIInsightsContent date={date} /> : null);
 
 export default AIInsights;
