@@ -1,8 +1,7 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useState} from 'react';
 
-import {IS_AI_INSIGHTS_ENABLED} from '@/pages/Day/components/DayContext/blocks/AIInsights/enabled';
-import {parseAIContent} from '@/pages/Day/components/DayContext/blocks/AIInsights/parseAIContent';
-import {useGetDayHolidaysInfoQuery} from '@/redux/dateHolidaysGenerator/holidaysApi';
+import {IS_AI_INSIGHTS_ENABLED} from '@/redux/dateHolidaysGenerator/enabled';
+import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 
 import {THolidayLineState} from './types';
 
@@ -21,16 +20,13 @@ const useSettledDate = (date: string) => {
   return settled;
 };
 
-// Data for the Holiday line: the selected date's AI insights, shown only once the date has settled and only when
-// the answer belongs to that date (currentData is cleared while a new date is fetching, so no stale answer leaks)
+// Data for the Holiday line: the selected date's AI insights, requested only once the date has settled and shown
+// only when the answer belongs to that date (useAIInsights reads currentData, so no stale answer leaks)
 export const useHolidayLine = (date: string): THolidayLineState => {
   const settled = useSettledDate(date);
   const isSettled = settled === date;
 
-  const {currentData, isFetching} = useGetDayHolidaysInfoQuery(settled, {
-    skip: !IS_AI_INSIGHTS_ENABLED || !isSettled,
-  });
-  const insights = useMemo(() => parseAIContent(currentData?.choices?.[0]?.message?.content), [currentData]);
+  const {insights, isFetching} = useAIInsights(settled, {skip: !isSettled});
 
   if (!IS_AI_INSIGHTS_ENABLED) return {isEnabled: false, isLoading: false, insights: null, name: null};
 

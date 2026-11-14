@@ -1,6 +1,6 @@
 import {ButtonHTMLAttributes} from 'react';
 
-import {TAIInsights} from '@/pages/Day/components/DayContext/blocks/AIInsights/parseAIContent';
+import {TAIInsights} from '@/redux/dateHolidaysGenerator/parseAIContent';
 
 // Extra button attributes (onClick, aria-expanded, aria-haspopup, aria-controls...) are passed to the chip so a
 // caller can turn it into a popover trigger; the ref is forwarded to the same button
