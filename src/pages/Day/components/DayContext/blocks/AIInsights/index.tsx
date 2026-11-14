@@ -1,24 +1,17 @@
-import {useMemo} from 'react';
-
-import {useGetDayHolidaysInfoQuery} from '@/redux/dateHolidaysGenerator/holidaysApi';
-import {cx} from '@/services/utils';
+import AIInsightsBody from '@/components/common/AIInsightsBody';
+import {IS_AI_INSIGHTS_ENABLED} from '@/redux/dateHolidaysGenerator/enabled';
+import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 
 import {BlockCard, SkeletonLine} from '../BlockCard';
 import {DayContextBlock} from '../types';
-import {IS_AI_INSIGHTS_ENABLED} from './enabled';
-import {parseAIContent} from './parseAIContent';
 import {TAIInsightsContentProps, TAIInsightsFrameProps} from './types';
-
-// Same minimum for skeleton and content so the blocks below don't jump when the answer arrives
-// (sampled answers measure 333-379px in the 320px drawer)
-const CARD_MIN_HEIGHT = 'min-h-96';
 
 const Frame = ({children, busy = false}: TAIInsightsFrameProps) => (
   <div className="bg-linear-to-br from-info via-action to-info p-px">
     <BlockCard
       label="AI insights"
       busy={busy}
-      className={cx('relative overflow-hidden bg-surface-sunken', CARD_MIN_HEIGHT)}
+      className="relative overflow-hidden bg-surface-sunken"
       header={
         <>
           <div
@@ -60,28 +53,14 @@ const AIInsightsSkeleton = () => (
 );
 
 const AIInsightsContent = ({date}: TAIInsightsContentProps) => {
-  const {data, isFetching, isError} = useGetDayHolidaysInfoQuery(date);
-  const insights = useMemo(() => parseAIContent(data?.choices?.[0]?.message?.content), [data]);
+  const {insights, isFetching, isError} = useAIInsights(date);
 
   if (isFetching) return <AIInsightsSkeleton />;
   if (isError || !insights) return null;
 
   return (
     <Frame>
-      {insights.holiday && (
-        <>
-          <h3 className="relative font-display text-2xl leading-tight font-extrabold">{insights.holiday.name}</h3>
-          {insights.holiday.description && (
-            <p className="relative text-sm leading-relaxed text-text-muted">{insights.holiday.description}</p>
-          )}
-        </>
-      )}
-      {insights.fact && (
-        <div className="relative border-l-2 border-action bg-action/10 p-3">
-          <span className="font-mono text-[10px] tracking-widest text-action uppercase">Did you know</span>
-          <p className="mt-1 text-sm leading-relaxed">{insights.fact}</p>
-        </div>
-      )}
+      <AIInsightsBody insights={insights} />
     </Frame>
   );
 };
