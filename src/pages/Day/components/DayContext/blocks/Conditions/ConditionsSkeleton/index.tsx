@@ -1,4 +1,5 @@
-import {SkeletonLine} from '../../BlockCard';
+import SkeletonLine from '@/components/ui/SkeletonLine';
+
 import ConditionsFrame from '../ConditionsFrame';
 import {DIAL_CENTRE, DIAL_CIRCUMFERENCE, DIAL_RADIUS, DIAL_RING_WIDTH, DIAL_SIZE} from '../dialGeometry';
 

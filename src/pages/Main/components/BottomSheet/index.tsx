@@ -55,13 +55,15 @@ const BottomSheet = () => {
             +
           </button>
 
+          {/* 24px visually, but a 44px tall hit area: the pseudo-element hangs 20px down over the date row (itself a
+              drag area) without adding height to the peek */}
           <button
             type="button"
             aria-expanded={isOpen}
             aria-label={isOpen ? 'Collapse events' : 'Expand events'}
             onPointerDown={startDrag}
             onClick={guardClick(toggle)}
-            className="flex h-6 w-full shrink-0 cursor-grab touch-none items-center justify-center">
+            className="relative z-10 flex h-6 w-full shrink-0 cursor-grab touch-none items-center justify-center before:absolute before:inset-x-0 before:top-0 before:h-11 before:content-['']">
             <span aria-hidden className="h-1 w-10 bg-line-strong" />
           </button>
 
@@ -81,7 +83,8 @@ const BottomSheet = () => {
               kind="link"
               to={`/day/${selectedDate}`}
               text="Open day ↗"
-              className="h-8 shrink-0 rounded-none border-line-strong bg-transparent p-0 px-2.5 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
+              // above the handle's enlarged hit area, which reaches the top pixel of this link
+              className="relative z-20 h-8 shrink-0 rounded-none border-line-strong bg-transparent p-0 px-2.5 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
             />
           </div>
 
@@ -89,7 +92,8 @@ const BottomSheet = () => {
               touch-none and stops pointerdown (the Popover listens in the capture phase, so it still closes). */}
           <div onPointerDown={e => e.stopPropagation()} className="flex shrink-0 flex-col gap-1.5 px-4 pb-2">
             {isSheetShown && <HolidayLinePopover date={selectedDate} />}
-            <DayNote date={selectedDate} variant="compact" />
+            {/* one line while the sheet is peeking, so the first event stays in view; full row once expanded */}
+            <DayNote date={selectedDate} variant={isOpen ? 'row' : 'compact'} />
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">

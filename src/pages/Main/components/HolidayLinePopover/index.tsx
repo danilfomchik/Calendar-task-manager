@@ -13,6 +13,7 @@ import {THolidayLinePopoverProps} from './types';
 const HolidayLinePopover = ({date, className}: THolidayLinePopoverProps) => {
   const {isEnabled, isLoading, insights, name} = useHolidayLine(date);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const slotRef = useRef<HTMLDivElement>(null);
   const popoverId = useId();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +35,7 @@ const HolidayLinePopover = ({date, className}: THolidayLinePopoverProps) => {
     <>
       <HolidayLine
         ref={triggerRef}
+        slotRef={slotRef}
         isLoading={isLoading}
         name={name}
         className={className}
@@ -47,6 +49,7 @@ const HolidayLinePopover = ({date, className}: THolidayLinePopoverProps) => {
         <Popover
           isOpen={isShown}
           anchorRef={triggerRef}
+          fallbackFocusRef={slotRef}
           onClose={close}
           id={popoverId}
           label={name ? `AI insights: ${name}` : 'AI insights'}
