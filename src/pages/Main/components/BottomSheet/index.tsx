@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
 import DayNote from '@/components/common/DayNote';
+import EventsTotal from '@/components/common/EventsTotal';
 import Sheet from '@/components/common/Sheet';
 import {useEventsList} from '@/hooks/useEventsList';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
@@ -14,10 +15,12 @@ import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
 import {onOpenItem} from '@/redux/overflow/overflowSlice';
 import {useAppDispatch} from '@/redux/store';
 import {EVENT_FORM_ID} from '@/services/constants';
-import {formatEventsCount} from '@/services/dateUtils';
+import {getTodayKey} from '@/services/dateUtils';
+import {cx, inertProps} from '@/services/utils';
 import {FormActionType} from '@/types/eventFormTypes';
 
 import AgendaEvent from '../AgendaPanel/AgendaEvent';
+import CalendarMix from '../CalendarMix';
 import HolidayLine from '../HolidayLine';
 import {SHEET_PEEK} from './constants';
 
@@ -37,6 +40,7 @@ const BottomSheet = () => {
 
   const day = moment(selectedDate);
   const eventsCount = events?.length ?? 0;
+  const isToday = selectedDate === getTodayKey();
 
   return (
     <Sheet
@@ -68,36 +72,48 @@ const BottomSheet = () => {
             <span aria-hidden className="h-1 w-10 bg-line-strong" />
           </button>
 
-          <div onPointerDown={startDrag} className="flex shrink-0 touch-none items-end gap-3 px-4 pb-2">
-            <span className="font-display text-6xl font-extrabold leading-[0.85] text-text">{day.format('DD')}</span>
+          <div onPointerDown={startDrag} className="shrink-0 touch-none px-4 pb-2">
+            <div className="flex items-end gap-3">
+              <span
+                className={cx(
+                  'font-display text-6xl leading-[0.8] font-extrabold tracking-[-0.04em] tabular-nums',
+                  isToday ? 'text-info' : 'text-text',
+                )}>
+                {day.format('DD')}
+              </span>
 
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5 pb-0.5">
-              <span className="font-mono text-[11px] uppercase tracking-widest text-text-muted">
-                {day.format('dddd')}
-              </span>
-              <span className="font-mono text-xs text-text-faint">
-                {day.format('MMM YYYY')} · {formatEventsCount(eventsCount)}
-              </span>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span className="flex items-baseline gap-1.5">
+                  <span className="truncate text-[15px] leading-tight font-semibold">{day.format('dddd')}</span>
+                  {isToday && (
+                    <span className="font-mono text-[10px] font-medium tracking-wider text-info uppercase">Today</span>
+                  )}
+                </span>
+                <span className="truncate text-[13px] text-text-muted">{day.format('MMMM YYYY')}</span>
+              </div>
+
+              <Button
+                kind="link"
+                to={`/day/${selectedDate}`}
+                text="Open day ↗"
+                // above the handle's enlarged hit area, which reaches the top pixel of this row
+                className="relative z-20 h-8 shrink-0 rounded-none border-line-strong bg-transparent p-0 px-2.5 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
+              />
             </div>
-
-            <Button
-              kind="link"
-              to={`/day/${selectedDate}`}
-              text="Open day ↗"
-              // above the handle's enlarged hit area, which reaches the top pixel of this link
-              className="relative z-20 h-8 shrink-0 rounded-none border-line-strong bg-transparent p-0 px-2.5 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
-            />
           </div>
 
-          {/* Not a drag area: taps, typing and scrolling the note must never move the sheet, so this block has no
-              touch-none and stops pointerdown (the Popover listens in the capture phase, so it still closes). */}
-          <div onPointerDown={e => e.stopPropagation()} className="flex shrink-0 flex-col gap-1.5 px-4 pb-2">
+          {/* Not a drag area: tapping the Holiday line never moves the sheet (the Popover listens
+              in the capture phase, so it still closes) */}
+          <div onPointerDown={e => e.stopPropagation()} className="flex shrink-0 flex-col gap-2.5 px-4 pb-2">
+            {/* the events total sits over the mix, not in the date row, where the + button overlaps the right edge */}
+            <div className="flex flex-col gap-2">
+              <EventsTotal count={eventsCount} className="shrink-0" />
+              <CalendarMix date={selectedDate} />
+            </div>
             {isSheetShown && <HolidayLine date={selectedDate} />}
-            {/* one line while the sheet is peeking, so the first event stays in view; full row once expanded */}
-            <DayNote date={selectedDate} variant={isOpen ? 'row' : 'compact'} />
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
+          <div className="min-h-0 flex-1 overflow-y-auto border-t border-line px-4 pt-2 pb-6">
             {eventsCount === 0 ? (
               <p className="font-mono text-xs text-text-faint">
                 No events{' '}
@@ -117,6 +133,16 @@ const BottomSheet = () => {
                 ))}
               </ul>
             )}
+          </div>
+
+          {/* Pinned under the list: the sheet keeps its full height and slides down when collapsed, so the note only
+              shows once it is expanded (and is inert until then) and the peek keeps the first event in view; typing never
+              moves the sheet */}
+          <div
+            {...inertProps(!isExpanded)}
+            onPointerDown={e => e.stopPropagation()}
+            className="shrink-0 border-t border-line bg-surface-raised p-4">
+            <DayNote date={selectedDate} appearance="margin" />
           </div>
         </>
       )}

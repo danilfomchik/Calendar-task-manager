@@ -1,11 +1,11 @@
 import moment from 'moment';
 import {useMemo} from 'react';
 
+import CalendarChips from '@/components/common/CalendarChips';
+import EventsTotal from '@/components/common/EventsTotal';
 import {useEventsList} from '@/hooks/useEventsList';
 import {defaultCalendars} from '@/services/constants';
 import {formatDate} from '@/services/dateUtils';
-import {formatEventsCount} from '@/services/dateUtils';
-import {calendarColorStyle} from '@/services/styles';
 
 import {TDaySummaryProps} from './types';
 
@@ -19,7 +19,8 @@ const DaySummary = ({date}: TDaySummaryProps) => {
     () =>
       defaultCalendars
         .map(calendar => ({
-          ...calendar,
+          name: calendar.name,
+          color: calendar.itemColor,
           count: events?.filter(event => event.eventCalendar === calendar.name).length ?? 0,
         }))
         .filter(calendar => calendar.count > 0),
@@ -32,28 +33,9 @@ const DaySummary = ({date}: TDaySummaryProps) => {
         {formatDate(moment(date), 'dddd, D MMMM')}
       </h1>
 
-      <p className="font-display text-2xl font-extrabold">
-        {total}{' '}
-        <span className="font-mono text-xs font-normal tracking-widest text-text-faint uppercase">
-          {total === 1 ? 'event' : 'events'}
-        </span>
-      </p>
+      <EventsTotal count={total} className="leading-normal" />
 
-      {chips.length > 0 && (
-        <ul aria-label="Events per calendar" className="flex flex-wrap gap-1.5">
-          {chips.map(chip => (
-            <li
-              key={chip.name}
-              title={`${chip.name}: ${formatEventsCount(chip.count)}`}
-              style={calendarColorStyle(chip.itemColor)}
-              className="flex items-center gap-1.5 border border-line px-2 py-0.5 font-mono text-[11px] text-text-muted">
-              <span aria-hidden className="size-2 rounded-full bg-(--calendar-color)" />
-              <span className="uppercase">{chip.name}</span>
-              {chip.count}
-            </li>
-          ))}
-        </ul>
-      )}
+      {chips.length > 0 && <CalendarChips chips={chips} />}
     </section>
   );
 };

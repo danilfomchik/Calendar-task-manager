@@ -3,6 +3,7 @@ import {motion, useReducedMotion} from 'motion/react';
 import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
+import DayNote from '@/components/common/DayNote';
 import {useEventsList} from '@/hooks/useEventsList';
 import {selectSelectedDate} from '@/redux/date/selectors';
 import {setEventFormData} from '@/redux/events/eventsSlice';
@@ -67,19 +68,25 @@ const AgendaPanel = () => {
         )}
       </div>
 
-      <div className="flex items-center gap-2 border-t border-line p-4">
-        <button
-          type="button"
-          onClick={handleAdd}
-          className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-2 bg-action px-3 font-mono text-xs font-medium uppercase tracking-wider text-action-ink hover:brightness-110">
-          + Add event
-        </button>
-        <Button
-          kind="link"
-          to={`/day/${selectedDate}`}
-          text="Open day ↗"
-          className="h-9 rounded-none border-line-strong bg-transparent p-0 px-3 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
-        />
+      {/* The Day note is keyed by date, so a pending draft is saved to its own day before the selected date changes
+          (and when the panel closes) */}
+      <div className="flex flex-col gap-3 border-t border-line p-4">
+        <DayNote date={selectedDate} appearance="margin" />
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleAdd}
+            className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-2 bg-action px-3 font-mono text-xs font-medium uppercase tracking-wider text-action-ink hover:brightness-110">
+            + Add event
+          </button>
+          <Button
+            kind="link"
+            to={`/day/${selectedDate}`}
+            text="Open day ↗"
+            className="h-9 rounded-none border-line-strong bg-transparent p-0 px-3 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
+          />
+        </div>
       </div>
     </motion.aside>
   );

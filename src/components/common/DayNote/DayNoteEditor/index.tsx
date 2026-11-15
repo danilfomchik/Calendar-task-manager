@@ -18,7 +18,7 @@ const MAX_ROWS = 6;
 // [icon] [text] [Saved] that saves itself shortly after typing stops (and on blur and unmount). An emptied note
 // is removed and the row goes back to the dashed line. Never counted as an event.
 // Mount it keyed by date (DayNote does), so the draft belongs to one day.
-const DayNoteEditor = ({date, variant = 'row'}: TDayNoteEditorProps) => {
+const DayNoteEditor = ({date, variant = 'row', appearance = 'boxed'}: TDayNoteEditorProps) => {
   const dispatch = useAppDispatch();
   const textareaId = useId();
   const storedNote = useSelector(selectDayNote(date)) ?? '';
@@ -92,6 +92,8 @@ const DayNoteEditor = ({date, variant = 'row'}: TDayNoteEditorProps) => {
     if (!draft.trim()) setDraft('');
   };
 
+  const isMargin = appearance === 'margin';
+
   if (!isEditing && !hasNote) {
     return (
       <button
@@ -100,10 +102,19 @@ const DayNoteEditor = ({date, variant = 'row'}: TDayNoteEditorProps) => {
           setIsEditing(true);
           setShouldFocus(true);
         }}
-        className="flex min-h-11 w-full cursor-pointer items-center gap-2.5 border border-dashed border-line px-3 text-left font-mono text-sm text-text-faint transition-colors hover:border-line-strong hover:text-text-muted focus-visible:border-action focus-visible:text-text-muted focus-visible:outline-none!">
-        <span aria-hidden className="inline-flex items-center justify-center w-4">
-          +
-        </span>
+        className={cx(
+          'group flex min-h-11 w-full cursor-pointer items-center gap-2.5 text-left text-sm text-text-faint transition-colors hover:text-text-muted focus-visible:text-text-muted focus-visible:outline-none!',
+          isMargin
+            ? 'border-l-2 border-dashed border-line-strong pl-3 hover:border-text-faint focus-visible:border-action focus-visible:bg-surface-raised'
+            : 'border border-dashed border-line px-3 font-mono hover:border-line-strong focus-visible:border-action',
+        )}>
+        {isMargin ? (
+          <NoteIcon className="size-4 shrink-0" />
+        ) : (
+          <span aria-hidden className="inline-flex items-center justify-center w-4">
+            +
+          </span>
+        )}
         Add a note
       </button>
     );
@@ -115,8 +126,11 @@ const DayNoteEditor = ({date, variant = 'row'}: TDayNoteEditorProps) => {
       className={cx(
         // top-aligned so the icon and "Saved" stay on the first line as the note grows; 1px border + 11px padding +
         // one 20px line = 44px, the same height as the dashed "Add a note" line
-        'group flex min-h-11 cursor-text items-start gap-2.5 border border-line bg-surface-sunken px-3 py-2.75 transition-colors hover:border-line-strong',
-        'focus-within:border-action focus-within:bg-surface-raised focus-within:shadow-[0_0_0_1px_var(--color-action)]',
+        'group flex min-h-11 cursor-text items-start gap-2.5 transition-colors',
+        isMargin
+          ? // the left rule is the only frame; min-h-11 keeps it the height of the margin "Add a note" row
+            'border-l-2 border-line-strong py-2.75 pr-2 pl-3 hover:not-focus-within:border-text-faint focus-within:border-action focus-within:bg-surface-raised'
+          : 'border border-line bg-surface-sunken px-3 py-2.75 hover:border-line-strong focus-within:border-action focus-within:bg-surface-raised focus-within:shadow-[0_0_0_1px_var(--color-action)]',
       )}>
       <NoteIcon className="mt-0.5 size-4 shrink-0 text-text-faint transition-colors group-focus-within:text-action" />
       <textarea
