@@ -1,7 +1,8 @@
 import {defaultCalendars} from '@/services/constants';
-import {CalendarsNames} from '@/types/types';
+import {CalendarsNames, TCalendarsList} from '@/types/types';
 
-import {EventsCountChangeKind} from './types';
+import {TEvent} from '../events/types';
+import {EventsCountChangeKind, TCalendarEventsCount} from './types';
 
 export const handleEventsCountChangeInMap = (
   eventsCalendarsMap: Record<string, Record<CalendarsNames, number>>,
@@ -48,3 +49,16 @@ export const handleEventsCountChangeInMap = (
 // an event is dimmed only when a non-empty calendar filter excludes its calendar
 export const isEventDimmed = (activeCalendars: CalendarsNames[], eventCalendar: CalendarsNames) =>
   activeCalendars.length > 0 && !activeCalendars.includes(eventCalendar);
+
+// A day's events counted per calendar, in the calendars' own order; calendars without events are left out
+export const countEventsByCalendar = (
+  events: TEvent[] | undefined,
+  calendars: TCalendarsList,
+): TCalendarEventsCount[] =>
+  calendars
+    .map(({name, itemColor}) => ({
+      name,
+      color: itemColor,
+      count: events?.filter(event => event.eventCalendar === name).length ?? 0,
+    }))
+    .filter(calendar => calendar.count > 0);

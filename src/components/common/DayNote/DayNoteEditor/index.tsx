@@ -102,10 +102,11 @@ const DayNoteEditor = ({date, appearance = 'boxed'}: TDayNoteEditorProps) => {
           setShouldFocus(true);
         }}
         className={cx(
-          'group flex min-h-11 w-full cursor-pointer items-center gap-2.5 text-left text-sm text-text-faint transition-colors hover:text-text-muted focus-visible:text-text-muted focus-visible:outline-none!',
+          'group flex min-h-11 w-full cursor-pointer items-center gap-2.5 text-left text-text-faint transition-colors hover:text-text-muted focus-visible:text-text-muted focus-visible:outline-none!',
           isMargin
-            ? 'border-l-2 border-dashed border-line-strong pl-3 hover:border-text-faint focus-visible:border-action focus-visible:bg-surface-raised'
-            : 'border border-dashed border-line px-3 font-mono hover:border-line-strong focus-visible:border-action',
+            ? 'border-l-2 border-dashed border-line-strong pl-3 text-sm hover:border-text-faint focus-visible:border-action focus-visible:bg-surface-raised'
+            : // the Day page's existing empty line, kept as it was (#86): 11px mono caps with wide tracking
+              'border border-dashed border-line px-3 font-mono text-[11px] tracking-widest uppercase hover:border-line-strong focus-visible:border-action',
         )}>
         {isMargin ? (
           <NoteIcon className="size-4 shrink-0" />
@@ -143,10 +144,8 @@ const DayNoteEditor = ({date, appearance = 'boxed'}: TDayNoteEditorProps) => {
         onChange={e => onChange(e.target.value)}
         onFocus={() => setIsEditing(true)}
         onBlur={onBlur}
-        className={cx(
-          // the row's border shows focus instead of the global outline
-          'min-w-0 flex-1 resize-none bg-transparent text-sm leading-5 text-text placeholder:text-text-faint focus-visible:outline-none!',
-        )}
+        // the row's border shows focus instead of the global outline
+        className="min-w-0 flex-1 resize-none bg-transparent text-sm leading-5 text-text placeholder:text-text-faint focus-visible:outline-none!"
       />
       <span role="status" className="font-mono text-[10px] leading-5 text-text-faint">
         {isSaved ? 'Saved' : ''}

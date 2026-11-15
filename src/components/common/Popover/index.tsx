@@ -4,7 +4,7 @@ import {createPortal} from 'react-dom';
 import {useSelector} from 'react-redux';
 
 import {selectOpenedItems} from '@/redux/overflow/selectors';
-import {cx} from '@/services/utils';
+import {cx, stopPropagation} from '@/services/utils';
 
 import {claimActivePopover, releaseActivePopover} from './activePopover';
 import {TPopoverProps} from './types';
@@ -118,8 +118,8 @@ const Popover = ({
       transition={{duration: 0.14, ease: 'easeOut'}}
       // React events bubble through portals: keep pointer-downs and clicks from reaching the trigger's ancestors
       // (a draggable sheet, a clickable row)
-      onPointerDown={e => e.stopPropagation()}
-      onClick={e => e.stopPropagation()}
+      onPointerDown={stopPropagation}
+      onClick={stopPropagation}
       style={
         position
           ? {top: position.top, left: position.left, width: position.width, maxHeight: position.maxHeight}

@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import {useEventsList} from '@/hooks/useEventsList';
-import {isEventDimmed} from '@/redux/myCalendars/helpers';
+import {countEventsByCalendar, isEventDimmed} from '@/redux/myCalendars/helpers';
 import {selectActiveCalendars, selectCalendarsList} from '@/redux/myCalendars/selectors';
 import {calendarColorStyle} from '@/services/styles';
 import {cx} from '@/services/utils';
@@ -20,14 +20,10 @@ const CalendarMix = ({date, className}: TCalendarMixProps) => {
 
   const segments = useMemo(
     () =>
-      calendarsList
-        .map(({name, itemColor}) => ({
-          name,
-          color: itemColor,
-          count: events?.filter(event => event.eventCalendar === name).length ?? 0,
-          isDimmed: isEventDimmed(activeCalendars, name),
-        }))
-        .filter(segment => segment.count > 0),
+      countEventsByCalendar(events, calendarsList).map(segment => ({
+        ...segment,
+        isDimmed: isEventDimmed(activeCalendars, segment.name),
+      })),
     [calendarsList, activeCalendars, events],
   );
 

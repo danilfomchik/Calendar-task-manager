@@ -1,11 +1,12 @@
 import moment from 'moment';
 import {useMemo} from 'react';
 
-import CalendarChips from '@/components/common/CalendarChips';
 import EventsTotal from '@/components/common/EventsTotal';
 import {useEventsList} from '@/hooks/useEventsList';
+import {countEventsByCalendar} from '@/redux/myCalendars/helpers';
 import {defaultCalendars} from '@/services/constants';
-import {formatDate} from '@/services/dateUtils';
+import {formatDate, formatEventsCount} from '@/services/dateUtils';
+import {calendarColorStyle} from '@/services/styles';
 
 import {TDaySummaryProps} from './types';
 
@@ -15,17 +16,7 @@ const DaySummary = ({date}: TDaySummaryProps) => {
   const events = useEventsList(date);
   const total = events?.length ?? 0;
 
-  const chips = useMemo(
-    () =>
-      defaultCalendars
-        .map(calendar => ({
-          name: calendar.name,
-          color: calendar.itemColor,
-          count: events?.filter(event => event.eventCalendar === calendar.name).length ?? 0,
-        }))
-        .filter(calendar => calendar.count > 0),
-    [events],
-  );
+  const chips = useMemo(() => countEventsByCalendar(events, defaultCalendars), [events]);
 
   return (
     <section aria-label="Day summary" className="flex flex-col gap-2">
@@ -33,9 +24,23 @@ const DaySummary = ({date}: TDaySummaryProps) => {
         {formatDate(moment(date), 'dddd, D MMMM')}
       </h1>
 
-      <EventsTotal count={total} className="leading-normal" />
+      <EventsTotal count={total} />
 
-      {chips.length > 0 && <CalendarChips chips={chips} />}
+      {chips.length > 0 && (
+        <ul aria-label="Events per calendar" className="flex flex-wrap gap-1.5">
+          {chips.map(chip => (
+            <li
+              key={chip.name}
+              title={`${chip.name}: ${formatEventsCount(chip.count)}`}
+              style={calendarColorStyle(chip.color)}
+              className="flex items-center gap-1.5 border border-line px-2 py-0.5 font-mono text-[11px] text-text-muted">
+              <span aria-hidden className="size-2 rounded-full bg-(--calendar-color)" />
+              <span className="uppercase">{chip.name}</span>
+              {chip.count}
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 };

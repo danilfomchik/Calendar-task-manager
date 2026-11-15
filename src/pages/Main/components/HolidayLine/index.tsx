@@ -54,7 +54,7 @@ const HolidayLine = ({date, className}: THolidayLineProps) => {
           id={popoverId}
           label={name ? `AI insights: ${name}` : 'AI insights'}
           className="flex flex-col gap-3">
-          <AIInsightsBody insights={insights} variant="editorial" />
+          <AIInsightsBody insights={insights} variant="popover" />
         </Popover>
       )}
     </>

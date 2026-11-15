@@ -1,12 +1,18 @@
+import {ComponentType} from 'react';
+
 import {TAIInsights} from '@/redux/dateHolidaysGenerator/parseAIContent';
 
-// block: the Day page AI insights card (fact in a callout); editorial: the Holiday popover (big name, fact as pull-quote)
-export type TAIInsightsBodyVariant = 'block' | 'editorial';
+// card: the Day page AI insights card (fact in a callout); popover: the Holiday popover (big name, fact as pull-quote)
+export type TAIInsightsBodyVariant = 'card' | 'popover';
 
-export type TAIInsightsVariantClasses = {
-  name: string;
-  description: string;
-  footnote: string;
+// Props shared by every variant's "Did you know" fact component
+export type TAIInsightsFactProps = {fact: string};
+
+export type TAIInsightsVariant = {
+  nameClassName: string;
+  descriptionClassName: string;
+  footnoteClassName: string;
+  Fact: ComponentType<TAIInsightsFactProps>;
 };
 
 export type TAIInsightsBodyProps = {

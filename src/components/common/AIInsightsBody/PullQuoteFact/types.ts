@@ -1,1 +1,3 @@
-export type TPullQuoteFactProps = {fact: string};
+import {TAIInsightsFactProps} from '../types';
+
+export type TPullQuoteFactProps = TAIInsightsFactProps;

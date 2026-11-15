@@ -8,6 +8,10 @@ import EventsTotal from '@/components/common/EventsTotal';
 import Sheet from '@/components/common/Sheet';
 import {useEventsList} from '@/hooks/useEventsList';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
+import AgendaEvent from '@/pages/Main/components/AgendaPanel/AgendaEvent';
+import CalendarMix from '@/pages/Main/components/CalendarMix';
+import DayHeading from '@/pages/Main/components/DayHeading';
+import HolidayLine from '@/pages/Main/components/HolidayLine';
 import {selectSelectedDate} from '@/redux/date/selectors';
 import {setEventFormData} from '@/redux/events/eventsSlice';
 import {isEventDimmed} from '@/redux/myCalendars/helpers';
@@ -15,13 +19,9 @@ import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
 import {onOpenItem} from '@/redux/overflow/overflowSlice';
 import {useAppDispatch} from '@/redux/store';
 import {EVENT_FORM_ID} from '@/services/constants';
-import {getTodayKey} from '@/services/dateUtils';
-import {cx, inertProps} from '@/services/utils';
+import {inertProps, stopPropagation} from '@/services/utils';
 import {FormActionType} from '@/types/eventFormTypes';
 
-import AgendaEvent from '../AgendaPanel/AgendaEvent';
-import CalendarMix from '../CalendarMix';
-import HolidayLine from '../HolidayLine';
 import {SHEET_PEEK} from './constants';
 
 const BottomSheet = () => {
@@ -40,7 +40,6 @@ const BottomSheet = () => {
 
   const day = moment(selectedDate);
   const eventsCount = events?.length ?? 0;
-  const isToday = selectedDate === getTodayKey();
 
   return (
     <Sheet
@@ -73,25 +72,7 @@ const BottomSheet = () => {
           </button>
 
           <div onPointerDown={startDrag} className="shrink-0 touch-none px-4 pb-2">
-            <div className="flex items-end gap-3">
-              <span
-                className={cx(
-                  'font-display text-6xl leading-[0.8] font-extrabold tracking-[-0.04em] tabular-nums',
-                  isToday ? 'text-info' : 'text-text',
-                )}>
-                {day.format('DD')}
-              </span>
-
-              <div className="flex min-w-0 flex-1 flex-col">
-                <span className="flex items-baseline gap-1.5">
-                  <span className="truncate text-[15px] leading-tight font-semibold">{day.format('dddd')}</span>
-                  {isToday && (
-                    <span className="font-mono text-[10px] font-medium tracking-wider text-info uppercase">Today</span>
-                  )}
-                </span>
-                <span className="truncate text-[13px] text-text-muted">{day.format('MMMM YYYY')}</span>
-              </div>
-
+            <DayHeading date={selectedDate} size="sheet">
               <Button
                 kind="link"
                 to={`/day/${selectedDate}`}
@@ -99,15 +80,15 @@ const BottomSheet = () => {
                 // above the handle's enlarged hit area, which reaches the top pixel of this row
                 className="relative z-20 h-8 shrink-0 rounded-none border-line-strong bg-transparent p-0 px-2.5 font-mono text-xs uppercase tracking-wider text-text-muted hover:text-text"
               />
-            </div>
+            </DayHeading>
           </div>
 
           {/* Not a drag area: tapping the Holiday line never moves the sheet (the Popover listens
               in the capture phase, so it still closes) */}
-          <div onPointerDown={e => e.stopPropagation()} className="flex shrink-0 flex-col gap-2.5 px-4 pb-2">
+          <div onPointerDown={stopPropagation} className="flex shrink-0 flex-col gap-2.5 px-4 pb-2">
             {/* the events total sits over the mix, not in the date row, where the + button overlaps the right edge */}
             <div className="flex flex-col gap-2">
-              <EventsTotal count={eventsCount} className="shrink-0" />
+              <EventsTotal count={eventsCount} className="shrink-0 leading-none" />
               <CalendarMix date={selectedDate} />
             </div>
             {isSheetShown && <HolidayLine date={selectedDate} />}
@@ -140,7 +121,7 @@ const BottomSheet = () => {
               moves the sheet */}
           <div
             {...inertProps(!isExpanded)}
-            onPointerDown={e => e.stopPropagation()}
+            onPointerDown={stopPropagation}
             className="shrink-0 border-t border-line bg-surface-raised p-4">
             <DayNote date={selectedDate} appearance="margin" />
           </div>
