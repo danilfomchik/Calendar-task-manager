@@ -18,7 +18,7 @@ const MAX_ROWS = 6;
 // [icon] [text] [Saved] that saves itself shortly after typing stops (and on blur and unmount). An emptied note
 // is removed and the row goes back to the dashed line. Never counted as an event.
 // Mount it keyed by date (DayNote does), so the draft belongs to one day.
-const DayNoteEditor = ({date, variant = 'row', appearance = 'boxed'}: TDayNoteEditorProps) => {
+const DayNoteEditor = ({date, appearance = 'boxed'}: TDayNoteEditorProps) => {
   const dispatch = useAppDispatch();
   const textareaId = useId();
   const storedNote = useSelector(selectDayNote(date)) ?? '';
@@ -66,7 +66,6 @@ const DayNoteEditor = ({date, variant = 'row', appearance = 'boxed'}: TDayNoteEd
   );
 
   const hasNote = !!draft.trim();
-  const isCollapsed = variant === 'compact' && !isEditing;
 
   // Grow with the text; the line height comes from the stylesheet, so the limit follows the font size
   useLayoutEffect(() => {
@@ -74,10 +73,10 @@ const DayNoteEditor = ({date, variant = 'row', appearance = 'boxed'}: TDayNoteEd
     if (!textarea) return;
 
     textarea.style.height = 'auto';
-    const maxHeight = parseFloat(getComputedStyle(textarea).lineHeight) * (isCollapsed ? 1 : MAX_ROWS);
+    const maxHeight = parseFloat(getComputedStyle(textarea).lineHeight) * MAX_ROWS;
 
     textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
-  }, [draft, isEditing, hasNote, isCollapsed]);
+  }, [draft, isEditing, hasNote]);
 
   const onChange = (text: string) => {
     setDraft(text);
@@ -147,7 +146,6 @@ const DayNoteEditor = ({date, variant = 'row', appearance = 'boxed'}: TDayNoteEd
         className={cx(
           // the row's border shows focus instead of the global outline
           'min-w-0 flex-1 resize-none bg-transparent text-sm leading-5 text-text placeholder:text-text-faint focus-visible:outline-none!',
-          isCollapsed && 'overflow-hidden',
         )}
       />
       <span role="status" className="font-mono text-[10px] leading-5 text-text-faint">
