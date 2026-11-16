@@ -6,12 +6,20 @@ export type THolidayLineProps = {
   className?: string;
 };
 
-export type THolidayLineState = {
+// What the Holiday line row shows: a skeleton while the date settles and loads, the error row with Retry when the
+// request failed, the holiday chip when the answer names one, and nothing otherwise
+export type THolidayLineStatus = 'loading' | 'error' | 'holiday' | 'none';
+
+type THolidayLineBase = {
   // AI insights flag; when false render nothing and reserve no space
   isEnabled: boolean;
-  // Debouncing the selected date or fetching its answer
-  isLoading: boolean;
-  // Parsed answer for exactly the selected date; null when none, failed or malformed
-  insights: TAIInsights | null;
-  name: string | null;
+  // Refetches the selected date's answer (the error row's Retry); only call it once the date has settled
+  retry: () => void;
 };
+
+// Parsed answer for exactly the selected date; insights and name are set exactly when status is 'holiday'
+export type THolidayLineState = THolidayLineBase &
+  (
+    | {status: 'holiday'; insights: TAIInsights; name: string}
+    | {status: Exclude<THolidayLineStatus, 'holiday'>; insights: null; name: null}
+  );

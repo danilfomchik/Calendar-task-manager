@@ -6,14 +6,16 @@ import {cx} from '@/services/utils';
 import {THolidayLineChipProps} from './types';
 
 // The Holiday line chip: one reserved 32px row under the Agenda panel / Bottom sheet date. Skeleton while loading, the
-// holiday name as an AI-insights chip when there is one, blank otherwise. Render it only while AI insights are
-// enabled (HolidayLine does) so no space is reserved when they are off.
-// Hover/focus effects (sliding gradient edge, glows, sparkle, arrow) are motion-safe only; under reduced motion the
-// chip keeps just the lighter fill and a static 1px green ring on focus.
+// holiday name as an AI-insights chip when there is one, a static rose error row with Retry when the request failed,
+// blank otherwise. Render it only while AI insights are enabled (HolidayLine does) so no space is reserved when off.
+// The ↗ is always visible so the chip reads as clickable. Lit (hover, keyboard focus or open, the `lit` variants in
+// index.css) it turns green and the chip slides its gradient edge, grows the glows and rotates the sparkle, all of that
+// motion-safe only; under reduced motion it keeps just the lighter fill, the green ↗ and a static 1px green focus
+// ring. The error row is not a live region, so clicking through failing dates stays quiet.
 const HolidayLineChip = forwardRef<HTMLButtonElement, THolidayLineChipProps>(
-  ({isLoading, name, className, slotRef, ...buttonProps}, ref) => (
+  ({status, onRetry, name, className, slotRef, ...buttonProps}, ref) => (
     // The slot is always mounted (while enabled) and focusable from script only, so focus has somewhere to land
-    // when the chip it belonged to is replaced by the skeleton (e.g. the date changes with the popover open)
+    // when the chip it belonged to is replaced (e.g. the date changes with the popover open)
     <div
       ref={slotRef}
       tabIndex={-1}
@@ -21,33 +23,48 @@ const HolidayLineChip = forwardRef<HTMLButtonElement, THolidayLineChipProps>(
         'group/slot h-8 focus-visible:shadow-[0_0_0_1px_var(--color-action)] focus-visible:outline-none!',
         className,
       )}>
-      {isLoading && (
+      {status === 'loading' && (
         <div
           role="status"
           className="h-8 border border-line bg-surface-sunken p-2 group-focus-visible/slot:border-action">
-          <span className="sr-only">Loading holiday</span>
+          <span className="sr-only">Loading AI insights</span>
           <SkeletonLine className="h-3.5 w-2/3" />
         </div>
       )}
 
-      {!isLoading && name && (
+      {status === 'error' && (
+        <div className="flex h-8 items-center gap-2 border border-danger/40 bg-danger/5 pr-1 pl-2.5 text-sm text-danger group-focus-visible/slot:border-action">
+          <span aria-hidden className="text-xs">
+            ⚠
+          </span>
+          <span className="min-w-0 flex-1 truncate">Couldn't load AI insights</span>
+          <button
+            type="button"
+            onClick={onRetry}
+            className="shrink-0 cursor-pointer px-1.5 py-0.5 font-mono text-[11px] tracking-widest text-danger uppercase transition-colors hover:text-text focus-visible:text-text focus-visible:shadow-[0_0_0_1px_var(--color-danger)] focus-visible:outline-none! motion-reduce:transition-none">
+            Retry
+          </button>
+        </div>
+      )}
+
+      {status === 'holiday' && name && (
         <button
           {...buttonProps}
           ref={ref}
           type="button"
-          className="group block w-full cursor-pointer bg-linear-to-br from-info via-action to-info bg-size-[220%_220%] bg-position-[0%_0%] p-px text-left transition-[background-position,box-shadow] duration-500 focus-visible:shadow-[0_0_0_1px_var(--color-action)] focus-visible:outline-none! motion-safe:hover:bg-position-[100%_100%] motion-safe:hover:shadow-[0_0_18px_-4px_var(--color-action)] motion-safe:focus-visible:bg-position-[100%_100%] motion-safe:focus-visible:shadow-[0_0_0_1px_var(--color-action),0_0_18px_-4px_var(--color-action)]! motion-reduce:transition-none">
-          <span className="relative flex h-7.5 items-center gap-2 overflow-hidden bg-surface-sunken px-2.5 transition-colors duration-300 group-hover:bg-surface-raised group-focus-visible:bg-surface-raised motion-reduce:transition-none">
+          className="group block w-full cursor-pointer bg-linear-to-br from-info via-action to-info bg-size-[220%_220%] bg-position-[0%_0%] p-px text-left transition-[background-position,box-shadow] duration-500 focus-visible:shadow-[0_0_0_1px_var(--color-action)] focus-visible:outline-none! motion-safe:lit:bg-position-[100%_100%] motion-safe:lit:shadow-[0_0_18px_-4px_var(--color-action)] motion-safe:focus-visible:shadow-[0_0_0_1px_var(--color-action),0_0_18px_-4px_var(--color-action)]! motion-reduce:transition-none">
+          <span className="relative flex h-7.5 items-center gap-2 overflow-hidden bg-surface-sunken px-2.5 transition-colors duration-300 group-lit:bg-surface-raised motion-reduce:transition-none">
             <span
               aria-hidden
-              className="pointer-events-none absolute -top-6 -right-6 size-16 rounded-full bg-action/20 blur-2xl transition-all duration-500 motion-safe:group-hover:scale-150 motion-safe:group-hover:bg-action/35 motion-safe:group-focus-visible:scale-150 motion-safe:group-focus-visible:bg-action/35 motion-reduce:transition-none"
+              className="pointer-events-none absolute -top-6 -right-6 size-16 rounded-full bg-action/20 blur-2xl transition-all duration-500 motion-safe:group-lit:scale-150 motion-safe:group-lit:bg-action/35 motion-reduce:transition-none"
             />
             <span
               aria-hidden
-              className="pointer-events-none absolute -bottom-6 -left-6 size-16 rounded-full bg-info/20 blur-2xl transition-all duration-500 motion-safe:group-hover:scale-150 motion-safe:group-hover:bg-info/35 motion-safe:group-focus-visible:scale-150 motion-safe:group-focus-visible:bg-info/35 motion-reduce:transition-none"
+              className="pointer-events-none absolute -bottom-6 -left-6 size-16 rounded-full bg-info/20 blur-2xl transition-all duration-500 motion-safe:group-lit:scale-150 motion-safe:group-lit:bg-info/35 motion-reduce:transition-none"
             />
             <span
               aria-hidden
-              className="relative text-xs text-action transition-transform duration-500 motion-safe:group-hover:scale-125 motion-safe:group-hover:rotate-180 motion-safe:group-focus-visible:scale-125 motion-safe:group-focus-visible:rotate-180 motion-reduce:transition-none">
+              className="relative text-xs text-action transition-transform duration-500 motion-safe:group-lit:scale-125 motion-safe:group-lit:rotate-180 motion-reduce:transition-none">
               ✦
             </span>
             <span
@@ -57,7 +74,7 @@ const HolidayLineChip = forwardRef<HTMLButtonElement, THolidayLineChipProps>(
             </span>
             <span
               aria-hidden
-              className="relative -translate-x-1 font-mono text-xs text-action opacity-0 transition-all duration-300 motion-safe:group-hover:translate-x-0 motion-safe:group-hover:opacity-100 motion-safe:group-focus-visible:translate-x-0 motion-safe:group-focus-visible:opacity-100 motion-reduce:hidden">
+              className="relative shrink-0 font-mono text-xs text-text-muted transition-colors duration-300 group-lit:text-action motion-reduce:transition-none">
               ↗
             </span>
           </span>

@@ -14,7 +14,8 @@ export type TPopoverProps = PropsWithChildren<{
   label: string;
   // id for the dialog, so the trigger can point at it with aria-controls
   id?: string;
-  // Desktop width in px, capped to the visible viewport width
+  // Desktop width in px, capped to the visible viewport width. Below a 640px layout viewport every popover is full
+  // width with a 16px inset whatever this is (a deliberate rule: phones get edge-to-edge panels)
   width?: number;
   className?: string;
 }>;

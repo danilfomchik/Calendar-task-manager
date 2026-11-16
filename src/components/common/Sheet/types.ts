@@ -19,8 +19,14 @@ export type TSheetProps = {
   // Height (px) that stays visible while closed. 0 hides the sheet completely: it becomes inert and the page
   // brings its own trigger. A peeking sheet stays interactive and is opened by dragging or tapping its handle.
   peek?: number;
-  // Adds a backdrop that closes the sheet on tap and closes it on Esc, and makes it a dialog
+  // Adds a backdrop that closes the sheet on tap and on Esc (unless isEscapeDisabled), and makes the
+  // open sheet a dialog
   modal?: boolean;
+  // Space (px) left above the open sheet, default SHEET_DEFAULT_TOP_GAP; raise it when the layer also covers something the sheet should
+  // stay below (e.g. a header)
+  topGap?: number;
+  // Ignore Esc, e.g. while a modal or menu opened on top handles its own
+  isEscapeDisabled?: boolean;
   // Positions the layer the sheet slides in (default fills the nearest positioned ancestor); add z-index and
   // visibility classes here
   layerClassName?: string;

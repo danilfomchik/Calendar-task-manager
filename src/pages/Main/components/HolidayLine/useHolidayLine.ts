@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 
 import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 
-import {THolidayLineState} from './types';
+import {THolidayLineState, THolidayLineStatus} from './types';
 
 const SETTLE_MS = 400;
 
@@ -25,11 +25,21 @@ export const useHolidayLine = (date: string): THolidayLineState => {
   const settled = useSettledDate(date);
   const isSettled = settled === date;
 
-  const {isEnabled, insights, isFetching} = useAIInsights(settled, {skip: !isSettled});
+  const {isEnabled, insights, isFetching, isError, refetch} = useAIInsights(settled, {skip: !isSettled});
 
-  if (!isEnabled) return {isEnabled: false, isLoading: false, insights: null, name: null};
+  const base = {isEnabled, retry: refetch};
+  const without = (status: Exclude<THolidayLineStatus, 'holiday'>): THolidayLineState => ({
+    ...base,
+    status,
+    insights: null,
+    name: null,
+  });
 
-  if (!isSettled || isFetching) return {isEnabled: true, isLoading: true, insights: null, name: null};
+  if (!isEnabled) return without('none');
+  if (!isSettled || isFetching) return without('loading');
+  if (isError) return without('error');
 
-  return {isEnabled: true, isLoading: false, insights, name: insights?.holiday?.name ?? null};
+  const name = insights?.holiday?.name;
+
+  return insights && name ? {...base, status: 'holiday', insights, name} : without('none');
 };

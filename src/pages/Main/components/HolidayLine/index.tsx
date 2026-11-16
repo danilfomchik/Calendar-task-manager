@@ -11,7 +11,7 @@ import {useHolidayLine} from './useHolidayLine';
 // Used in the Agenda panel and the Bottom sheet headers. Renders nothing (and reserves no space) when AI insights are
 // off. The popover closes when the selected date changes, so it never shows another day's answer.
 const HolidayLine = ({date, className}: THolidayLineProps) => {
-  const {isEnabled, isLoading, insights, name} = useHolidayLine(date);
+  const {isEnabled, status, insights, name, retry} = useHolidayLine(date);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const slotRef = useRef<HTMLDivElement>(null);
   const popoverId = useId();
@@ -29,14 +29,15 @@ const HolidayLine = ({date, className}: THolidayLineProps) => {
 
   if (!isEnabled) return null;
 
-  const isShown = isOpen && !isLoading && !!insights;
+  const isShown = isOpen && status === 'holiday' && !!insights;
 
   return (
     <>
       <HolidayLineChip
         ref={triggerRef}
         slotRef={slotRef}
-        isLoading={isLoading}
+        status={status}
+        onRetry={retry}
         name={name}
         className={className}
         onClick={() => setIsOpen(open => !open)}

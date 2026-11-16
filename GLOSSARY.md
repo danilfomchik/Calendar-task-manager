@@ -74,10 +74,10 @@ The Day context block listing the next three days after the Viewed day that have
 The selected day's events split by calendar, in the Agenda panel and the Bottom sheet: one segment per calendar, sized by its share of the day's events, so it shows which calendars dominate the day. It ignores the Calendar filter; a filtered-out calendar is shown hatched rather than removed, so the day keeps its shape. Not to be confused with the Event mix on the Day page's Week strip, which has one segment per event.
 
 **Holiday line**:
-The one line in the header of the Agenda panel and the Bottom sheet that names the selected day's holiday, taken from the same answer as AI insights. It shows only the name; selecting it opens a popover with that answer in full (name, description and the fact). It is blank when the day has no holiday, the answer fails or AI insights are switched off. Its space is kept free whenever AI insights are on, so the events below do not move when a day is selected.
+The one line in the header of the Agenda panel and the Bottom sheet that names the selected day's holiday, taken from the same answer as AI insights. It shows only the name; selecting it opens a popover with that answer in full (name, description and the fact). It is blank when the day has no holiday or AI insights are switched off; when the answer fails it says so and offers Retry. Its space is kept free whenever AI insights are on, so the events below do not move when a day is selected.
 
 **Day note**:
-One plain-text note per date, kept in the Day context and saved automatically as the user writes. It is also written in place in the Agenda panel and the Bottom sheet, as a single row that grows with the text; the note is the same one in both places. An emptied note is removed. A Day note is not an event: it never appears in the Month grid, the Day summary, the Event mix or any event count.
+One plain-text note per date, kept in the Day context and saved automatically as the user writes. It is also written in place in the Agenda panel and the Bottom sheet, as a single row that grows with the text while it is written and shows two lines at rest, with Show more for a longer note; the note is the same one in both places. An emptied note is removed, and the note can also be removed in one click. A Day note is not an event: it never appears in the Month grid, the Day summary, the Event mix or any event count.
 
 ## Rules
 

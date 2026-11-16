@@ -17,18 +17,21 @@ import {setEventFormData} from '@/redux/events/eventsSlice';
 import {isEventDimmed} from '@/redux/myCalendars/helpers';
 import {selectActiveCalendars} from '@/redux/myCalendars/selectors';
 import {onOpenItem} from '@/redux/overflow/overflowSlice';
+import {selectOpenedItems} from '@/redux/overflow/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {EVENT_FORM_ID} from '@/services/constants';
 import {inertProps, stopPropagation} from '@/services/utils';
 import {FormActionType} from '@/types/eventFormTypes';
 
-import {SHEET_PEEK} from './constants';
+import {SHEET_PEEK, SHEET_TOP_GAP} from './constants';
 
 const BottomSheet = () => {
   const dispatch = useAppDispatch();
   const selectedDate = useSelector(selectSelectedDate);
   const activeCalendars = useSelector(selectActiveCalendars);
   const events = useEventsList(selectedDate);
+  // modals and menus opened over the sheet (e.g. add event) handle their own Esc
+  const openedItems = useSelector(selectOpenedItems);
   const [isExpanded, setIsExpanded] = useState(false);
   // the sheet stays mounted but hidden from md up; only ask for the holiday where the sheet is actually shown
   const isSheetShown = useMediaQuery({size: 'sm', direction: 'to'});
@@ -47,7 +50,10 @@ const BottomSheet = () => {
       isOpen={isExpanded}
       onOpenChange={setIsExpanded}
       peek={SHEET_PEEK}
-      layerClassName="z-20 md:hidden"
+      modal
+      topGap={SHEET_TOP_GAP}
+      isEscapeDisabled={openedItems > 0}
+      layerClassName="fixed z-40 md:hidden"
       className="bg-surface-raised shadow-[0_-12px_32px_rgba(0,0,0,0.55)]">
       {({isOpen, toggle, startDrag, guardClick}) => (
         <>
