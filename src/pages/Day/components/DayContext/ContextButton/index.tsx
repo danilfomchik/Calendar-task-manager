@@ -1,5 +1,4 @@
-import {PanInfo, motion} from 'motion/react';
-import {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {MouseEvent, PointerEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import {useGetDayConditionsQuery} from '@/redux/conditions/conditionsApi';
@@ -17,9 +16,8 @@ import {DAY_CONTEXT_BUTTON_ID, DAY_CONTEXT_SHEET_ID} from '../constants';
 import {InsightIcon, NoteIcon, PanelBottomIcon} from '../icons';
 import {TChipProps, TContextButtonProps} from './types';
 
-// An upward drag this long (px) or this fast (px/s) opens the sheet, like the sheet's own downward flick to close
-const OPEN_DRAG_DISTANCE = 24;
-const OPEN_FLICK_VELOCITY = 250;
+// A click that ends this far (px) from where the pointer went down is the tail of a drag, not a tap
+const TAP_SLOP = 8;
 
 const Chip = ({children}: TChipProps) => (
   <span className="inline-flex shrink-0 items-center gap-1.5 border border-line bg-surface-raised px-2 py-0.5 font-mono text-[11px] leading-4 tracking-wide whitespace-nowrap text-text-muted">
@@ -86,9 +84,10 @@ const useChips = (date: string) => {
 
 // Mobile Context button (fills the bar to the left of the floating Add event). Closed, it is the top of the Bottom
 // sheet peeking above the screen's bottom: a grab handle, the title and a chip per block that
-// has something to show. A tap or an upward drag opens the sheet; the chips swipe sideways.
+// has something to show. A tap opens the sheet; an upward drag pulls it up under the finger; the chips swipe sideways.
 const ContextButton = ({date}: TContextButtonProps) => {
-  const {isSheetOpen, openSheet} = useDayContext();
+  const {isSheetOpen, openSheet, sheetDragControls} = useDayContext();
+  const pointerDownYRef = useRef(0);
   const chips = useChips(date);
   const chipsRef = useRef<HTMLSpanElement>(null);
   // the right-edge fade only shows while more chips are hidden past it
@@ -108,19 +107,27 @@ const ContextButton = ({date}: TContextButtonProps) => {
     return () => observer.disconnect();
   }, [updateHasMore, chips.length]);
 
-  const onPanEnd = (_: PointerEvent, {offset, velocity}: PanInfo) => {
-    if (offset.y < -OPEN_DRAG_DISTANCE || velocity.y < -OPEN_FLICK_VELOCITY) openSheet();
+  // The sheet follows the finger from the first move and settles by flick or half way, like when it closes
+  const onPointerDown = (e: PointerEvent) => {
+    pointerDownYRef.current = e.clientY;
+    sheetDragControls?.start(e);
+  };
+
+  const onClick = (e: MouseEvent) => {
+    if (Math.abs(e.clientY - pointerDownYRef.current) > TAP_SLOP) return;
+
+    openSheet();
   };
 
   return (
-    <motion.button
+    <button
       id={DAY_CONTEXT_BUTTON_ID}
       type="button"
       aria-expanded={isSheetOpen}
       aria-controls={DAY_CONTEXT_SHEET_ID}
       aria-haspopup="dialog"
-      onClick={openSheet}
-      onPanEnd={onPanEnd}
+      onPointerDown={onPointerDown}
+      onClick={onClick}
       className="relative flex h-14 min-w-0 flex-1 cursor-pointer touch-pan-x flex-col justify-end gap-1 border border-line-strong bg-surface-base px-3 pb-1.5 text-left shadow-lg active:bg-surface-overlay">
       <span aria-hidden className="absolute top-1 left-1/2 h-0.75 w-8 -translate-x-1/2 bg-line-strong" />
       <span className="flex items-center gap-2 font-mono text-[11px] leading-none tracking-widest text-action uppercase">
@@ -139,7 +146,7 @@ const ContextButton = ({date}: TContextButtonProps) => {
           <span className="font-mono text-[11px] tracking-wide text-text-faint">Weather, upcoming, note</span>
         )}
       </span>
-    </motion.button>
+    </button>
   );
 };
 

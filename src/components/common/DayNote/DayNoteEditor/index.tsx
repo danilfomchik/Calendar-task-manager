@@ -12,9 +12,9 @@ import {useDayNoteDraft} from './useDayNoteDraft';
 
 // One plain-text note per date, written in place. A dashed "Add a note" line until used, then one row
 // [icon] [text] [✓] [×] that saves itself (useDayNoteDraft). At rest the text is clamped to 2 lines (DayNoteText). An
-// emptied or removed note goes back to the dashed line. Same behaviour in both appearances. Never counted as an event.
+// emptied or removed note goes back to the dashed line. Never counted as an event.
 // Mount it keyed by date (DayNote does), so the draft belongs to one day.
-const DayNoteEditor = ({date, appearance = 'boxed'}: TDayNoteEditorProps) => {
+const DayNoteEditor = ({date}: TDayNoteEditorProps) => {
   const {draft, isSaved, change, flush, remove, dropBlank} = useDayNoteDraft(date);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -79,28 +79,14 @@ const DayNoteEditor = ({date, appearance = 'boxed'}: TDayNoteEditorProps) => {
     addButtonRef.current?.focus();
   }, [isEmptyLine]);
 
-  const isMargin = appearance === 'margin';
-
   if (isEmptyLine) {
     return (
       <button
         ref={addButtonRef}
         type="button"
         onClick={() => startEditing()}
-        className={cx(
-          'group flex w-full cursor-pointer items-center gap-2.5 text-left text-text-faint transition-colors hover:text-text-muted focus-visible:text-text-muted focus-visible:outline-none!',
-          isMargin
-            ? 'border-l-2 border-dashed border-line-strong py-1 pl-3 text-sm hover:border-text-faint focus-visible:border-action focus-visible:bg-surface-raised'
-            : // the Day page's existing empty line, kept as it was (#86): 11px mono caps with wide tracking
-              'min-h-11 border border-dashed border-line px-3 font-mono text-[11px] tracking-widest uppercase hover:border-line-strong focus-visible:border-action',
-        )}>
-        {isMargin ? (
-          <NoteIcon className="size-4 shrink-0" />
-        ) : (
-          <span aria-hidden className="inline-flex items-center justify-center w-4">
-            +
-          </span>
-        )}
+        className="group flex w-full cursor-pointer items-center gap-2.5 border-l-2 border-dashed border-line-strong py-1 pl-3 text-left text-sm text-text-faint transition-colors hover:border-text-faint hover:text-text-muted focus-visible:border-action focus-visible:bg-surface-raised focus-visible:text-text-muted focus-visible:outline-none!">
+        <NoteIcon className="size-4 shrink-0" />
         Add a note
       </button>
     );
@@ -117,22 +103,10 @@ const DayNoteEditor = ({date, appearance = 'boxed'}: TDayNoteEditorProps) => {
         if (isEditing && e.target !== textareaRef.current) e.preventDefault();
       }}
       className={cx(
-        // top-aligned so the icon and the saved check stay on the first line as the note grows
-        'group flex items-start gap-2.5 transition-colors',
-        isEditing && 'cursor-text',
-        isMargin
-          ? // the left rule is the only frame; a tight 4px block padding keeps the written note compact in the footer
-            cx(
-              'border-l-2 py-1 pr-2 pl-3',
-              isEditing ? 'border-action bg-surface-raised' : 'border-line-strong hover:border-text-faint',
-            )
-          : // 1px border + 11px padding + one 20px line = 44px, the same height as the dashed "Add a note" line
-            cx(
-              'min-h-11 border px-3 py-2.75',
-              isEditing
-                ? 'border-action bg-surface-raised shadow-[0_0_0_1px_var(--color-action)]'
-                : 'border-line bg-surface-sunken hover:border-line-strong',
-            ),
+        // top-aligned so the icon and the saved check stay on the first line as the note grows; the left rule is the
+        // only frame, and a tight 4px block padding keeps the written note compact
+        'group flex items-start gap-2.5 border-l-2 py-1 pr-2 pl-3 transition-colors',
+        isEditing ? 'cursor-text border-action bg-surface-raised' : 'border-line-strong hover:border-text-faint',
       )}>
       <NoteIcon
         className={cx('mt-0.5 size-4 shrink-0 transition-colors', isEditing ? 'text-action' : 'text-text-faint')}

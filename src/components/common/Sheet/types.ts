@@ -1,3 +1,4 @@
+import {DragControls} from 'motion/react';
 import {PointerEvent, ReactNode} from 'react';
 
 // What the sheet hands to its content, so the content can build its own handle, header and buttons
@@ -27,6 +28,8 @@ export type TSheetProps = {
   topGap?: number;
   // Ignore Esc, e.g. while a modal or menu opened on top handles its own
   isEscapeDisabled?: boolean;
+  // Drag controls owned by the page, so a trigger outside the sheet (e.g. a peeking button) can start dragging it
+  dragControls?: DragControls;
   // Positions the layer the sheet slides in (default fills the nearest positioned ancestor); add z-index and
   // visibility classes here
   layerClassName?: string;

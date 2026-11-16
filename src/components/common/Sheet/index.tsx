@@ -31,12 +31,14 @@ const Sheet = ({
   modal = false,
   topGap = SHEET_DEFAULT_TOP_GAP,
   isEscapeDisabled = false,
+  dragControls: externalDragControls,
   layerClassName,
   className,
   children,
 }: TSheetProps) => {
   const shouldReduceMotion = useReducedMotion();
-  const dragControls = useDragControls();
+  const ownDragControls = useDragControls();
+  const dragControls = externalDragControls ?? ownDragControls;
 
   const layerRef = useRef<HTMLDivElement>(null);
   const [layerHeight, setLayerHeight] = useState(0);

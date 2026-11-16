@@ -9,9 +9,9 @@ import {PanelBottomIcon} from '../icons';
 import {TDayContextSheetProps} from './types';
 
 // Mobile Bottom sheet with the drawer's blocks, on the shared Sheet: closed it is hidden (the Context button is
-// its trigger), open it closes on Esc, backdrop and a downward drag.
+// its trigger), open it closes on Esc, backdrop and a downward drag, and the Context button drags it open.
 const DayContextSheet = ({date}: TDayContextSheetProps) => {
-  const {isSheetOpen, openSheet, closeSheet} = useDayContext();
+  const {isSheetOpen, openSheet, closeSheet, sheetDragControls} = useDayContext();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -29,6 +29,7 @@ const DayContextSheet = ({date}: TDayContextSheetProps) => {
       label="Day context"
       modal
       isOpen={isSheetOpen}
+      dragControls={sheetDragControls ?? undefined}
       onOpenChange={open => (open ? openSheet() : closeSheet())}
       layerClassName="fixed z-40 md:hidden"
       className="bg-surface-base shadow-lg">

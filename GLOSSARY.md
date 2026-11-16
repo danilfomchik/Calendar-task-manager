@@ -35,13 +35,7 @@ An event whose calendar is not an Active calendar while the Calendar filter is n
 The date the Day page is showing, taken from its URL (`/day/YYYY-MM-DD`). It is separate from the selected date on Home.
 
 **Week strip**:
-The row at the top of the Day page showing the Viewed day's week, Monday to Sunday. The Viewed day is expanded with its numeral, weekday, month and year; the other days are compact cells showing their Event mix, and clicking one opens that day. On desktop, chevrons at either end show the previous or next week; on mobile, a swipe does the same; neither changes the Viewed day.
-
-**Event mix**:
-The segmented bar in a compact Week strip day: one segment per event of that day, in its calendar's colour (grey on past days, a dashed line on an empty day), so it shows how busy the day is. It counts every event and ignores the Calendar filter. Not to be confused with the Calendar mix.
-
-**Day summary**:
-The event count of the Viewed day plus one chip per calendar that has events on it. It ignores the Calendar filter.
+The row at the top of the Day page showing the Viewed day's week, Monday to Sunday. The Viewed day is expanded with its numeral, weekday, month and year; the other days are compact cells showing their Calendar mix (grey on past days), and clicking one opens that day. On desktop, chevrons at either end show the previous or next week; on mobile, a swipe does the same; neither changes the Viewed day.
 
 **Quick add**:
 The bar on the Day page that adds an event to the Viewed day from just a title and a calendar choice. Its calendar defaults to the single Active calendar when exactly one is chosen, otherwise the calendar last used with Quick add in this session, otherwise the first calendar. An empty title is not added. For anything more, the user opens the full event form.
@@ -71,13 +65,13 @@ The city nearest the browser's time zone, used by Conditions until a saved locat
 The Day context block listing the next three days after the Viewed day that have events, within 30 days. Each day is a group: its date and a few of its events, each in its calendar's colour, with a "+N more" for the rest; the group opens that day. It ignores the Calendar filter.
 
 **Calendar mix**:
-The selected day's events split by calendar, in the Agenda panel and the Bottom sheet: one segment per calendar, sized by its share of the day's events, so it shows which calendars dominate the day. It ignores the Calendar filter; a filtered-out calendar is shown hatched rather than removed, so the day keeps its shape. Not to be confused with the Event mix on the Day page's Week strip, which has one segment per event.
+The day's events split by calendar, in the Agenda panel, the Bottom sheet and the Day page: one segment per calendar, sized by its share of the day's events, so it shows which calendars dominate the day. It ignores the Calendar filter; a filtered-out calendar is shown hatched rather than removed, so the day keeps its shape. Also shown on the Day page, in the Week strip cells and under the events total.
 
 **Holiday line**:
 The one line in the header of the Agenda panel and the Bottom sheet that names the selected day's holiday, taken from the same answer as AI insights. It shows only the name; selecting it opens a popover with that answer in full (name, description and the fact). It is blank when the day has no holiday or AI insights are switched off; when the answer fails it says so and offers Retry. Its space is kept free whenever AI insights are on, so the events below do not move when a day is selected.
 
 **Day note**:
-One plain-text note per date, kept in the Day context and saved automatically as the user writes. It is also written in place in the Agenda panel and the Bottom sheet, as a single row that grows with the text while it is written and shows two lines at rest, with Show more for a longer note; the note is the same one in both places. An emptied note is removed, and the note can also be removed in one click. A Day note is not an event: it never appears in the Month grid, the Day summary, the Event mix or any event count.
+One plain-text note per date, kept in the Day context and saved automatically as the user writes. It is also written in place in the Agenda panel and the Bottom sheet, as a single row that grows with the text while it is written and shows two lines at rest, with Show more for a longer note; the note is the same one in both places. An emptied note is removed, and the note can also be removed in one click. A Day note is not an event: it never appears in the Month grid, the Calendar mix or any event count.
 
 ## Rules
 
@@ -85,5 +79,5 @@ One plain-text note per date, kept in the Day context and saved automatically as
 - Clicking a calendar in the sidebar toggles it in or out of the Calendar filter; no modifier key is needed.
 - An empty Calendar filter means no filtering: no event is a Dimmed event.
 - The Calendar filter does not affect the per-calendar event counts shown in the sidebar.
-- On the Day page the Calendar filter only produces Dimmed events in the events list; the Day summary, Event mix and Upcoming always count every event.
+- On the Day page the Calendar filter only produces Dimmed events in the events list; the events total, Calendar mix and Upcoming always count every event.
 - A Week strip swipe changes the week shown, never the Viewed day; only picking a day (a cell, the mini-calendar, the arrow keys or Today) changes the Viewed day.
