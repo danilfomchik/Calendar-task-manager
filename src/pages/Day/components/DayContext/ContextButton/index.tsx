@@ -3,14 +3,12 @@ import {ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'reac
 import {useSelector} from 'react-redux';
 
 import {useGetDayConditionsQuery} from '@/redux/conditions/conditionsApi';
-import {useGetDayHolidaysInfoQuery} from '@/redux/dateHolidaysGenerator/holidaysApi';
+import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 import {selectDayNote} from '@/redux/dayNotes/selectors';
 import {selectAllEventsByDate, selectEventsById} from '@/redux/events/selectors';
 import {cx} from '@/services/utils';
 
 import {useDayContext} from '../DayContextState';
-import {IS_AI_INSIGHTS_ENABLED} from '../blocks/AIInsights/enabled';
-import {parseAIContent} from '../blocks/AIInsights/parseAIContent';
 import {getConditionsSourceForToday} from '../blocks/Conditions/conditionsRange';
 import {useConditionsLocation} from '../blocks/Conditions/useConditionsLocation';
 import {describeWeatherCode} from '../blocks/Conditions/weatherCode';
@@ -38,7 +36,7 @@ const useChips = (date: string) => {
     {date, latitude: location?.latitude ?? 0, longitude: location?.longitude ?? 0, source: source ?? 'forecast'},
     {skip: !source || !location},
   );
-  const {data: holidays} = useGetDayHolidaysInfoQuery(date, {skip: !IS_AI_INSIGHTS_ENABLED});
+  const {insights} = useAIInsights(date);
   const eventsByDate = useSelector(selectAllEventsByDate);
   const eventsById = useSelector(selectEventsById);
   const note = useSelector(selectDayNote(date))?.trim();
@@ -47,7 +45,7 @@ const useChips = (date: string) => {
     () => getUpcomingDays(date, eventsByDate, eventsById).reduce((total, day) => total + day.count, 0),
     [date, eventsByDate, eventsById],
   );
-  const hasInsights = IS_AI_INSIGHTS_ENABLED && !!parseAIContent(holidays?.choices?.[0]?.message?.content);
+  const hasInsights = !!insights;
 
   const chips: {key: string; label: ReactNode}[] = [];
 

@@ -23,12 +23,13 @@ const Controls = () => {
 
             handleClose();
           }}
-          className="fixed w-full h-full inset-0 z-20"
+          className="fixed w-full h-full inset-0 z-50"
         />
       )}
 
       <div
         className={cx('flex items-center gap-2 md:gap-4 z-20', {
+          'z-50': isMenuOpen,
           'flex flex-col border border-line bg-surface-base p-4 mt-2 rounded visible': isMenuOpen && isMobileScreen,
         })}>
         <div

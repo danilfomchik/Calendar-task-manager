@@ -15,6 +15,7 @@
   --color-action-ink: #04140b;
   --color-info: #5aa2ff;
   --color-info-ink: #04101f;
+  --color-danger: #fb7185;
 
   --font-display: 'Inter Tight', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
@@ -30,7 +31,34 @@
   --grid-template-columns-auto-fill: repeat(auto-fill, minmax(330px, 1fr));
 }
 
-/* home page header: h-16 on mobile, h-22 from md (matches the prototype) */
+/* The Holiday line chip's lit look: hover (pointer devices only, as Tailwind's own hover), keyboard focus or open
+   (aria-expanded). `lit` styles the element itself, `group-lit` the parts inside a `group`. */
+@custom-variant lit {
+  &:focus-visible,
+  &[aria-expanded='true'] {
+    @slot;
+  }
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
+@custom-variant group-lit {
+  &:is(:where(.group):focus-visible *),
+  &:is(:where(.group)[aria-expanded='true'] *) {
+    @slot;
+  }
+  @media (hover: hover) {
+    &:is(:where(.group):hover *) {
+      @slot;
+    }
+  }
+}
+
+/* home page header: h-16 on mobile, h-22 from md (matches the prototype). The mobile value is repeated as
+   HOME_HEADER_HEIGHT_MOBILE in pages/Main/components/BottomSheet/constants.ts; change both. */
 :root {
   --height-home-header: 4rem;
 }

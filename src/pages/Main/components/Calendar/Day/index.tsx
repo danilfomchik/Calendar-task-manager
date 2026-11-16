@@ -10,7 +10,7 @@ import {setSelectedDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectSelectedDate} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {CURRENT_DATE_PARAMS_KEY} from '@/services/constants';
-import {formatDate, getDate} from '@/services/dateUtils';
+import {formatDate, formatEventsCount, getDate} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 
 import {useAgendaPanel} from '../../../AgendaPanelContext';
@@ -69,7 +69,7 @@ const Day = ({date}: TDayProps) => {
             type="button"
             tabIndex={isMobileScreen ? -1 : 0}
             aria-pressed={date === selectedDate}
-            aria-label={`${formatDate(getDate(date), 'dddd D MMMM')}, ${events.length === 1 ? '1 event' : `${events.length} events`}`}
+            aria-label={`${formatDate(getDate(date), 'dddd D MMMM')}, ${formatEventsCount(events.length)}`}
             onClick={e => {
               e.stopPropagation();
               handleDayClick();

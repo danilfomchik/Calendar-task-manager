@@ -10,3 +10,9 @@ export enum EventsCountChangeKind {
   ADD = 'add',
   DELETE = 'delete',
 }
+
+export type TCalendarEventsCount = {
+  name: CalendarsNames;
+  color: string;
+  count: number;
+};

@@ -89,4 +89,6 @@ export const getTodayKey = () => formatDate(getDate(new Date()), DATE_KEY_FORMAT
 // Route of the Day page for a date key (RouterPaths.day)
 export const getDayPath = (date: string) => `/day/${date}`;
 
-export const formatEventsCount = (count: number) => (count === 1 ? '1 event' : `${count} events`);
+export const eventsNoun = (count: number) => (count === 1 ? 'event' : 'events');
+
+export const formatEventsCount = (count: number) => `${count} ${eventsNoun(count)}`;

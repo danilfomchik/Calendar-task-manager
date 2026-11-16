@@ -11,13 +11,12 @@ import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 
 import {cx, inertProps} from '@/services/utils';
 
+import {SHEET_DEFAULT_TOP_GAP} from './constants';
 import {TSheetApi, TSheetProps} from './types';
 
 const FLICK_VELOCITY = 250;
 // a click right after a drag is the tail of that same gesture, not a tap
 const CLICK_AFTER_DRAG_WINDOW_MS = 150;
-// Space left above the open sheet
-const TOP_GAP = 72;
 const SPRING = {type: 'spring', stiffness: 500, damping: 42, mass: 0.8} as const;
 
 // Mobile bottom sheet: a layer filling its positioned ancestor with a sheet that slides between open (flush to the
@@ -30,6 +29,8 @@ const Sheet = ({
   onOpenChange,
   peek = 0,
   modal = false,
+  topGap = SHEET_DEFAULT_TOP_GAP,
+  isEscapeDisabled = false,
   layerClassName,
   className,
   children,
@@ -60,7 +61,7 @@ const Sheet = ({
     return () => observer.disconnect();
   }, []);
 
-  const sheetHeight = Math.max(layerHeight - TOP_GAP, peek + 40);
+  const sheetHeight = Math.max(layerHeight - topGap, peek + 40);
   const collapsedY = sheetHeight - peek;
 
   const animateTo = useCallback(
@@ -96,7 +97,7 @@ const Sheet = ({
   );
 
   useEffect(() => {
-    if (!modal || !isOpen) return;
+    if (!modal || !isOpen || isEscapeDisabled) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') settle(false);
@@ -104,7 +105,7 @@ const Sheet = ({
     document.addEventListener('keydown', onKeyDown);
 
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [modal, isOpen, settle]);
+  }, [modal, isOpen, isEscapeDisabled, settle]);
 
   // The backdrop follows the sheet, so it fades with the slide and with the finger
   const backdropOpacity = useTransform([y, collapsedYValue], ([latestY, latestCollapsedY]: number[]) =>
@@ -123,8 +124,10 @@ const Sheet = ({
     },
   };
 
+  // `overflow-clip`, not `hidden`: a hidden layer is still scrollable by script, so focusing a field in the sheet
+  // (or the keyboard opening) could scroll it and leave the sheet shifted
   return (
-    <div ref={layerRef} className={cx('pointer-events-none absolute inset-0 overflow-hidden', layerClassName)}>
+    <div ref={layerRef} className={cx('pointer-events-none absolute inset-0 overflow-clip', layerClassName)}>
       {layerHeight > 0 && (
         <>
           {modal && (
@@ -138,7 +141,8 @@ const Sheet = ({
 
           <motion.section
             id={id}
-            role={modal ? 'dialog' : undefined}
+            // a collapsed peeking sheet is part of the page, not a dialog
+            role={modal && isOpen ? 'dialog' : undefined}
             aria-label={label}
             {...inertProps(modal && !isOpen && peek === 0)}
             drag="y"
