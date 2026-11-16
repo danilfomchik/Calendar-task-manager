@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 
@@ -27,7 +27,19 @@ export const useHolidayLine = (date: string): THolidayLineState => {
 
   const {isEnabled, insights, isFetching, isError, refetch} = useAIInsights(settled, {skip: !isSettled});
 
-  const base = {isEnabled, retry: refetch};
+  // The date whose Retry is in flight; keyed by date so a retry that outlives a date change never marks another day
+  const [retryingDate, setRetryingDate] = useState<string | null>(null);
+  const isRetrying = isSettled && retryingDate === settled;
+
+  const retry = useCallback(() => {
+    const retried = settled;
+    const done = () => setRetryingDate(current => (current === retried ? null : current));
+
+    setRetryingDate(retried);
+    refetch().then(done, done);
+  }, [refetch, settled]);
+
+  const base = {isEnabled, isRetrying, retry};
   const without = (status: Exclude<THolidayLineStatus, 'holiday'>): THolidayLineState => ({
     ...base,
     status,
@@ -36,8 +48,10 @@ export const useHolidayLine = (date: string): THolidayLineState => {
   });
 
   if (!isEnabled) return without('none');
-  if (!isSettled || isFetching) return without('loading');
-  if (isError) return without('error');
+  if (!isSettled) return without('loading');
+  // keep the error row (spinner on) while retrying instead of swapping to the skeleton and back
+  if (isRetrying || isError) return without('error');
+  if (isFetching) return without('loading');
 
   const name = insights?.holiday?.name;
 

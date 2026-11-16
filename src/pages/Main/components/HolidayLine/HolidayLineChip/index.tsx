@@ -11,9 +11,9 @@ import {THolidayLineChipProps} from './types';
 // The ↗ is always visible so the chip reads as clickable. Lit (hover, keyboard focus or open, the `lit` variants in
 // index.css) it turns green and the chip slides its gradient edge, grows the glows and rotates the sparkle, all of that
 // motion-safe only; under reduced motion it keeps just the lighter fill, the green ↗ and a static 1px green focus
-// ring. The error row is not a live region, so clicking through failing dates stays quiet.
+// ring. The error row shows a spinner and disables Retry while retrying. It is not a live region, so clicking through failing dates stays quiet.
 const HolidayLineChip = forwardRef<HTMLButtonElement, THolidayLineChipProps>(
-  ({status, onRetry, name, className, slotRef, ...buttonProps}, ref) => (
+  ({status, onRetry, isRetrying = false, name, className, slotRef, ...buttonProps}, ref) => (
     // The slot is always mounted (while enabled) and focusable from script only, so focus has somewhere to land
     // when the chip it belonged to is replaced (e.g. the date changes with the popover open)
     <div
@@ -34,14 +34,23 @@ const HolidayLineChip = forwardRef<HTMLButtonElement, THolidayLineChipProps>(
 
       {status === 'error' && (
         <div className="flex h-8 items-center gap-2 border border-danger/40 bg-danger/5 pr-1 pl-2.5 text-sm text-danger group-focus-visible/slot:border-action">
-          <span aria-hidden className="text-xs">
-            ⚠
-          </span>
+          {isRetrying ? (
+            <span
+              aria-hidden
+              className="size-3 shrink-0 animate-spin rounded-full border-2 border-danger/30 border-t-danger motion-reduce:animate-none"
+            />
+          ) : (
+            <span aria-hidden className="text-xs">
+              ⚠
+            </span>
+          )}
           <span className="min-w-0 flex-1 truncate">Couldn't load AI insights</span>
+          {isRetrying && <span className="sr-only">Retrying</span>}
           <button
             type="button"
             onClick={onRetry}
-            className="shrink-0 cursor-pointer px-1.5 py-0.5 font-mono text-[11px] tracking-widest text-danger uppercase transition-colors hover:text-text focus-visible:text-text focus-visible:shadow-[0_0_0_1px_var(--color-danger)] focus-visible:outline-none! motion-reduce:transition-none">
+            disabled={isRetrying}
+            className="shrink-0 cursor-pointer px-1.5 py-0.5 font-mono text-[11px] tracking-widest text-danger uppercase transition-colors hover:text-text focus-visible:text-text focus-visible:shadow-[0_0_0_1px_var(--color-danger)] focus-visible:outline-none! disabled:cursor-default disabled:opacity-50 disabled:hover:text-danger motion-reduce:transition-none">
             Retry
           </button>
         </div>

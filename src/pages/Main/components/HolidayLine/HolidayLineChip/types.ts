@@ -11,6 +11,8 @@ export type THolidayLineChipProps = Omit<
   status: THolidayLineStatus;
   // Called by the error row's Retry button
   onRetry: () => void;
+  // Swaps the error row's warning mark for a spinner and disables Retry
+  isRetrying?: boolean;
   // The holiday's name, shown when status is 'holiday'
   name: string | null;
   className?: string;
