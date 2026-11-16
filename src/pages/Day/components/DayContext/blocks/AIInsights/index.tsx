@@ -3,6 +3,8 @@ import SkeletonLine from '@/components/ui/SkeletonLine';
 import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 
 import {BlockCard} from '../BlockCard';
+import BlockError from '../BlockError';
+import {useRetry} from '../BlockError/useRetry';
 import {DayContextBlock} from '../types';
 import {TAIInsightsFrameProps} from './types';
 
@@ -52,13 +54,22 @@ const AIInsightsSkeleton = () => (
   </Frame>
 );
 
-// AI insights (holiday + "Did you know"): nothing when the Groq flag is off, on error or on malformed content
+// AI insights (holiday + "Did you know"): nothing when the Groq flag is off; a failed request or malformed content
+// shows an error with Retry
 const AIInsights: DayContextBlock = ({date}) => {
-  const {isEnabled, insights, isFetching, isError} = useAIInsights(date);
+  const {isEnabled, insights, isFetching, isUninitialized, isError, refetch} = useAIInsights(date);
+  const {isRetrying, retry} = useRetry(refetch);
 
   if (!isEnabled) return null;
-  if (isFetching) return <AIInsightsSkeleton />;
-  if (isError || !insights) return null;
+  if (!isRetrying && (isFetching || isUninitialized)) return <AIInsightsSkeleton />;
+
+  if (isError || !insights) {
+    return (
+      <Frame>
+        <BlockError message="Couldn't load AI insights" onRetry={retry} isRetrying={isRetrying} />
+      </Frame>
+    );
+  }
 
   return (
     <Frame>

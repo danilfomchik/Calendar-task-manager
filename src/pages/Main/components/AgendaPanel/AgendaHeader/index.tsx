@@ -1,5 +1,5 @@
+import CalendarMix from '@/components/common/CalendarMix';
 import EventsTotal from '@/components/common/EventsTotal';
-import CalendarMix from '@/pages/Main/components/CalendarMix';
 import DayHeading from '@/pages/Main/components/DayHeading';
 import HolidayLine from '@/pages/Main/components/HolidayLine';
 

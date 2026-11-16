@@ -1,21 +1,21 @@
 import moment from 'moment';
 import {Link} from 'react-router';
 
+import CalendarMix from '@/components/common/CalendarMix';
+import {useEventsList} from '@/hooks/useEventsList';
 import {getDayPath} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 
 import {getDayCellLabel} from '../../../helpers';
-import MixBar from '../MixBar';
-import {useEventMix} from '../useEventMix';
 import {TDayCellProps} from './types';
 
-// Compact Week strip cell: weekday, numeral and the day's Event mix; clicking opens that day
+// Compact Week strip cell: weekday, numeral and the day's Calendar mix; clicking opens that day
 const DayCell = ({date, offset, isToday, isPast}: TDayCellProps) => {
-  const colors = useEventMix(date, isPast);
+  const count = useEventsList(date)?.length ?? 0;
   const day = moment(date);
   const isWeekend = day.isoWeekday() >= 6;
   const hint = offset === -1 ? 'Previous' : offset === 1 ? 'Next' : null;
-  const label = `${getDayCellLabel(date, colors.length)}${isToday ? ', today' : ''}`;
+  const label = `${getDayCellLabel(date, count)}${isToday ? ', today' : ''}`;
 
   return (
     <Link
@@ -48,7 +48,8 @@ const DayCell = ({date, offset, isToday, isPast}: TDayCellProps) => {
         )}>
         {day.format('D')}
       </span>
-      <MixBar colors={colors} />
+
+      <CalendarMix date={date} isPast={isPast} />
     </Link>
   );
 };

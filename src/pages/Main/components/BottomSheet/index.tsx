@@ -3,13 +3,13 @@ import {useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import Button from '@/components/common/Button';
+import CalendarMix from '@/components/common/CalendarMix';
 import DayNote from '@/components/common/DayNote';
 import EventsTotal from '@/components/common/EventsTotal';
 import Sheet from '@/components/common/Sheet';
 import {useEventsList} from '@/hooks/useEventsList';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import AgendaEvent from '@/pages/Main/components/AgendaPanel/AgendaEvent';
-import CalendarMix from '@/pages/Main/components/CalendarMix';
 import DayHeading from '@/pages/Main/components/DayHeading';
 import HolidayLine from '@/pages/Main/components/HolidayLine';
 import {selectSelectedDate} from '@/redux/date/selectors';
@@ -129,7 +129,7 @@ const BottomSheet = () => {
             {...inertProps(!isExpanded)}
             onPointerDown={stopPropagation}
             className="shrink-0 border-t border-line bg-surface-raised p-4">
-            <DayNote date={selectedDate} appearance="margin" />
+            <DayNote date={selectedDate} />
           </div>
         </>
       )}

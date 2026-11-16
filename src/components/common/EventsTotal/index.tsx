@@ -3,7 +3,7 @@ import {cx} from '@/services/utils';
 
 import {TEventsTotalProps} from './types';
 
-// Total events of a day: a display numeral with a small mono "events" label (Day summary, Agenda panel, Bottom sheet)
+// Total events of a day: a display numeral with a small mono "events" label (Day page, Agenda panel, Bottom sheet)
 const EventsTotal = ({count, className}: TEventsTotalProps) => (
   <p className={cx('font-display text-2xl font-extrabold whitespace-nowrap', className)}>
     {count}{' '}

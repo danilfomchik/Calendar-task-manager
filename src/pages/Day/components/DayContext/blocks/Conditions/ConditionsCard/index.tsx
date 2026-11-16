@@ -1,5 +1,7 @@
 import {useGetDayConditionsQuery, useGetPlaceNameQuery} from '@/redux/conditions/conditionsApi';
 
+import BlockError from '../../BlockError';
+import {useRetry} from '../../BlockError/useRetry';
 import ChangeLocationButton from '../ChangeLocationButton';
 import ConditionsFrame from '../ConditionsFrame';
 import ConditionsSkeleton from '../ConditionsSkeleton';
@@ -21,23 +23,33 @@ const ConditionsCard = ({
   focusChange,
 }: TConditionsCardProps) => {
   const {latitude, longitude} = location;
-  const {data, isFetching, isError} = useGetDayConditionsQuery({date, latitude, longitude, source});
+  const {data, isFetching, isError, refetch} = useGetDayConditionsQuery({date, latitude, longitude, source});
+  const {isRetrying, retry} = useRetry(refetch);
   // A device position has no name of its own: look the city up (the card shows the weather meanwhile)
   const {data: placeName} = useGetPlaceNameQuery({latitude, longitude}, {skip: location.source !== 'device'});
 
-  if (isFetching) return <ConditionsSkeleton />;
-  if (isError || !data) return null;
+  if (isFetching && !isRetrying) return <ConditionsSkeleton />;
+
+  const changeLocation = (
+    <ChangeLocationButton
+      name={location.name ?? placeName ?? null}
+      isApproximate={isApproximate}
+      onClick={onChangeLocation}
+      autoFocus={focusChange}
+    />
+  );
+
+  // A failed request or an unusable answer: the location stays changeable, since a bad one can be the cause
+  if (isError || !data) {
+    return (
+      <ConditionsFrame label={changeLocation}>
+        <BlockError message="Couldn't load conditions" onRetry={retry} isRetrying={isRetrying} />
+      </ConditionsFrame>
+    );
+  }
 
   return (
-    <ConditionsFrame
-      label={
-        <ChangeLocationButton
-          name={location.name ?? placeName ?? null}
-          isApproximate={isApproximate}
-          onClick={onChangeLocation}
-          autoFocus={focusChange}
-        />
-      }>
+    <ConditionsFrame label={changeLocation}>
       <div className="flex items-center gap-4">
         <Dial
           rainChance={data.precipitationProbability}

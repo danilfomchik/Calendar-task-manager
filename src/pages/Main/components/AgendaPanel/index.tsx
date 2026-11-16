@@ -71,7 +71,7 @@ const AgendaPanel = () => {
       {/* The Day note is keyed by date, so a pending draft is saved to its own day before the selected date changes
           (and when the panel closes) */}
       <div className="flex flex-col gap-3 border-t border-line p-4">
-        <DayNote date={selectedDate} appearance="margin" />
+        <DayNote date={selectedDate} />
 
         <div className="flex items-center gap-2">
           <button

@@ -2,21 +2,21 @@
 
 The shared design language of the app. Each page document describes only what is specific to that page and links back here; rules that apply everywhere live here and are not repeated.
 
-| Document                               | Covers                                                                                         |
-| -------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| [home-redesign.md](./home-redesign.md) | Month grid, header, Agenda panel, Bottom sheet, sidebar. Also defines the visual system.       |
-| [day-redesign.md](./day-redesign.md)   | Day page: masthead and Week strip, Day summary, Quick add, Day context, sidebar mini-calendar. |
-| [`GLOSSARY.md`](../../GLOSSARY.md)     | Domain terms used in the docs, the code and the UI.                                            |
-| [`docs/adr/`](../adr)                  | Hard-to-reverse decisions (for example Open-Meteo for Day conditions).                         |
+| Document                               | Covers                                                                                          |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [home-redesign.md](./home-redesign.md) | Month grid, header, Agenda panel, Bottom sheet, sidebar. Also defines the visual system.        |
+| [day-redesign.md](./day-redesign.md)   | Day page: masthead and Week strip, events total, Quick add, Day context, sidebar mini-calendar. |
+| [`GLOSSARY.md`](../../GLOSSARY.md)     | Domain terms used in the docs, the code and the UI.                                             |
+| [`docs/adr/`](../adr)                  | Hard-to-reverse decisions (for example Open-Meteo for Day conditions).                          |
 
 Keep it this way: a design concept goes in the page document that owns it, a shared rule goes here, a term goes in the glossary, and only a hard-to-reverse trade-off becomes an ADR. Update the documents in the same change as the behaviour.
 
 ## 1. Principles
 
 1. **Dark, square, hairline, technical.** No rounded cards; hairline borders; round shapes only for dots. Dark theme only; tokens are named by role, so a light theme later is a token change.
-2. **Two colour channels that never mix.** _Calendar colour_ appears only on event marks (chips, dots, bars, Event mix segments, Quick add dots and its border), through the `--calendar-color` custom property. _Interface colour_ is **green = action** (buttons, selection, focus, open-state toggles) and **blue = info / today** (today, the Viewed day tint, the Conditions card). Calendar colours will become user-chosen, so they must never be mistakable for chrome. Destructive controls use the design system red (`red-400`), shown on the Day event Delete button.
+2. **Two colour channels that never mix.** _Calendar colour_ appears only on event marks (chips, dots, bars, Calendar mix segments, Quick add dots and its border), through the `--calendar-color` custom property. _Interface colour_ is **green = action** (buttons, selection, focus, open-state toggles) and **blue = info / today** (today, the Viewed day tint, the Conditions card). Calendar colours will become user-chosen, so they must never be mistakable for chrome. Destructive controls use the design system red (`red-400`), shown on the Day event Delete button.
 3. **Meaning is never colour alone.** Every colour signal has a second one: an underline and label for today, a dashed line for an empty day, a dashed outline plus hollow bar plus italic text for a Dimmed event, names in `title` / sr-only text for calendar dots. Day cells are labelled "Monday 9 November, 3 events".
-4. **Totals ignore the Calendar filter, lists dim.** The filter produces Dimmed events (visible, never hidden, disabled). Counts, summaries and Event mix always count everything.
+4. **Totals ignore the Calendar filter, lists dim.** The filter produces Dimmed events (visible, never hidden, disabled). Counts, summaries and Calendar mix always count everything.
 5. **The selected or viewed day is a place, not a hidden state.** On Home the selected date lives in Redux and opens the Agenda panel; on the Day page the URL (`/day/YYYY-MM-DD`) is the Viewed day and nothing keeps a second copy. Browsing (swiping a week, stepping the sidebar month) never changes it; only picking a day does.
 6. **Primary actions are reachable by touch and keyboard.** Nothing is hover-only. Mobile controls are 44px targets (a Quick add dot is 28px wide by 44px high). Desktop keyboard shortcuts exist on the Day page and are suppressed while typing.
 
