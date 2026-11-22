@@ -24,11 +24,23 @@ const HolidayLineChip = forwardRef<HTMLButtonElement, THolidayLineChipProps>(
         className,
       )}>
       {status === 'loading' && (
-        <div
-          role="status"
-          className="h-8 border border-line bg-surface-sunken p-2 group-focus-visible/slot:border-action">
+        // Same frame as the AI insights skeleton on the Day page (gradient edge, sunken fill, glows, sparkle) and the same geometry as the holiday chip, so the row doesn't shift when the name arrives
+        <div role="status" className="h-8 bg-linear-to-br from-info via-action to-info p-px">
           <span className="sr-only">Loading AI insights</span>
-          <SkeletonLine className="h-3.5 w-2/3" />
+          <span className="relative flex h-7.5 items-center gap-2 overflow-hidden bg-surface-sunken px-2.5">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-6 -right-6 size-16 rounded-full bg-action/20 blur-2xl"
+            />
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -bottom-6 -left-6 size-16 rounded-full bg-info/20 blur-2xl"
+            />
+            <span aria-hidden className="relative text-xs text-action">
+              ✦
+            </span>
+            <SkeletonLine className="relative h-3.5 w-2/3" />
+          </span>
         </div>
       )}
 
