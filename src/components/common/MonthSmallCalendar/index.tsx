@@ -3,8 +3,10 @@ import {KeyboardEvent, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {useMatch, useNavigate} from 'react-router';
 
+import ArrowLeft from '@/components/ui/icons/ArrowLeft';
+import ArrowRight from '@/components/ui/icons/ArrowRight';
 import {useMediaQuery} from '@/hooks/useMediaQuery';
-import {useAgendaPanel} from '@/pages/Main/AgendaPanelContext';
+import {useAgendaPanelActions} from '@/pages/Main/AgendaPanelContext';
 import {setFullDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectSelectedDate, selectTodayRequests} from '@/redux/date/selectors';
 import {selectAllEventsByDate} from '@/redux/events/selectors';
@@ -18,23 +20,28 @@ import {
   getDate,
   getDayPath,
   getTodayKey,
-  getWeekDays,
+  getWeekDaysMin,
 } from '@/services/dateUtils';
+import {gridArrowSteps} from '@/services/gridKeyboard';
 import {HAIRLINE_CONTROL_BASE_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
 import {RouterPaths} from '@/types/types';
 
+import {TMonthSmallCalendarProps} from './types';
+
 const MONTH_CONTROL_CLASS = cx(HAIRLINE_CONTROL_BASE_CLASS, 'flex size-11 md:size-7');
 
+const DAYS_IN_WEEK = 7;
+
 // Arrow keys move the roving focus by a day or a week; Home / End go to the start / end of the row (week)
-const KEY_STEPS: Record<string, (index: number) => number> = {
-  ArrowLeft: i => i - 1,
-  ArrowRight: i => i + 1,
-  ArrowUp: i => i - 7,
-  ArrowDown: i => i + 7,
-  Home: i => i - (i % 7),
-  End: i => i - (i % 7) + 6,
+const ARROW_STEPS = gridArrowSteps(DAYS_IN_WEEK);
+const ROW_EDGE_STEPS: Record<string, (index: number) => number> = {
+  Home: i => i - (i % DAYS_IN_WEEK),
+  End: i => i - (i % DAYS_IN_WEEK) + DAYS_IN_WEEK - 1,
 };
+
+const keyStep = (key: string): ((index: number) => number) | undefined =>
+  key in ARROW_STEPS ? i => i + ARROW_STEPS[key] : ROW_EDGE_STEPS[key];
 
 // the Viewed day, when the sidebar is shown on a valid Day page
 const useViewedDay = () => {
@@ -43,10 +50,10 @@ const useViewedDay = () => {
   return date && moment(date, DATE_KEY_FORMAT, true).isValid() ? date : null;
 };
 
-const MonthSmallCalendar = ({className = ''}) => {
+const MonthSmallCalendar = ({className = ''}: TMonthSmallCalendarProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const {openFor} = useAgendaPanel();
+  const {openFor} = useAgendaPanelActions();
   const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
 
   const fullDate = useSelector(selectFullDate);
@@ -60,14 +67,20 @@ const MonthSmallCalendar = ({className = ''}) => {
   // browse from there without moving Home's Month grid. The offset resets when that anchor changes or Today is requested.
   const anchor = viewedDay ?? fullDate;
   const [monthOffset, setMonthOffset] = useState({anchor, todayRequests, by: 0});
-  const offset = monthOffset.anchor === anchor && monthOffset.todayRequests === todayRequests ? monthOffset.by : 0;
+  const isOffsetCurrent = monthOffset.anchor === anchor && monthOffset.todayRequests === todayRequests;
+  const offset = isOffsetCurrent ? monthOffset.by : 0;
 
   const shownMonth = moment(anchor, DATE_KEY_FORMAT).add(offset, 'M');
   const shownYear = formatDate(shownMonth, 'YYYY');
   const shownMonthName = formatDate(shownMonth, 'MMMM');
+  // Announced on the Day page, and on Home only when the month-step buttons browse: Home's own status region
+  // (MonthAnnouncer) already names the Visible month when it changes, so the mini-calendar following it stays quiet.
+  // A stale offset means the anchor moved since the last browse, so the region empties (silently) instead.
+  const liveMonthLabel = viewedDay || isOffsetCurrent ? `${shownMonthName} ${shownYear}` : '';
 
   const dates = generateDatesArray(shownYear, shownMonthName);
-  const weekDays = getWeekDays();
+  // two letters, as the Month grid: single initials repeat (T T, S S)
+  const weekDays = getWeekDaysMin();
   const todayKey = getTodayKey();
   const highlightedDate = viewedDay ?? selectedDate;
 
@@ -101,7 +114,7 @@ const MonthSmallCalendar = ({className = ''}) => {
   };
 
   const handleGridKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    const step = KEY_STEPS[e.key];
+    const step = keyStep(e.key);
     const index = dates.indexOf(tabStopDate);
 
     if (!step || index === -1) return;
@@ -118,9 +131,12 @@ const MonthSmallCalendar = ({className = ''}) => {
   return (
     <div className={cx('px-3 py-5 md:px-4', className)}>
       <div className="mb-3 flex items-center justify-between gap-2">
-        <p className="font-mono text-[11px] uppercase tracking-widest text-text-faint" aria-live="polite">
+        <p className="text-caption text-text-faint">
           {shownMonthName} {shownYear}
         </p>
+        <span aria-live="polite" className="sr-only">
+          {liveMonthLabel}
+        </span>
 
         <div className="flex items-center gap-1">
           <button
@@ -128,34 +144,32 @@ const MonthSmallCalendar = ({className = ''}) => {
             aria-label="Previous month"
             className={MONTH_CONTROL_CLASS}
             onClick={() => shiftShownMonth(-1)}>
-            ‹
+            <ArrowLeft size="size-4" aria-hidden />
           </button>
           <button
             type="button"
             aria-label="Next month"
             className={MONTH_CONTROL_CLASS}
             onClick={() => shiftShownMonth(1)}>
-            ›
+            <ArrowRight size="size-4" aria-hidden />
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-7 gap-px" onKeyDown={handleGridKeyDown}>
         {weekDays.map(weekday => (
-          <span
-            key={weekday}
-            aria-hidden="true"
-            className="flex justify-center pb-1 font-mono text-[11px] text-text-faint">
-            {weekday.slice(0, 1)}
+          <span key={weekday} aria-hidden="true" className="flex justify-center pb-1 text-caption text-text-faint">
+            {weekday}
           </span>
         ))}
 
         {dates.map(date => {
-          const day = formatDate(getDate(date), 'DD');
+          const day = formatDate(getDate(date), 'D');
           const isOtherMonth = !moment(date).isSame(shownMonth, 'month');
           const isToday = todayKey === date;
           const isHighlighted = highlightedDate === date;
           const eventsCount = eventsByDate[date]?.length ?? 0;
+          const hasEvents = eventsCount > 0;
 
           return (
             <button
@@ -170,25 +184,27 @@ const MonthSmallCalendar = ({className = ''}) => {
               aria-label={`${formatDate(getDate(date), 'dddd D MMMM')}, ${formatEventsCount(eventsCount)}${isToday ? ', today' : ''}`}
               {...(viewedDay ? {'aria-current': isHighlighted ? 'date' : undefined} : {'aria-pressed': isHighlighted})}
               className={cx(
-                'relative flex cursor-pointer flex-col items-center justify-center text-text-muted font-mono text-xs py-0.75 max-md:min-h-11 transition-colors hover:bg-surface-raised hover:text-text focus-visible:z-10',
+                'relative flex cursor-pointer flex-col items-center justify-center text-text-muted text-caption font-normal tabular-nums py-1 max-md:min-h-11 transition-colors hover:bg-surface-raised hover:text-text focus-visible:z-10',
                 {
+                  // As the Month grid, weight carries the day's load (typography.md): bold on a day with events,
+                  // regular when empty, regular and faint for a neighbouring month's day
+                  'font-bold text-text': hasEvents && !isOtherMonth,
                   'text-text-faint': isOtherMonth,
-                  'text-info-ink bg-info font-medium hover:bg-info hover:text-info-ink': isToday,
-                  'outline-1 -outline-offset-1 outline-action': isHighlighted && !viewedDay,
-                  // the Viewed day is the page's subject, so it gets the stronger mark
-                  'outline-2 -outline-offset-2 outline-action font-medium': isHighlighted && viewedDay,
+                  // The Month grid's split: selection is the cell's 2px green frame, today the numeral's blue fill, so a
+                  // selected today is frame plus fill, never a ring on the fill. On the Day page the Viewed day, the
+                  // page's subject, also takes full-strength text.
+                  'outline-2 -outline-offset-2 outline-action': isHighlighted,
                   'text-text': isHighlighted && viewedDay && !isToday,
                 },
               )}>
-              <time dateTime={date}>{day}</time>
-              <span
-                aria-hidden="true"
-                className={cx('mt-0.5 size-1', {
-                  invisible: eventsCount === 0,
-                  'bg-text-muted': !isToday,
-                  'bg-info-ink': isToday,
-                })}
-              />
+              <time
+                dateTime={date}
+                className={cx('flex h-4 min-w-5 items-center justify-center px-0.5', {
+                  'bg-info text-info-ink': isToday,
+                })}>
+                {day}
+              </time>
+              <span aria-hidden="true" className={cx('mt-0.5 size-1 bg-text-muted', {invisible: !hasEvents})} />
             </button>
           );
         })}

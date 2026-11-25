@@ -11,7 +11,7 @@ const Loading = ({className = ''}) => {
 
         {/* Rotating arc - blue partial circle */}
         <svg
-          className="absolute animate-spin"
+          className="absolute animate-spin progress-pulse"
           style={{animationDuration: '1s'}}
           viewBox="0 0 32 32"
           fill="none"

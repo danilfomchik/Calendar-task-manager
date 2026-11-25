@@ -3,10 +3,9 @@ import {Link} from 'react-router';
 
 import CalendarMix from '@/components/common/CalendarMix';
 import {useEventsList} from '@/hooks/useEventsList';
-import {getDayPath} from '@/services/dateUtils';
+import {getDayCellLabel, getDayPath} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 
-import {getDayCellLabel} from '../../../helpers';
 import {TDayCellProps} from './types';
 
 // Compact Week strip cell: weekday, numeral and the day's Calendar mix; clicking opens that day
@@ -27,23 +26,21 @@ const DayCell = ({date, offset, isToday, isPast}: TDayCellProps) => {
         isWeekend && 'bg-surface-sunken',
         isPast ? 'text-text-faint' : 'text-text-muted',
       )}>
-      <span className="flex w-full items-baseline justify-center gap-1 font-mono text-[11px] uppercase tracking-wider md:justify-between md:text-xs">
+      <span className="flex w-full items-baseline justify-center gap-1 text-caption md:justify-between">
         <span className="md:hidden">{day.format('dd')}</span>
         <span className="max-md:hidden">{day.format('ddd')}</span>
         {isToday ? (
-          <span className="text-[11px] text-info max-md:hidden">Today</span>
+          <span className="text-info max-md:hidden">Today</span>
         ) : (
           hint && (
-            <span className="text-[11px] text-info opacity-0 transition-opacity group-hover:opacity-100 max-md:hidden">
-              {hint}
-            </span>
+            <span className="text-info opacity-0 transition-opacity group-hover:opacity-100 max-md:hidden">{hint}</span>
           )
         )}
       </span>
       {/* today: info colour plus an underline, so it is not marked by colour alone */}
       <span
         className={cx(
-          'font-display text-xl leading-none font-extrabold group-hover:text-text md:text-3xl',
+          'text-h6 tabular-nums group-hover:text-text md:text-h3',
           isToday && 'text-info underline decoration-info decoration-2 underline-offset-4 group-hover:text-info',
         )}>
         {day.format('D')}

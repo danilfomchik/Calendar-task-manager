@@ -1,6 +1,6 @@
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
-import {getLocalStoredValues} from '@/services/utils';
+import {getLocalStoredValues} from '@/services/storage';
 import {StorageKeys} from '@/types/types';
 
 import {SliceNames} from '../types';

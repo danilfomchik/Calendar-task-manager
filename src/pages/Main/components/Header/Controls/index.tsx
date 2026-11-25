@@ -1,49 +1,19 @@
-import {useSelector} from 'react-redux';
-
-import {useMediaQuery} from '@/hooks/useMediaQuery';
-import {useOpeningItem} from '@/hooks/useOpeningItem';
-import {selectIsItemCurrentlyOpened} from '@/redux/overflow/selectors';
-import {cx} from '@/services/utils';
-
 import AddEventButton from './AddEventButton';
+import AgendaToggle from './AgendaToggle';
 import ChangeMonthControl from './ChangeMonthControl';
 
-const Controls = () => {
-  const {ref: menuRef, refId, handleClose} = useOpeningItem();
-  const isMenuOpen = useSelector(selectIsItemCurrentlyOpened(refId));
+// ‹ Today ›, the green Add event and the Agenda toggle, always in the same places: opening or closing the Agenda panel
+// only flips the toggle's filled rail, so nothing in the header shifts. Add event is the page's one add action at every
+// width from md (it adds to the selected day); below md the green + docked in the Bottom sheet's date row adds and there is no panel.
+const Controls = () => (
+  <div className="flex items-center gap-2 z-20">
+    <ChangeMonthControl />
 
-  const isMobileScreen = useMediaQuery({size: 'sm', direction: 'to'});
-
-  return (
-    <div ref={menuRef} className="flex items-center gap-4 relative">
-      {isMenuOpen && (
-        <div
-          onClick={e => {
-            e.stopPropagation();
-
-            handleClose();
-          }}
-          className="fixed w-full h-full inset-0 z-50"
-        />
-      )}
-
-      <div
-        className={cx('flex items-center gap-2 md:gap-4 z-20', {
-          'z-50': isMenuOpen,
-          'flex flex-col border border-line bg-surface-base p-4 mt-2 rounded visible': isMenuOpen && isMobileScreen,
-        })}>
-        <div
-          className={cx('flex flex-row gap-2.5', {
-            'flex-col': isMenuOpen && isMobileScreen,
-          })}>
-          <ChangeMonthControl />
-        </div>
-
-        {/* on mobile the Bottom sheet's floating button adds events */}
-        {!isMobileScreen && <AddEventButton />}
-      </div>
+    <div className="hidden items-center gap-2 md:flex">
+      <AddEventButton />
+      <AgendaToggle />
     </div>
-  );
-};
+  </div>
+);
 
 export default Controls;

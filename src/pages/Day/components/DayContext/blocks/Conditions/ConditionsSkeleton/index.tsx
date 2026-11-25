@@ -13,7 +13,7 @@ const ConditionsSkeleton = () => (
         width={DIAL_SIZE}
         height={DIAL_SIZE}
         aria-hidden
-        className="shrink-0 animate-[spin_1.4s_linear_infinite] motion-reduce:animate-none">
+        className="shrink-0 animate-[spin_1.4s_linear_infinite] progress-pulse">
         <circle
           cx={DIAL_CENTRE}
           cy={DIAL_CENTRE}

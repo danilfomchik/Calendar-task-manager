@@ -2,7 +2,7 @@ import {MouseEvent, useLayoutEffect, useRef, useState} from 'react';
 
 import {cx} from '@/services/utils';
 
-import {COLLAPSED_LINES, MAX_ROWS, NOTE_LINE_HEIGHT_REM} from '../constants';
+import {COLLAPSED_LINES, MAX_ROWS} from '../constants';
 import {TDayNoteTextProps} from './types';
 
 // The Day note while it is not being edited: the text clamped to 2 lines with an ellipsis, and a Show more / Show less
@@ -60,10 +60,11 @@ const DayNoteText = ({text, onEdit}: TDayNoteTextProps) => {
   return (
     <div className="flex min-w-0 flex-1 flex-col items-start gap-1">
       {/* The scroll box wraps the button, not the other way round, so a long expanded note scrolls without a nested
-      interactive scroller; its max height is MAX_ROWS lines. */}
+      interactive scroller. It carries the text style (the button inherits it), so its max height of MAX_ROWS `lh` is
+      MAX_ROWS of the note's own lines at either size. */}
       <div
-        style={isExpanded ? {maxHeight: `${MAX_ROWS * NOTE_LINE_HEIGHT_REM}rem`} : undefined}
-        className={cx('w-full', isExpanded && 'overflow-y-auto overscroll-contain')}>
+        style={isExpanded ? {maxHeight: `${MAX_ROWS}lh`} : undefined}
+        className={cx('w-full text-para-m md:text-para-s', isExpanded && 'overflow-y-auto overscroll-contain')}>
         {/* `block`: an inline-block button would sit on a line box of the wrapper's own (taller) line height and make a
         one-line note taller than the empty "Add a note" row.
         The clamp sits on an inner span: buttons do not reliably honour -webkit-line-clamp. The note text stays the
@@ -73,7 +74,7 @@ const DayNoteText = ({text, onEdit}: TDayNoteTextProps) => {
           onClick={(e: MouseEvent) =>
             onEdit(e.detail > 0 && textRef.current ? getOffsetAtPoint(textRef.current, e.clientX, e.clientY) : null)
           }
-          className="block w-full cursor-text text-left text-sm leading-5 text-text focus-visible:outline-none!">
+          className="block w-full cursor-text text-left text-text focus-visible:outline-offset-0!">
           <span className="sr-only">Edit day note: </span>
           <span
             ref={textRef}
@@ -88,7 +89,7 @@ const DayNoteText = ({text, onEdit}: TDayNoteTextProps) => {
           type="button"
           aria-expanded={isExpanded}
           onClick={() => setIsExpanded(expanded => !expanded)}
-          className="cursor-pointer text-xs leading-4 text-text-faint transition-colors hover:text-action focus-visible:text-action focus-visible:underline focus-visible:outline-none! motion-reduce:transition-none">
+          className="cursor-pointer text-caption text-text-faint transition-colors hover:text-action focus-visible:text-action motion-reduce:transition-none">
           {isExpanded ? 'Show less' : 'Show more'}
         </button>
       )}

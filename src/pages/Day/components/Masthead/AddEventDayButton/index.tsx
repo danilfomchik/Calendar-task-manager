@@ -1,20 +1,14 @@
-import {setEventFormData} from '@/redux/events/eventsSlice';
-import {onOpenItem} from '@/redux/overflow/overflowSlice';
-import {useAppDispatch} from '@/redux/store';
-import {EVENT_FORM_ID} from '@/services/constants';
-import {FormActionType} from '@/types/eventFormTypes';
+import PlusIcon from '@/components/ui/icons/PlusIcon';
+import {useOpenEventForm} from '@/hooks/useOpenEventForm';
 
 import {TAddEventDayButtonProps} from './types';
 
 // Home's green Add event, bound to the Viewed day instead of the selected date.
 // `floating` is the mobile square button; the Day page places it in the bottom-right floating stack.
 const AddEventDayButton = ({date, floating = false}: TAddEventDayButtonProps) => {
-  const dispatch = useAppDispatch();
+  const {openCreate} = useOpenEventForm();
 
-  const handleOpen = () => {
-    dispatch(onOpenItem(EVENT_FORM_ID));
-    dispatch(setEventFormData({actionType: FormActionType.create, date}));
-  };
+  const handleOpen = () => openCreate(date);
 
   if (floating) {
     return (
@@ -23,8 +17,8 @@ const AddEventDayButton = ({date, floating = false}: TAddEventDayButtonProps) =>
         aria-label="Add event"
         title="Add event"
         onClick={handleOpen}
-        className="flex size-14 cursor-pointer items-center justify-center bg-action font-mono text-3xl font-medium text-action-ink shadow-lg active:brightness-110">
-        +
+        className="flex size-14 cursor-pointer items-center justify-center bg-action text-action-ink shadow-fab active:brightness-110">
+        <PlusIcon size="size-6" strokeWidth={2} aria-hidden />
       </button>
     );
   }
@@ -33,8 +27,9 @@ const AddEventDayButton = ({date, floating = false}: TAddEventDayButtonProps) =>
     <button
       type="button"
       onClick={handleOpen}
-      className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 bg-action px-3 font-mono text-xs font-medium tracking-wider text-action-ink uppercase hover:brightness-110">
-      + Add event
+      className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 bg-action px-3 text-para-s text-action-ink hover:brightness-110">
+      <PlusIcon size="size-4" aria-hidden />
+      Add event
     </button>
   );
 };

@@ -5,7 +5,7 @@ import SkyScene from '../SkyScene';
 const EmptyDial = () => (
   <div aria-hidden>
     <Dial rainChance={null} windDirection={null} face={<SkyScene kind="night" />}>
-      <span className="font-display text-2xl font-extrabold text-white">–°</span>
+      <span className="text-h3 text-white">–°</span>
     </Dial>
   </div>
 );

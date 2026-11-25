@@ -1,6 +1,6 @@
 import {TScreenSizes} from '@/types/types';
 
-import {useScreenSize} from './useScreenSize';
+import {useMatchMedia} from './useMatchMedia';
 
 type TMediaQueryDirection = 'to' | 'from';
 
@@ -9,18 +9,18 @@ interface IUseMediaQuery {
   direction: TMediaQueryDirection;
 }
 
-const screenSizes: TScreenSizes[] = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'];
+// Tailwind's default breakpoints: where each size starts, in px
+const SIZE_START: Record<IUseMediaQuery['size'], number> = {xs: 0, sm: 640, md: 768, lg: 1024, xl: 1280, '2xl': 1536};
+const SIZES = Object.keys(SIZE_START) as IUseMediaQuery['size'][];
 
-export const useMediaQuery = ({size, direction}: IUseMediaQuery) => {
-  const screenSize = useScreenSize();
+const toQuery = ({size, direction}: IUseMediaQuery) => {
+  if (direction === 'from') return `(min-width: ${SIZE_START[size]}px)`;
 
-  // get current screen size index
-  const sizeIndex = screenSizes.indexOf(size);
+  const next = SIZES[SIZES.indexOf(size) + 1];
 
-  // slice array of sizes according to direction
-  // if 'to' - get sizes from index 0 to sizeIndex
-  // else - get sizes from sizeIndex to the end of array
-  const sizesSlice = direction === 'to' ? screenSizes.slice(0, sizeIndex + 1) : screenSizes.slice(sizeIndex);
-
-  return sizesSlice.includes(screenSize);
+  return next ? `(max-width: ${SIZE_START[next] - 0.02}px)` : 'all';
 };
+
+// Whether the viewport is in a Tailwind breakpoint range: 'to' = up to and including `size` (e.g. sm → below md),
+// 'from' = `size` and up (like the `md:` prefix)
+export const useMediaQuery = (params: IUseMediaQuery) => useMatchMedia(toQuery(params));

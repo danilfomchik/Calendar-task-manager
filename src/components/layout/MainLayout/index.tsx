@@ -1,6 +1,6 @@
 import {Suspense, lazy, useEffect} from 'react';
 import {useSelector} from 'react-redux';
-import {Outlet} from 'react-router';
+import {Outlet, useMatch} from 'react-router';
 
 import Loading from '@/components/ui/Loading';
 import {useOpeningItem} from '@/hooks/useOpeningItem';
@@ -10,28 +10,24 @@ import {selectEventFormData} from '@/redux/events/selectors';
 import {selectOpenedItems} from '@/redux/overflow/selectors';
 import {selectIsSidebarOpen} from '@/redux/sidebar/selectors';
 import {useAppDispatch} from '@/redux/store';
-import {EVENT_FORM_ID} from '@/services/constants';
+import {EVENT_FORM_ID, EVENT_FORM_TITLE_ID} from '@/services/constants';
 import {cx} from '@/services/utils';
+import {RouterPaths} from '@/types/types';
 
 import Aside from '../Aside';
 import DataInitWrapper from '../DataInitWrapper';
+import SkipLink from './SkipLink';
 
 const Modal = lazy(() => import('@/components/common/Modal'));
 const EventForm = lazy(() => import('@/components/common/EventForm'));
-
-// separate branches TODO
-// check "return back" btn
-// popover for event details for desktop
-// add correct selectedDate handling (on refresh) - on separate branch
-// replace momentjs with date-fns or dayjs
-// update ci/cd pipelne to call lint, prettier, build after merge to develop/main and before deploy
-// theme switch (https://chatgpt.com/share/699c086a-5894-800e-b965-4532a24a7fc5)
 
 const MainLayout = () => {
   const dispatch = useAppDispatch();
   const openedItems = useSelector(selectOpenedItems);
   const eventFormData = useSelector(selectEventFormData);
   const isSidebarOpen = useSelector(selectIsSidebarOpen);
+  // the skip link's target, the Month grid, exists only on Home
+  const isHome = useMatch(RouterPaths.home) !== null;
 
   const {ref, isOpen, handleClose: handleModalClose} = useOpeningItem(EVENT_FORM_ID);
 
@@ -56,6 +52,8 @@ const MainLayout = () => {
     <AgendaPanelProvider>
       <DataInitWrapper />
 
+      {isHome && <SkipLink />}
+
       <Aside />
       <main
         className={cx('ml-0 h-full flex-1 overflow-y-auto', {
@@ -69,9 +67,9 @@ const MainLayout = () => {
       {isOpen && (
         <Suspense
           fallback={
-            <Loading className="bg-opacity-80 fixed top-1/2 left-1/2 z-1000 h-full w-full -translate-x-1/2 -translate-y-1/2 bg-overlay [&>div]:size-8" />
+            <Loading className="fixed top-1/2 left-1/2 z-1000 h-full w-full -translate-x-1/2 -translate-y-1/2 bg-surface-sunken/85 [&>div]:size-8" />
           }>
-          <Modal refItem={ref} onClose={handleClose}>
+          <Modal refItem={ref} labelledBy={EVENT_FORM_TITLE_ID} onClose={handleClose}>
             <EventForm {...eventFormData} handleModalClose={handleClose} />
           </Modal>
         </Suspense>

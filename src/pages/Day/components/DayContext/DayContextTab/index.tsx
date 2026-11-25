@@ -18,7 +18,7 @@ const DayContextTab = () => {
       onClick={toggleDrawer}
       className={cx(
         'flex h-32 w-9 shrink-0 cursor-pointer items-center justify-center gap-2.5 self-center border border-r-0 bg-surface-raised',
-        'font-mono text-[11px] tracking-widest uppercase transition-colors [writing-mode:vertical-rl]',
+        'text-caption transition-colors [writing-mode:vertical-rl]',
         isDrawerOpen
           ? 'border-action text-action hover:brightness-110'
           : 'border-line-strong text-text-muted hover:border-action hover:text-action',

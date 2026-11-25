@@ -20,7 +20,8 @@ const Header = () => {
       )}>
       <SidebarToggle className={cx({'md:hidden': isSidebarOpen})} />
 
-      <div className="flex flex-1 items-center justify-between gap-5">
+      {/* min-w-0 lets the month title give way (it truncates) before ‹ Today › is pushed off a 320px screen */}
+      <div className="flex min-w-0 flex-1 items-center justify-between gap-3 md:gap-5">
         <CalendarDatePicker />
         <Controls />
       </div>

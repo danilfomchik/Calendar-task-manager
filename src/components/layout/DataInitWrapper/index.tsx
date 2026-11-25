@@ -9,7 +9,7 @@ import {EventsCountChangeKind} from '@/redux/myCalendars/types';
 import {setIsOpenSidebar} from '@/redux/sidebar/sidebarSlice';
 import {useAppDispatch} from '@/redux/store';
 import {formatDate} from '@/services/dateUtils';
-import {getLocalStoredValues} from '@/services/utils';
+import {getLocalStoredValues} from '@/services/storage';
 import {CalendarsNames, StorageKeys} from '@/types/types';
 
 const DataInitWrapper = () => {

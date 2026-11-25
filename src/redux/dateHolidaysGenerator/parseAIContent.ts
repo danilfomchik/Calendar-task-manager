@@ -1,5 +1,6 @@
 export type TAIInsights = {
-  holiday: {name: string; description: string} | null;
+  // region: where the holiday is observed (a country or "Worldwide"); null when the answer leaves it out
+  holiday: {name: string; description: string; region: string | null} | null;
   fact: string | null;
 };
 
@@ -25,9 +26,29 @@ export const parseAIContent = (content: string | undefined): TAIInsights | null 
   const holidayName = isRecord(raw.holiday) ? nonEmptyString(raw.holiday.name) : null;
   const holiday =
     holidayName && isRecord(raw.holiday)
-      ? {name: holidayName, description: nonEmptyString(raw.holiday.description) ?? ''}
+      ? {
+          name: holidayName,
+          description: nonEmptyString(raw.holiday.description) ?? '',
+          region: nonEmptyString(raw.holiday.region)?.trim() ?? null,
+        }
       : null;
   const fact = nonEmptyString(raw.fact);
 
   return holiday || fact ? {holiday, fact} : null;
+};
+
+const isWorldwide = (region: string) => /^(worldwide|international|global)$/i.test(region);
+
+// "Observed in Japan" / "Observed worldwide": says whose holiday it is, since the answer is not tied to the user's country
+export const describeHolidayRegion = (region: string | null) => {
+  if (!region) return null;
+
+  return isWorldwide(region) ? 'Observed worldwide' : `Observed in ${region}`;
+};
+
+// The short form for the Holiday line chip's label: "Japan" / "Worldwide"
+export const shortHolidayRegion = (region: string | null) => {
+  if (!region) return null;
+
+  return isWorldwide(region) ? 'Worldwide' : region;
 };

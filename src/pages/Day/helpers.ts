@@ -1,8 +1,6 @@
 import moment from 'moment';
 
-import {DATE_KEY_FORMAT, formatDate, formatEventsCount} from '@/services/dateUtils';
-
-export const shiftDay = (date: string, days: number) => formatDate(moment(date).add(days, 'day'), DATE_KEY_FORMAT);
+import {DATE_KEY_FORMAT, formatDate} from '@/services/dateUtils';
 
 // Monday to Sunday of the ISO week that contains `date`
 export const getWeekDates = (date: string) => {
@@ -11,9 +9,5 @@ export const getWeekDates = (date: string) => {
   return Array.from({length: 7}, (_, i) => formatDate(monday.clone().add(i, 'day'), DATE_KEY_FORMAT));
 };
 
-// ISO week number: the 'uk' locale is not bundled, so moment's locale week() is not ISO
+// ISO week number: the app's locale week() (Monday start, week 1 holds 1 January) is not ISO
 export const getWeekNumber = (date: string) => moment(date).isoWeek();
-
-// "Monday 9 November, 3 events"
-export const getDayCellLabel = (date: string, count: number) =>
-  `${formatDate(moment(date), 'dddd D MMMM')}, ${formatEventsCount(count)}`;

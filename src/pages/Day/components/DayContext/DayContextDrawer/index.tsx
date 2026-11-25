@@ -1,4 +1,5 @@
-import {cx, inertProps} from '@/services/utils';
+import {inertProps} from '@/services/dom';
+import {cx} from '@/services/utils';
 
 import DayContextBlocks from '../DayContextBlocks';
 import {useDayContext} from '../DayContextState';

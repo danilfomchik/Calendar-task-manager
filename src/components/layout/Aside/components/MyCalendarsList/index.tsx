@@ -1,12 +1,11 @@
-import moment from 'moment';
-import {KeyboardEvent} from 'react';
+import {useId} from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectFullDate} from '@/redux/date/selectors';
 import {clearActiveCalendars, toggleActiveCalendar} from '@/redux/myCalendars/myCalendarsSlice';
 import {selectActiveCalendars, selectCalendarsList, selectCalendarsMap} from '@/redux/myCalendars/selectors';
 import {useAppDispatch} from '@/redux/store';
-import {formatDate} from '@/services/dateUtils';
+import {eventsNoun, getYearMonthKey} from '@/services/dateUtils';
 import {cx} from '@/services/utils';
 import {CalendarsNames} from '@/types/types';
 
@@ -17,32 +16,33 @@ const MyCalendarsList = () => {
   const calendarsMap = useSelector(selectCalendarsMap);
   const fullDate = useSelector(selectFullDate);
 
-  const yearMonthKey = formatDate(moment(fullDate), 'YYYY-MM');
+  const yearMonthKey = getYearMonthKey(fullDate);
   const currentCalendarsData = calendarsMap[yearMonthKey];
   const hasActiveCalendars = activeCalendars.length > 0;
+
+  const labelId = useId();
 
   const toggleCalendar = (name: CalendarsNames) => {
     dispatch(toggleActiveCalendar(name));
   };
 
-  const handleOptionKeyDown = (event: KeyboardEvent<HTMLLIElement>, index: number) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleCalendar(calendarsList[index].name);
-    }
-  };
-
+  // The calendar filter: each row is a toggle button (aria-pressed), so it is announced as a filter switched on or
+  // off rather than as a selected option. Pressed rows keep their raised fill, green left bar and ringed dot.
   return (
     <div className="px-4 py-5">
       <div className="flex items-center justify-between mb-2.5 min-h-5">
-        <p className="uppercase font-mono text-[11px] tracking-widest text-text-faint">My calendars</p>
+        <p id={labelId} className="text-caption text-text-faint">
+          My calendars
+          <span className="sr-only"> filter</span>
+        </p>
 
         {hasActiveCalendars && (
           <button
             type="button"
+            aria-label={`Clear calendar filter, ${activeCalendars.length} on`}
             onClick={() => dispatch(clearActiveCalendars())}
-            className="group flex h-6 max-md:min-h-11 cursor-pointer items-center gap-1.5 border border-line-strong px-2 font-mono text-[11px] uppercase leading-none tracking-wider text-text-muted transition-colors hover:border-text-muted hover:text-text">
-            <span className="flex items-center justify-center bg-surface-overlay px-1 py-px text-[10px] text-text">
+            className="group flex h-6 max-md:min-h-11 cursor-pointer items-center gap-1.5 border border-line-strong px-2 text-caption text-text-muted transition-colors hover:border-text-muted hover:text-text">
+            <span className="flex items-center justify-center bg-surface-overlay px-1 py-px text-caption tabular-nums text-text">
               {activeCalendars.length}
             </span>
             Clear
@@ -53,35 +53,41 @@ const MyCalendarsList = () => {
         )}
       </div>
 
-      <ul role="listbox" aria-multiselectable="true" aria-label="My calendars">
-        {calendarsList?.map(({name, itemColor}, index) => {
+      <ul role="group" aria-labelledby={labelId}>
+        {calendarsList?.map(({name, itemColor}) => {
           const isSelected = activeCalendars.includes(name);
           const count = currentCalendarsData?.[name];
 
           return (
-            <li
-              key={name}
-              role="option"
-              tabIndex={0}
-              aria-selected={isSelected}
-              className={cx(
-                'relative flex min-h-11 md:min-h-9 items-center gap-2.5 px-2.5 cursor-pointer transition-colors hover:bg-surface-raised select-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-action',
-                {
-                  'bg-surface-raised before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-action':
-                    isSelected,
-                },
-              )}
-              onClick={() => toggleCalendar(name)}
-              onKeyDown={e => handleOptionKeyDown(e, index)}>
-              <div
-                className="size-2 rounded-full"
-                style={{
-                  backgroundColor: itemColor,
-                  boxShadow: isSelected ? `0 0 0 2px var(--color-surface-raised), 0 0 0 3px ${itemColor}` : '',
-                }}></div>
-              <p className={cx('text-[15px]', isSelected ? 'text-text' : 'text-text-muted')}>{name}</p>
+            <li key={name}>
+              <button
+                type="button"
+                aria-pressed={isSelected}
+                className={cx(
+                  'relative flex w-full min-h-11 md:min-h-9 items-center gap-2.5 px-2.5 text-left cursor-pointer transition-colors hover:bg-surface-raised select-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-action',
+                  {
+                    'bg-surface-raised before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-action':
+                      isSelected,
+                  },
+                )}
+                onClick={() => toggleCalendar(name)}>
+                <span
+                  aria-hidden
+                  className="size-2 shrink-0 rounded-full"
+                  style={{
+                    backgroundColor: itemColor,
+                    boxShadow: isSelected ? `0 0 0 2px var(--color-surface-raised), 0 0 0 3px ${itemColor}` : '',
+                  }}
+                />
+                <span className={cx('text-para-m', isSelected ? 'text-text' : 'text-text-muted')}>{name}</span>
 
-              {!!count && <span className="text-text-faint font-mono text-xs/[1] ml-auto">{count}</span>}
+                {!!count && (
+                  <span className="text-text-faint text-caption tabular-nums ml-auto">
+                    {count}
+                    <span className="sr-only"> {eventsNoun(count)} this month</span>
+                  </span>
+                )}
+              </button>
             </li>
           );
         })}

@@ -2,8 +2,8 @@ import moment from 'moment';
 
 import CalendarMix from '@/components/common/CalendarMix';
 import {useEventsList} from '@/hooks/useEventsList';
+import {getDayCellLabel} from '@/services/dateUtils';
 
-import {getDayCellLabel} from '../../../helpers';
 import {TViewedDayCellProps} from './types';
 
 // The Viewed day, expanded in place: display numeral, weekday, "Month YYYY, week N" and a Today label
@@ -20,29 +20,24 @@ const ViewedDayCell = ({date, isToday}: TViewedDayCellProps) => {
       </span>
 
       <div aria-hidden className="flex flex-col gap-1.5 md:flex-row md:items-end md:gap-4">
-        <span className="text-sm leading-none font-semibold whitespace-nowrap md:hidden">{day.format('dddd')}</span>
-        <time
-          dateTime={date}
-          className="font-display text-[52px] leading-[0.78] font-extrabold tracking-tighter text-info md:text-7xl">
+        {/* mobile: the strip is 112px high, so the weekday is set solid and the line under the numeral is one line:
+            "Today" when it is today (that already says which month), otherwise "Nov 2026" */}
+        <span className="text-h6 leading-none whitespace-nowrap md:hidden">{day.format('dddd')}</span>
+        <time dateTime={date} className="font-headline text-numeral-s text-info md:text-numeral-l">
           {day.format('D')}
         </time>
 
-        <div className="flex min-w-0 flex-col max-md:flex-row max-md:flex-wrap max-md:items-baseline max-md:gap-x-1.5">
-          {isToday && (
-            <span className="font-mono text-[10px] font-medium tracking-wider text-info uppercase md:hidden">
-              Today
-            </span>
+        <div className="flex min-w-0 flex-col">
+          {isToday ? (
+            <span className="text-caption text-info md:hidden">Today</span>
+          ) : (
+            <span className="truncate text-para-s text-text-muted md:hidden">{day.format('MMM YYYY')}</span>
           )}
-          <span className="truncate text-xl leading-tight font-semibold max-md:hidden">{day.format('dddd')}</span>
-          <span className="truncate text-sm text-text-muted md:hidden">{day.format('MMM YYYY')}</span>
-          <span className="truncate text-sm text-text-muted max-md:hidden">{day.format('MMMM YYYY')}</span>
+          <span className="truncate text-h4 max-md:hidden">{day.format('dddd')}</span>
+          <span className="truncate text-para-s text-text-muted max-md:hidden">{day.format('MMMM YYYY')}</span>
         </div>
 
-        {isToday && (
-          <span className="ml-auto self-start font-mono text-xs font-medium tracking-wider text-info uppercase max-md:hidden">
-            Today
-          </span>
-        )}
+        {isToday && <span className="ml-auto self-start text-caption text-info max-md:hidden">Today</span>}
       </div>
 
       <CalendarMix date={date} tall className="max-md:hidden" />
