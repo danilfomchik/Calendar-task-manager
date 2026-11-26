@@ -11,6 +11,12 @@ export type TEvent = {
   eventCalendar: CalendarsNames;
 };
 
+// An event as it may come back from localStorage: ones saved before calendars existed carry their own `color`
+// (a random hex) instead of a usable `eventCalendar`. Stored data is never rewritten, so the field is read defensively.
+export type TLegacyEvent = TEvent & {
+  color?: unknown;
+};
+
 export type TEventsById = {
   [key: string]: TEvent;
 };

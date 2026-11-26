@@ -28,7 +28,7 @@ const Frame = ({children, busy = false}: TAIInsightsFrameProps) => (
             <span aria-hidden className="text-action">
               ✦
             </span>
-            <span className="font-mono text-[10px] tracking-widest text-action uppercase">AI insight</span>
+            <span className="text-caption text-action">AI insight</span>
           </div>
         </>
       }>

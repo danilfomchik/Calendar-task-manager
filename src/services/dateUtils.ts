@@ -15,7 +15,11 @@ export const formatDate = (date: Moment, format: string) => {
   return date.format(format);
 };
 
+// The 'YYYY-MM' key of a date's month, as used by the per-month event-count map and to compare months
+export const getYearMonthKey = (date: MomentInput) => moment(date).format('YYYY-MM');
+
 export const getWeekDays = () => moment.weekdays(true);
+export const getWeekDaysMin = () => moment.weekdaysMin(true);
 export const getMonthsOptions = () => moment.months();
 
 export const getYearsOptions = () => {
@@ -33,7 +37,8 @@ export const getDays = (year: string, month: string) => {
   const monthIndex = getMonthIndex(month);
   const amountOfDays = moment([year, +monthIndex - 1]).daysInMonth();
 
-  return Array.from({length: amountOfDays}, (_, i) => (i + 1 < 10 ? `0${i + 1}` : `${i + 1}`));
+  // No leading zero: dates read `D`, not `DD` (docs/design/overview.md)
+  return Array.from({length: amountOfDays}, (_, i) => `${i + 1}`);
 };
 
 export const generateDatesArray = (year: string, month: string) => {
@@ -92,3 +97,10 @@ export const getDayPath = (date: string) => `/day/${date}`;
 export const eventsNoun = (count: number) => (count === 1 ? 'event' : 'events');
 
 export const formatEventsCount = (count: number) => `${count} ${eventsNoun(count)}`;
+
+// The date key `days` after (or, negative, before) `date`
+export const shiftDay = (date: string, days: number) => formatDate(moment(date).add(days, 'day'), DATE_KEY_FORMAT);
+
+// A day's accessible label with its load, "Monday 9 November, 3 events" (Week strip, Upcoming, After that)
+export const getDayCellLabel = (date: string, count: number) =>
+  `${formatDate(moment(date), 'dddd D MMMM')}, ${formatEventsCount(count)}`;

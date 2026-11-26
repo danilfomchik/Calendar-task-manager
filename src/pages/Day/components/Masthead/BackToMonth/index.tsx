@@ -2,6 +2,7 @@ import moment from 'moment';
 import {useSelector} from 'react-redux';
 import {useNavigate} from 'react-router';
 
+import ArrowLeft from '@/components/ui/icons/ArrowLeft';
 import {setFullDate, setSelectedDate} from '@/redux/date/dateSlice';
 import {selectFullDate, selectHasShownMonthGrid} from '@/redux/date/selectors';
 import {useAppDispatch} from '@/redux/store';
@@ -34,7 +35,7 @@ const BackToMonth = ({date, compact = false}: TBackToMonthProps) => {
 
   return (
     <button type="button" onClick={handleClick} aria-label={`Back to ${monthLabel}`} className={HAIRLINE_CONTROL_CLASS}>
-      <span aria-hidden>‹</span>
+      <ArrowLeft size="size-4" aria-hidden />
       <span className={cx({'max-md:hidden': compact})}>{monthLabel}</span>
     </button>
   );

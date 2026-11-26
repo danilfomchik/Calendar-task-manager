@@ -15,6 +15,8 @@ export type THolidayLineChipProps = Omit<
   isRetrying?: boolean;
   // The holiday's name, shown when status is 'holiday'
   name: string | null;
+  // Where the holiday is observed (a country or "Worldwide"), shown in the chip's AI label; null when unknown
+  region?: string | null;
   className?: string;
   // The always-mounted row around the chip; a popover returns focus here when the chip itself has gone
   slotRef?: Ref<HTMLDivElement>;

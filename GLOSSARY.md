@@ -14,10 +14,16 @@ The full 6×7 view of the Visible month, including dimmed days from neighbouring
 A horizontal gesture on the Month grid, on mobile only, that moves the Visible month to the previous or next month. It changes the Visible month and does not change the selected date.
 
 **Agenda panel**:
-The desktop panel beside the Month grid that lists the events of the selected day and lets the user open that day, add an event to it, or edit its Day note in place. Its header shows the day's events total, the Calendar mix and the Holiday line; the Day note sits at its foot. It can be closed.
+The desktop panel beside the Month grid that lists the events of the selected day and lets the user open that day, add an event to it, edit one of its events, or edit its Day note in place. Clicking an event in the Month grid selects its day and points out that event here; editing starts from the panel. Its header shows the day's events total, the Calendar mix and the Holiday line; the Day note sits at its foot. It can be closed, and shown again from the header.
 
 **Bottom sheet**:
 The mobile sheet over the Month grid that lists the events of the selected day, with the same events total, Calendar mix, Holiday line and Day note as the Agenda panel. The user can pull it up to read more or push it down to see more of the calendar. On the Day page, the mobile sheet that holds the Day context; it opens from the Context button and closes on its backdrop, Esc or a downward drag.
+
+**Free day**:
+A selected day with no events, as the Agenda panel and the Bottom sheet show it: their events total reads "Free day" instead of "0 events", and the body leads with what is coming instead of saying the day is empty again: the **Next event** (the first event after the day), then **After that**, the next few days with events after it, each opening that day. Both ignore the Calendar filter.
+
+**First run**:
+The state with no events anywhere. The Agenda panel and Bottom sheet hold its one empty state (how adding works, and on desktop an "Add to <day>" button; on mobile it points to the + docked beside the Bottom sheet's date); Home shows no empty-month note.
 
 **Calendar filter**:
 The set of Active calendars chosen in the sidebar. A user can have several Active calendars at once. Lives for the session only.
@@ -68,7 +74,7 @@ The Day context block listing the next three days after the Viewed day that have
 The day's events split by calendar, in the Agenda panel, the Bottom sheet and the Day page: one segment per calendar, sized by its share of the day's events, so it shows which calendars dominate the day. It ignores the Calendar filter; a filtered-out calendar is shown hatched rather than removed, so the day keeps its shape. Also shown on the Day page, in the Week strip cells and under the events total.
 
 **Holiday line**:
-The one line in the header of the Agenda panel and the Bottom sheet that names the selected day's holiday, taken from the same answer as AI insights. It shows only the name; selecting it opens a popover with that answer in full (name, description and the fact). It is blank when the day has no holiday or AI insights are switched off; when the answer fails it says so and offers Retry. Its space is kept free whenever AI insights are on, so the events below do not move when a day is selected.
+The one line in the header of the Agenda panel and the Bottom sheet that names the selected day's holiday, taken from the same answer as AI insights. It shows only the name, labelled as AI output with where the holiday is observed (a country, or worldwide); selecting it opens a popover with that answer in full (name, description and the fact). It is blank when the day has no holiday or AI insights are switched off; when the answer fails it says so and offers Retry. Its space is kept free whenever AI insights are on, so the events below do not move when a day is selected.
 
 **Day note**:
 One plain-text note per date, kept in the Day context and saved automatically as the user writes. It is also written in place in the Agenda panel and the Bottom sheet, as a single row that grows with the text while it is written and shows two lines at rest, with Show more for a longer note; the note is the same one in both places. An emptied note is removed, and the note can also be removed in one click. A Day note is not an event: it never appears in the Month grid, the Calendar mix or any event count.
@@ -76,6 +82,8 @@ One plain-text note per date, kept in the Day context and saved automatically as
 ## Rules
 
 - A Month swipe behaves exactly like the header arrows: it changes the Visible month and leaves the selected date untouched.
+- Every change of the Visible month after Home opens is announced to screen readers by its name and year, whatever caused it.
+- Today changes both: it shows today's month and selects today. When the selected date is outside the Month grid, the Agenda panel and Bottom sheet say it is not in view and offer to go to its month.
 - Clicking a calendar in the sidebar toggles it in or out of the Calendar filter; no modifier key is needed.
 - An empty Calendar filter means no filtering: no event is a Dimmed event.
 - The Calendar filter does not affect the per-calendar event counts shown in the sidebar.

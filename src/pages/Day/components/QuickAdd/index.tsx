@@ -5,7 +5,7 @@ import {addEvent} from '@/redux/events/eventsSlice';
 import {selectActiveCalendars, selectCalendarsList} from '@/redux/myCalendars/selectors';
 import {useAppDispatch} from '@/redux/store';
 import {createEventObj} from '@/services/eventUtils';
-import {calendarColorStyle} from '@/services/styles';
+import {TEXT_FIELD_GROUP_FOCUS_CLASS, calendarColorStyle} from '@/services/styles';
 import {cx} from '@/services/utils';
 import {CalendarsNames} from '@/types/types';
 
@@ -48,7 +48,10 @@ const QuickAdd = ({date}: TQuickAddProps) => {
       aria-label="Quick add"
       onSubmit={handleSubmit}
       style={calendarColor ? calendarColorStyle(calendarColor) : undefined}
-      className="flex min-h-12 flex-wrap items-center gap-x-3 border border-(--calendar-color,var(--color-line-strong)) bg-surface-sunken pl-3 transition-colors">
+      className={cx(
+        'flex min-h-12 flex-wrap items-center gap-x-3 border border-(--calendar-color,var(--color-line-strong)) bg-surface-sunken pl-3 transition-colors',
+        TEXT_FIELD_GROUP_FOCUS_CLASS,
+      )}>
       <input
         ref={inputRef}
         value={title}
@@ -56,12 +59,12 @@ const QuickAdd = ({date}: TQuickAddProps) => {
         aria-label={`Event title, adds to ${calendar}`}
         placeholder={`Add to ${calendar}, press Enter`}
         enterKeyHint="done"
-        className="h-11 min-w-0 flex-1 bg-transparent text-[15px] placeholder:text-text-faint focus-visible:outline-none!"
+        className="h-11 min-w-0 flex-1 bg-transparent text-para-m placeholder:text-text-faint md:text-para-s focus-visible:outline-none!"
       />
 
       <fieldset className="flex items-center">
         <legend className="sr-only">Calendar</legend>
-        <span aria-hidden className="mr-1 font-mono text-[11px] tracking-wider text-text-muted uppercase max-sm:hidden">
+        <span aria-hidden className="mr-1 text-caption text-text-muted max-sm:hidden">
           {calendar}
         </span>
 
@@ -72,7 +75,7 @@ const QuickAdd = ({date}: TQuickAddProps) => {
             <label
               key={name}
               title={name}
-              style={{'--calendar-color': itemColor} as React.CSSProperties}
+              style={calendarColorStyle(itemColor)}
               className="flex h-11 w-7 cursor-pointer items-center justify-center md:size-8">
               <input
                 type="radio"

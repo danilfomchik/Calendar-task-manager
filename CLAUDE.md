@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture
 
-React 18 + TypeScript + Vite SPA (calendar / event manager). Tailwind for styling, `moment` for all date handling (configured in `src/moment.config.ts`), react-hook-form + yup for forms, `@dnd-kit` for drag and drop, `motion` for animation. Import alias `@/` → `src/`.
+React 18 + TypeScript + Vite SPA (calendar / event manager). Tailwind for styling, `moment` for all date handling (configured in `src/moment.config.ts`), react-hook-form + yup for forms, `motion` for animation. Import alias `@/` → `src/`.
 
 **Routing** (`src/routes/router.tsx`, react-router v7 `createBrowserRouter`): `MainLayout` wraps `/` (month calendar, `pages/Main`) and the day route (`pages/Day`, loader validates `YYYY-MM-DD` and throws a 404 Response otherwise). Page components are re-exported from `src/pages/index.tsx`.
 

@@ -1,7 +1,7 @@
 export type Nullable<T> = T | null;
 export type NonNullable<T> = T extends null | undefined ? never : T;
 
-export type TScreenSizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '';
+export type TScreenSizes = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export enum MonthParts {
   START = 'start',

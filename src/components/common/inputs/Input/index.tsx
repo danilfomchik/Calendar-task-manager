@@ -1,5 +1,7 @@
 import {ChangeEvent, HTMLProps, useCallback, useEffect, useRef, useState} from 'react';
 
+import {TEXT_FIELD_CLASS} from '@/services/styles';
+
 import {TInputProps} from './types';
 
 const Input = ({
@@ -43,7 +45,7 @@ const Input = ({
         onChange={handleChange}
         type={type}
         placeholder={placeholder}
-        className="bg-black w-full focus:border-[#3b5bfd] border rounded outline-none px-3.75 py-2.5"
+        className={TEXT_FIELD_CLASS}
         {...restProps}
       />
     </>

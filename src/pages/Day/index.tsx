@@ -3,6 +3,7 @@ import {useParams} from 'react-router';
 
 import CalendarMix from '@/components/common/CalendarMix';
 import EventsTotal from '@/components/common/EventsTotal';
+import {useDocumentTitle} from '@/hooks/useDocumentTitle';
 import {useEventsList} from '@/hooks/useEventsList';
 import {formatDate} from '@/services/dateUtils';
 
@@ -13,13 +14,11 @@ import DayEventsList from './components/DayEventsList';
 import Masthead from './components/Masthead';
 import AddEventDayButton from './components/Masthead/AddEventDayButton';
 import QuickAdd from './components/QuickAdd';
-import ShortcutsHint from './components/ShortcutsHint';
-import {useDayShortcuts} from './hooks/useDayShortcuts';
 
 const DayPage = () => {
   const {date} = useParams<{date: string}>();
   const viewedDate = date ?? '';
-  useDayShortcuts(viewedDate);
+  useDocumentTitle(formatDate(moment(viewedDate), 'dddd D MMMM YYYY'));
   const events = useEventsList(viewedDate);
   const total = events?.length ?? 0;
 
@@ -37,7 +36,6 @@ const DayPage = () => {
             <CalendarMix date={viewedDate} className="hidden max-md:flex" />
           </div>
           <DayEventsList date={viewedDate} />
-          <ShortcutsHint className="mt-auto pt-6" />
         </div>
 
         <DayContext date={viewedDate} />

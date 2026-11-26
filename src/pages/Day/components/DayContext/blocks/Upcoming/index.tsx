@@ -3,15 +3,14 @@ import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router';
 
-import {getDayCellLabel} from '@/pages/Day/helpers';
 import {selectAllEventsByDate, selectEventsById} from '@/redux/events/selectors';
-import {getCalendarColor} from '@/services/calendars';
-import {formatEventsCount, getDayPath, getTodayKey} from '@/services/dateUtils';
+import {getEventColor} from '@/services/calendars';
+import {formatEventsCount, getDayCellLabel, getDayPath, getTodayKey} from '@/services/dateUtils';
 import {calendarColorStyle} from '@/services/styles';
+import {UPCOMING_SCAN_DAYS, getUpcomingDays} from '@/services/upcomingDays';
 
 import {useDayContext} from '../../DayContextState';
 import {DayContextBlock} from '../types';
-import {UPCOMING_SCAN_DAYS, getUpcomingDays} from './getUpcomingDays';
 
 const MAX_RELATIVE_DAYS = 7;
 
@@ -37,7 +36,7 @@ const Upcoming: DayContextBlock = ({date}) => {
     <section
       aria-labelledby="day-context-upcoming"
       className="flex flex-col gap-3 border border-line bg-surface-raised p-4">
-      <h3 id="day-context-upcoming" className="font-mono text-[11px] tracking-widest text-text-faint uppercase">
+      <h3 id="day-context-upcoming" className="text-caption text-text-faint">
         Upcoming
       </h3>
       {days.length ? (
@@ -56,10 +55,10 @@ const Upcoming: DayContextBlock = ({date}) => {
                   {...linkProps}
                   aria-label={getDayCellLabel(day.date, day.count)}
                   className="group flex min-h-7 flex-wrap items-baseline gap-x-2 focus-visible:-outline-offset-2">
-                  <span className="font-display text-lg leading-none font-extrabold group-hover:text-action">
+                  <span className="text-h5 tabular-nums group-hover:text-action">
                     {moment(day.date).format('ddd D MMM')}
                   </span>
-                  <span className="font-mono text-[11px] tracking-wider text-text-faint uppercase">
+                  <span className="text-caption text-text-faint">
                     {relative ? `${relative} · ` : ''}
                     {formatEventsCount(day.count)}
                   </span>
@@ -70,11 +69,11 @@ const Upcoming: DayContextBlock = ({date}) => {
                     <li key={event.id}>
                       <Link
                         {...linkProps}
-                        style={calendarColorStyle(getCalendarColor(event.eventCalendar))}
+                        style={calendarColorStyle(getEventColor(event))}
                         className="group flex min-h-9 items-stretch gap-2.5 border border-line bg-surface-base transition-colors hover:border-line-strong md:min-h-8 focus-visible:-outline-offset-2">
                         <span aria-hidden className="w-1 shrink-0 bg-(--calendar-color)" />
                         <span className="flex min-w-0 flex-1 flex-col justify-center py-1 pr-2">
-                          <span className="truncate text-sm group-hover:text-action">{event.title}</span>
+                          <span className="truncate text-para-s group-hover:text-action">{event.title}</span>
                           <span className="sr-only">{event.eventCalendar}</span>
                         </span>
                       </Link>
@@ -85,7 +84,7 @@ const Upcoming: DayContextBlock = ({date}) => {
                 {hiddenCount > 0 && (
                   <Link
                     {...linkProps}
-                    className="self-start font-mono text-[11px] tracking-wider text-text-faint uppercase underline-offset-2 hover:text-action hover:underline">
+                    className="self-start text-para-s text-text-faint underline-offset-2 hover:text-action hover:underline">
                     +{hiddenCount} more
                   </Link>
                 )}
@@ -94,7 +93,7 @@ const Upcoming: DayContextBlock = ({date}) => {
           })}
         </ol>
       ) : (
-        <p className="font-mono text-xs text-text-faint">Nothing in the next {UPCOMING_SCAN_DAYS} days</p>
+        <p className="text-para-s text-text-faint">Nothing in the next {UPCOMING_SCAN_DAYS} days</p>
       )}
     </section>
   );

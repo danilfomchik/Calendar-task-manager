@@ -2,6 +2,7 @@ import {FormEvent, useId, useState} from 'react';
 
 import {useSearchPlacesQuery} from '@/redux/conditions/conditionsApi';
 import {TGeolocationFailure} from '@/redux/location/types';
+import {TEXT_FIELD_GROUP_FOCUS_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
 
 import ConditionsFrame from '../ConditionsFrame';
@@ -64,15 +65,19 @@ const LocationSearch = ({onPick, onLocateDevice, onCancel}: TLocationSearchProps
         <button
           type="button"
           onClick={onCancel}
-          className="h-8 cursor-pointer px-1 text-xs text-text-muted underline-offset-2 hover:text-text hover:underline">
+          className="h-8 cursor-pointer px-1 text-para-s text-text-muted underline-offset-2 hover:text-text hover:underline">
           Cancel
         </button>
       }>
       <form role="search" onSubmit={onSubmit} className="flex flex-col gap-1.5">
-        <label htmlFor={inputId} className="text-xs text-text-muted">
+        <label htmlFor={inputId} className="text-caption text-text-muted">
           Find a city for the weather
         </label>
-        <div className="flex h-11 border border-line-strong bg-surface-base/90 focus-within:border-info md:h-10">
+        <div
+          className={cx(
+            'flex h-11 border border-line-strong bg-surface-base/90 transition-colors md:h-10',
+            TEXT_FIELD_GROUP_FOCUS_CLASS,
+          )}>
           <CompassIcon className="ml-3 size-4 shrink-0 self-center text-text-faint" />
           <input
             id={inputId}
@@ -83,11 +88,11 @@ const LocationSearch = ({onPick, onLocateDevice, onCancel}: TLocationSearchProps
             value={text}
             onChange={e => setText(e.target.value)}
             placeholder="Lisbon, Osaka, Quito…"
-            className="min-w-0 flex-1 bg-transparent px-2 text-sm outline-none focus-visible:outline-none! placeholder:text-text-faint"
+            className="min-w-0 flex-1 bg-transparent px-2 text-para-m md:text-para-s outline-none focus-visible:outline-none! placeholder:text-text-faint"
           />
           <button
             type="submit"
-            className="shrink-0 cursor-pointer bg-info px-3 text-xs font-semibold text-info-ink hover:brightness-110">
+            className="shrink-0 cursor-pointer bg-info px-3 text-para-s text-info-ink hover:brightness-110">
             Search
           </button>
         </div>
@@ -97,12 +102,12 @@ const LocationSearch = ({onPick, onLocateDevice, onCancel}: TLocationSearchProps
         type="button"
         disabled={isLocating}
         onClick={locateDevice}
-        className="flex h-10 w-full cursor-pointer items-center gap-2 border border-line px-3 text-left text-sm hover:bg-surface-overlay disabled:cursor-default">
-        <CrosshairIcon className={cx('size-4 shrink-0', isLocating && 'animate-pulse motion-reduce:animate-none')} />
+        className="flex h-10 w-full cursor-pointer items-center gap-2 border border-line px-3 text-left text-para-s hover:bg-surface-overlay disabled:cursor-default">
+        <CrosshairIcon className={cx('size-4 shrink-0', isLocating && 'animate-pulse progress-pulse')} />
         <span className="flex-1">{isLocating ? 'Waiting for your device…' : 'Use my location'}</span>
       </button>
 
-      <p role="status" className="text-xs text-text-muted empty:hidden">
+      <p role="status" className="text-caption text-text-muted empty:hidden">
         {message}
       </p>
 
@@ -115,10 +120,10 @@ const LocationSearch = ({onPick, onLocateDevice, onCancel}: TLocationSearchProps
                 onClick={() => onPick(place)}
                 className="group flex min-h-11 w-full cursor-pointer items-center gap-3 border-b border-line px-1 py-1.5 text-left hover:bg-surface-overlay">
                 <span className="flex min-w-0 flex-1 flex-col">
-                  <span className="truncate text-sm font-semibold">{place.name}</span>
-                  {place.region && <span className="truncate text-xs text-text-faint">{place.region}</span>}
+                  <span className="truncate text-h6">{place.name}</span>
+                  {place.region && <span className="truncate text-caption text-text-faint">{place.region}</span>}
                 </span>
-                <span className="flex shrink-0 flex-col font-mono text-[10px] text-text-faint tabular-nums group-hover:text-info">
+                <span className="flex shrink-0 flex-col text-caption text-text-faint tabular-nums group-hover:text-info">
                   <span>{formatCoordinates(place.latitude, place.longitude).latitude}</span>
                   <span>{formatCoordinates(place.latitude, place.longitude).longitude}</span>
                 </span>

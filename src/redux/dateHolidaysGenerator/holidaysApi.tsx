@@ -37,6 +37,7 @@ Rules:
 - If the most significant holiday is related to Russia or the Soviet Union, choose the next most significant holiday that is unrelated to them.
 - Prefer holidays that are internationally recognized or celebrated in multiple countries rather than niche or local observances.
 - Do not return multiple holidays.
+- Set the holiday's "region" to where it is observed: one country name in English (e.g. "Japan"), or "Worldwide" for an international observance.
 
 - Return exactly ONE interesting historical fact.
 - The fact must be the most historically significant or widely known fact about that date.
@@ -65,8 +66,12 @@ Follow the provided JSON schema strictly.
                     properties: {
                       name: {type: 'string'},
                       description: {type: 'string'},
+                      region: {
+                        type: 'string',
+                        description: 'Where the holiday is observed: one country name, or "Worldwide"',
+                      },
                     },
-                    required: ['name', 'description'],
+                    required: ['name', 'description', 'region'],
                     additionalProperties: false,
                   },
                   fact: {

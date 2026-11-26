@@ -42,7 +42,7 @@ const TextareaControl = ({
         {...restProps}
       />
       {errorProps.error && (
-        <p role="alert" className="text-rose-500 text-xs pl-1">
+        <p role="alert" className="text-caption text-danger">
           {errorProps.helperText}
         </p>
       )}

@@ -28,11 +28,11 @@ const Button = ({
         className={cx('flex items-center justify-center w-full', {
           'gap-2': (startIcon || endIcon) && text,
         })}>
-        {startIcon ? <span className="font-medium block truncate">{startIcon}</span> : null}
+        {startIcon ? <span className="block truncate">{startIcon}</span> : null}
 
-        <div className="font-medium block truncate">{text}</div>
+        <div className="block truncate">{text}</div>
 
-        {endIcon ? <span className="font-medium block truncate">{endIcon}</span> : null}
+        {endIcon ? <span className="block truncate">{endIcon}</span> : null}
       </div>
 
       {children}

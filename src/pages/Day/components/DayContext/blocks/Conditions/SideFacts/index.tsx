@@ -3,7 +3,7 @@ import {TSideFactsProps} from './types';
 
 // Beside the Dial; the first two rows double as its legend (the ring colour and the pointer)
 const SideFacts = ({data}: TSideFactsProps) => (
-  <dl className="flex min-w-0 flex-1 flex-col gap-2 text-xs">
+  <dl className="flex min-w-0 flex-1 flex-col gap-2 text-caption">
     <div>
       <dt className="text-text-faint">
         {data.precipitationProbability !== null && <span className="mr-1.5 inline-block size-2 bg-info" aria-hidden />}

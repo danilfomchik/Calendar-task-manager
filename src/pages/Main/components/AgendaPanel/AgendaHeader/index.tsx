@@ -6,26 +6,19 @@ import HolidayLine from '@/pages/Main/components/HolidayLine';
 import {TAgendaHeaderProps} from './types';
 
 // Agenda panel header: the day numeral beside the weekday (plus "Today") over "Month YYYY", as in the Day page's
-// Viewed day cell, and the close button; then the events total over the Calendar mix, then the Holiday line.
-// Today's numeral is blue, as in the grid. The header is mounted only while the panel is open, so a closed panel
-// never asks for the holiday.
-const AgendaHeader = ({date, eventsCount, onClose}: TAgendaHeaderProps) => {
+// Viewed day cell (the header's Agenda toggle hides the panel); then the events total over the Calendar mix, then the Holiday line.
+// Today's numeral is blue, as in the grid. An empty day reads "Free day" rather than "0 events", and its Calendar mix is
+// left out (its height kept, so the header never jumps between empty and busy days): the default landing is today,
+// often empty, and the first impression should not be a zero over a dashed line. The header is mounted only while the
+// panel is open, so a closed panel never asks for the holiday.
+const AgendaHeader = ({date, eventsCount}: TAgendaHeaderProps) => {
   return (
     <div className="flex flex-col gap-4 border-b border-line px-5 pt-4 pb-5">
-      <DayHeading date={date} size="panel">
-        <button
-          type="button"
-          aria-label="Close agenda"
-          title="Close agenda"
-          onClick={onClose}
-          className="ml-auto flex size-8 shrink-0 cursor-pointer items-center justify-center self-start border border-line-strong font-mono text-text-muted transition-colors hover:text-text">
-          ×
-        </button>
-      </DayHeading>
+      <DayHeading date={date} size="panel" />
 
       <div className="flex flex-col gap-2.5">
-        <EventsTotal count={eventsCount} className="leading-none" />
-        <CalendarMix date={date} />
+        <EventsTotal count={eventsCount} emptyLabel="Free day" />
+        {eventsCount > 0 ? <CalendarMix date={date} /> : <div aria-hidden className="h-0.75" />}
       </div>
       <HolidayLine date={date} />
     </div>

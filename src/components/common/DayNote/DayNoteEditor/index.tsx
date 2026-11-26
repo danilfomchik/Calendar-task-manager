@@ -85,7 +85,7 @@ const DayNoteEditor = ({date}: TDayNoteEditorProps) => {
         ref={addButtonRef}
         type="button"
         onClick={() => startEditing()}
-        className="group flex w-full cursor-pointer items-center gap-2.5 border-l-2 border-dashed border-line-strong py-1 pl-3 text-left text-sm text-text-faint transition-colors hover:border-text-faint hover:text-text-muted focus-visible:border-action focus-visible:bg-surface-raised focus-visible:text-text-muted focus-visible:outline-none!">
+        className="group flex w-full cursor-pointer items-center gap-2.5 border-l-2 border-dashed border-line-strong py-1 pl-3 text-left text-para-s text-text-faint transition-colors hover:border-text-faint hover:text-text-muted focus-visible:bg-surface-raised focus-visible:text-text-muted focus-visible:outline-offset-0!">
         <NoteIcon className="size-4 shrink-0" />
         Add a note
       </button>
@@ -122,7 +122,7 @@ const DayNoteEditor = ({date}: TDayNoteEditorProps) => {
           onChange={e => change(e.target.value)}
           onBlur={onBlur}
           // the row's border shows focus instead of the global outline
-          className="min-w-0 flex-1 resize-none bg-transparent text-sm leading-5 text-text placeholder:text-text-faint focus-visible:outline-none!"
+          className="min-w-0 flex-1 resize-none bg-transparent text-para-m md:text-para-s text-text placeholder:text-text-faint focus-visible:outline-none!"
         />
       ) : (
         <DayNoteText text={draft} onEdit={startEditing} />

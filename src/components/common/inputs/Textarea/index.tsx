@@ -1,5 +1,6 @@
 import {ChangeEvent, HTMLProps, useCallback, useEffect, useState} from 'react';
 
+import {TEXT_FIELD_CLASS} from '@/services/styles';
 import {cx} from '@/services/utils';
 
 import {TTextareaProps} from './types';
@@ -42,10 +43,7 @@ const Textarea = ({
         value={currentValue}
         onChange={handleChange}
         placeholder={placeholder}
-        className={cx(
-          'max-h-[150px]m min-h-11.5 bg-black w-full focus:border-[#3b5bfd] border rounded outline-none px-3.75 py-2.5',
-          className,
-        )}
+        className={cx('min-h-20 max-h-40 resize-y', TEXT_FIELD_CLASS, className)}
         {...restProps}
       />
     </>

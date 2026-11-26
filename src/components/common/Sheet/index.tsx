@@ -9,7 +9,8 @@ import {
 } from 'motion/react';
 import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 
-import {cx, inertProps} from '@/services/utils';
+import {inertProps} from '@/services/dom';
+import {cx} from '@/services/utils';
 
 import {SHEET_DEFAULT_TOP_GAP} from './constants';
 import {TSheetApi, TSheetProps} from './types';

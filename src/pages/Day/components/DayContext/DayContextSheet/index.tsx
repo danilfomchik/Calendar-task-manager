@@ -32,13 +32,13 @@ const DayContextSheet = ({date}: TDayContextSheetProps) => {
       dragControls={sheetDragControls ?? undefined}
       onOpenChange={open => (open ? openSheet() : closeSheet())}
       layerClassName="fixed z-40 md:hidden"
-      className="bg-surface-base shadow-lg">
+      className="bg-surface-base shadow-fab">
       {({startDrag, guardClick, close}) => (
         <>
           <div onPointerDown={startDrag} className="shrink-0 cursor-grab touch-none">
             <span aria-hidden className="mx-auto mt-2 block h-1 w-10 bg-line-strong" />
             <div className="flex items-center justify-between gap-3 pl-4">
-              <h2 className="flex items-center gap-2 font-mono text-[11px] tracking-widest text-action uppercase">
+              <h2 className="flex items-center gap-2 text-caption text-action">
                 <PanelBottomIcon />
                 Day context
               </h2>
@@ -46,7 +46,7 @@ const DayContextSheet = ({date}: TDayContextSheetProps) => {
                 ref={closeButtonRef}
                 type="button"
                 onClick={guardClick(close)}
-                className="flex min-h-11 cursor-pointer items-center px-4 font-mono text-xs tracking-wider text-text-muted uppercase hover:text-text">
+                className="flex min-h-11 cursor-pointer items-center px-4 text-para-s text-text-muted hover:text-text">
                 Close
               </button>
             </div>

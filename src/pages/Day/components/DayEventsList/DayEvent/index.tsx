@@ -2,14 +2,12 @@ import {memo} from 'react';
 
 import DeleteIcon from '@/components/ui/icons/DeleteIcon';
 import EditIcon from '@/components/ui/icons/EditIcon';
-import {deleteEvent, setEventFormData} from '@/redux/events/eventsSlice';
-import {onOpenItem} from '@/redux/overflow/overflowSlice';
+import {useOpenEventForm} from '@/hooks/useOpenEventForm';
+import {deleteEvent} from '@/redux/events/eventsSlice';
 import {useAppDispatch} from '@/redux/store';
-import {getCalendarColor} from '@/services/calendars';
-import {EVENT_FORM_ID} from '@/services/constants';
+import {getEventColor} from '@/services/calendars';
 import {calendarColorStyle} from '@/services/styles';
 import {cx} from '@/services/utils';
-import {FormActionType} from '@/types/eventFormTypes';
 
 import {TDayEventProps} from './types';
 
@@ -26,11 +24,9 @@ const DELETE_CONTROL_CLASS = cx(
 // A Dimmed event stays visible (dashed, hollow bar, italic) but its controls are disabled.
 const DayEvent = ({event, isDimmed}: TDayEventProps) => {
   const dispatch = useAppDispatch();
+  const {openEdit} = useOpenEventForm();
 
-  const handleEdit = () => {
-    dispatch(onOpenItem(EVENT_FORM_ID));
-    dispatch(setEventFormData({actionType: FormActionType.edit, event}));
-  };
+  const handleEdit = () => openEdit(event);
 
   const handleDelete = () => {
     dispatch(deleteEvent(event));
@@ -39,7 +35,7 @@ const DayEvent = ({event, isDimmed}: TDayEventProps) => {
   return (
     <li
       title={isDimmed ? `${event.title} (filtered out)` : undefined}
-      style={calendarColorStyle(getCalendarColor(event.eventCalendar))}
+      style={calendarColorStyle(getEventColor(event))}
       className={cx(
         'flex min-h-11 items-stretch gap-3 border transition-colors',
         isDimmed
@@ -56,22 +52,16 @@ const DayEvent = ({event, isDimmed}: TDayEventProps) => {
           'flex min-w-0 flex-1 flex-col justify-center gap-0.5 py-2',
           isDimmed ? 'cursor-not-allowed' : 'cursor-pointer',
         )}>
-        <span
-          className={cx(
-            'text-[15px] leading-tight font-semibold wrap-break-word',
-            isDimmed ? 'text-text-faint italic' : 'text-text',
-          )}>
+        <span className={cx('text-h5 wrap-break-word', isDimmed ? 'text-text-faint italic' : 'text-text')}>
           {event.title}
           {isDimmed && <span className="sr-only"> (filtered out)</span>}
         </span>
         {event.description && (
-          <span className={cx('line-clamp-3 text-sm', isDimmed ? 'text-text-faint' : 'text-text-muted')}>
+          <span className={cx('line-clamp-3 text-para-m', isDimmed ? 'text-text-faint' : 'text-text-muted')}>
             {event.description}
           </span>
         )}
-        <span className="truncate font-mono text-[11px] tracking-wider text-text-faint uppercase">
-          {event.eventCalendar}
-        </span>
+        <span className="truncate text-caption text-text-faint">{event.eventCalendar}</span>
       </div>
 
       <div className="flex shrink-0 items-center gap-1.5 self-center pr-2">

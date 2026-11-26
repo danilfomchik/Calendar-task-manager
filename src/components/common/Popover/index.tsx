@@ -1,10 +1,10 @@
-import {motion, useReducedMotion} from 'motion/react';
 import {useEffect, useLayoutEffect, useRef} from 'react';
 import {createPortal} from 'react-dom';
 import {useSelector} from 'react-redux';
 
 import {selectOpenedItems} from '@/redux/overflow/selectors';
-import {cx, stopPropagation} from '@/services/utils';
+import {stopPropagation} from '@/services/dom';
+import {cx} from '@/services/utils';
 
 import {claimActivePopover, releaseActivePopover} from './activePopover';
 import {TPopoverProps} from './types';
@@ -29,7 +29,6 @@ const Popover = ({
   children,
 }: TPopoverProps) => {
   const panelRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
   const position = usePopoverPosition(isOpen, anchorRef, panelRef, width);
   const openedItems = useSelector(selectOpenedItems);
 
@@ -107,15 +106,12 @@ const Popover = ({
   if (!isOpen) return null;
 
   return createPortal(
-    <motion.div
+    <div
       ref={panelRef}
       id={id}
       role="dialog"
       aria-label={label}
       tabIndex={-1}
-      initial={reduceMotion ? false : {opacity: 0, y: -4}}
-      animate={{opacity: 1, y: 0}}
-      transition={{duration: 0.14, ease: 'easeOut'}}
       // React events bubble through portals: keep pointer-downs and clicks from reaching the trigger's ancestors
       // (a draggable sheet, a clickable row)
       onPointerDown={stopPropagation}
@@ -125,14 +121,15 @@ const Popover = ({
           ? {top: position.top, left: position.left, width: position.width, maxHeight: position.maxHeight}
           : {top: 0, left: 0, width, visibility: 'hidden'}
       }
-      // focus shows as a green border on the panel and a 1px green ring on anything focusable inside, not the
-      // global outline
+      // the entrance (fade and a 4px drop) is a CSS animation, so Home does not load `motion` for it
+      // the panel itself (focused from script on open) shows focus as a green border instead of the global outline;
+      // anything focusable inside keeps the global 2px outline at offset 0, so the panel's scroll box never clips it
       className={cx(
-        'fixed z-900 overflow-y-auto overscroll-contain border border-line-strong bg-surface-overlay p-4 shadow-[0_12px_32px_rgba(0,0,0,0.55)] transition-colors focus-visible:border-action focus-visible:outline-none! [&_*:focus-visible]:shadow-[0_0_0_1px_var(--color-action)] [&_*:focus-visible]:outline-none!',
+        'animate-popover-in fixed z-900 overflow-y-auto overscroll-contain border border-line-strong bg-surface-overlay p-4 shadow-popover transition-colors focus-visible:border-action focus-visible:outline-none! [&_*:focus-visible]:outline-offset-0!',
         className,
       )}>
       {children}
-    </motion.div>,
+    </div>,
     document.body,
   );
 };

@@ -19,7 +19,7 @@ const RemoveButton = ({onClick, isAvailable}: TRemoveButtonProps) =>
       onClick={onClick}
       className={cx(
         SLOT_CLASS,
-        'grid cursor-pointer place-items-center text-text-faint transition-colors hover:text-danger focus-visible:text-danger focus-visible:shadow-[0_0_0_1px_var(--color-danger)] focus-visible:outline-none! motion-reduce:transition-none',
+        'grid cursor-pointer place-items-center text-text-faint transition-colors hover:text-danger focus-visible:text-danger focus-visible:outline-offset-0! motion-reduce:transition-none',
       )}>
       <CloseIcon aria-hidden className="size-3.5" />
     </button>

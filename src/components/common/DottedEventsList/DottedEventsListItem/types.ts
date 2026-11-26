@@ -1,6 +1,5 @@
-import {TEvent} from '@/redux/events/types';
-
 export type TEventProps = {
-  event: TEvent;
+  // the calendar's colour (one dot per calendar in the day's mix)
+  color: string;
   isDisabled?: boolean;
 };

@@ -5,13 +5,13 @@ import {useGetDayConditionsQuery} from '@/redux/conditions/conditionsApi';
 import {useAIInsights} from '@/redux/dateHolidaysGenerator/useAIInsights';
 import {selectDayNote} from '@/redux/dayNotes/selectors';
 import {selectAllEventsByDate, selectEventsById} from '@/redux/events/selectors';
+import {getUpcomingDays} from '@/services/upcomingDays';
 import {cx} from '@/services/utils';
 
 import {useDayContext} from '../DayContextState';
 import {getConditionsSourceForToday} from '../blocks/Conditions/conditionsRange';
 import {useConditionsLocation} from '../blocks/Conditions/useConditionsLocation';
 import {describeWeatherCode} from '../blocks/Conditions/weatherCode';
-import {getUpcomingDays} from '../blocks/Upcoming/getUpcomingDays';
 import {DAY_CONTEXT_BUTTON_ID, DAY_CONTEXT_SHEET_ID} from '../constants';
 import {InsightIcon, NoteIcon, PanelBottomIcon} from '../icons';
 import {TChipProps, TContextButtonProps} from './types';
@@ -20,7 +20,7 @@ import {TChipProps, TContextButtonProps} from './types';
 const TAP_SLOP = 8;
 
 const Chip = ({children}: TChipProps) => (
-  <span className="inline-flex shrink-0 items-center gap-1.5 border border-line bg-surface-raised px-2 py-0.5 font-mono text-[11px] leading-4 tracking-wide whitespace-nowrap text-text-muted">
+  <span className="inline-flex shrink-0 items-center gap-1.5 border border-line bg-surface-raised px-2 py-0.5 text-caption whitespace-nowrap text-text-muted">
     {children}
   </span>
 );
@@ -128,9 +128,9 @@ const ContextButton = ({date}: TContextButtonProps) => {
       aria-haspopup="dialog"
       onPointerDown={onPointerDown}
       onClick={onClick}
-      className="relative flex h-14 min-w-0 flex-1 cursor-pointer touch-pan-x flex-col justify-end gap-1 border border-line-strong bg-surface-base px-3 pb-1.5 text-left shadow-lg active:bg-surface-overlay">
+      className="relative flex h-14 min-w-0 flex-1 cursor-pointer touch-pan-x flex-col justify-end gap-1 border border-line-strong bg-surface-base px-3 pb-1.5 text-left shadow-fab active:bg-surface-overlay">
       <span aria-hidden className="absolute top-1 left-1/2 h-0.75 w-8 -translate-x-1/2 bg-line-strong" />
-      <span className="flex items-center gap-2 font-mono text-[11px] leading-none tracking-widest text-action uppercase">
+      <span className="flex items-center gap-2 text-caption text-action">
         <PanelBottomIcon />
         Day context
       </span>
@@ -143,7 +143,7 @@ const ContextButton = ({date}: TContextButtonProps) => {
         {chips.length ? (
           chips.map(chip => <Chip key={chip.key}>{chip.label}</Chip>)
         ) : (
-          <span className="font-mono text-[11px] tracking-wide text-text-faint">Weather, upcoming, note</span>
+          <span className="text-caption text-text-faint">Weather, upcoming, note</span>
         )}
       </span>
     </button>
