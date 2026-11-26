@@ -5,15 +5,35 @@ import {SHEET_DEFAULT_TOP_GAP} from '@/components/common/Sheet/constants';
 // them to the root size: with a raised browser font size the budget grows with the layout and the sheet does not cover
 // the Month grid.
 
+// What the collapsed sheet shows, top to bottom (px). Keep each part in step with its class in BottomSheet/index.tsx.
+const PEEK_PARTS = {
+  // 24px tall; its 44px hit area overlaps the date row
+  handle: 24,
+  // the header band: `pt-1`
+  bandTop: 4,
+  // numeral, with Open day and the 44px add button at its right, plus its `pb-3`
+  dateRow: 47 + 12,
+  // the events total, `gap-2`, the Calendar mix (or its 3px spacer on a free day)
+  totalAndMix: 30 + 8 + 3,
+  // the Holiday line's `mt-2` and its 32px row. Budgeted always: with AI insights off the line renders nothing and the
+  // peek simply shows 40px more of the list
+  holidayLine: 8 + 32,
+  // the band's `pb-2` and its hairline
+  bandBottom: 8 + 1,
+  // the list's top padding (`py-6`, the same as its bottom)
+  listTop: 24,
+  // three 60px event rows with two 6px gaps
+  threeRows: 3 * 60 + 2 * 6,
+  // check it at 390x844: the third row should end this far above the peek's edge
+  margin: 5,
+};
+
 // Visible height of the sheet when collapsed, where the screen allows it (useSheetPeek lowers it on short phones so
-// the Month grid always keeps its six rows); the calendar reserves the same space.
-// It must show three whole event rows, so a busy day reads as a list rather than one row. Budget (px): handle 24 (its
-// 44px hit area overlaps the date row) + date row 47 (numeral, with Open day and the 44px add button at its right) + 12 + the events total 30 +
-// 8 + the Calendar mix 3 + list top 8 + three 60px rows with two 6px gaps 192 + 5 margin (check it
-// at 390x844: the third row should end 5px above the peek's edge). A free day's Holiday line, Next event row and the
-// start of After that fit as well (the rest scrolls). On a busy day the Holiday line follows the list and the Day note
-// is pinned at the foot of the sheet, so both stay out of the peek. Cut header padding before dropping a row if the header grows.
-export const SHEET_PEEK = 24 + 47 + 12 + 30 + 8 + 3 + 8 + 192 + 5;
+// the Month grid always keeps its six rows); the calendar reserves the same space. It must show three whole event
+// rows, so a busy day reads as a list rather than one row. A free day's Next event row and the start of After that fit
+// as well (the rest scrolls). The Day note is pinned at the foot of the sheet, so it stays out of the peek. Cut header
+// padding before dropping a row if the header grows.
+export const SHEET_PEEK = Object.values(PEEK_PARTS).reduce((sum, part) => sum + part, 0);
 
 // --height-home-header below md (index.css), where the Bottom sheet lives
 export const HOME_HEADER_HEIGHT_MOBILE = 64;

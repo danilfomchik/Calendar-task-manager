@@ -20,7 +20,7 @@ The desktop panel beside the Month grid that lists the events of the selected da
 The mobile sheet over the Month grid that lists the events of the selected day, with the same events total, Calendar mix, Holiday line and Day note as the Agenda panel. The user can pull it up to read more or push it down to see more of the calendar. On the Day page, the mobile sheet that holds the Day context; it opens from the Context button and closes on its backdrop, Esc or a downward drag.
 
 **Free day**:
-A selected day with no events, as the Agenda panel and the Bottom sheet show it: their events total reads "Free day" instead of "0 events", and the body leads with what is coming instead of saying the day is empty again: the **Next event** (the first event after the day), then **After that**, the next few days with events after it, each opening that day. In the Bottom sheet the Holiday line comes first on a free day. Both ignore the Calendar filter.
+A selected day with no events, as the Agenda panel and the Bottom sheet show it: their events total reads "Free day" instead of "0 events", and the body leads with what is coming instead of saying the day is empty again: the **Next event** (the first event after the day), then **After that**, the next few days with events after it, each opening that day. Both ignore the Calendar filter.
 
 **First run**:
 The state with no events anywhere. The Agenda panel and Bottom sheet hold its one empty state (how adding works, and on desktop an "Add to <day>" button; on mobile it points to the + docked beside the Bottom sheet's date); Home shows no empty-month note.

@@ -59,40 +59,55 @@ const BottomSheet = ({peek}: TBottomSheetProps) => {
             aria-label={isOpen ? 'Collapse events' : 'Expand events'}
             onPointerDown={startDrag}
             onClick={guardClick(toggle)}
-            className="relative z-10 flex h-6 w-full shrink-0 cursor-grab touch-none items-center justify-center before:absolute before:inset-x-0 before:top-0 before:h-11 before:content-['']">
-            <span aria-hidden className="h-1 w-10 bg-line-strong" />
+            className="group/handle relative z-10 flex h-6 w-full shrink-0 cursor-grab touch-none items-center justify-center bg-surface-overlay before:absolute before:inset-x-0 before:top-0 before:h-11 before:content-['']">
+            <span
+              aria-hidden
+              className="h-1 w-10 bg-line-strong transition-colors group-hover/handle:bg-text-faint group-focus-visible/handle:bg-text-muted"
+            />
           </button>
 
-          {/* The peek's header: the date with Open day (bottom-aligned with the month line) and the green add at its
-              right, then the events total over the Calendar mix, as in the Agenda panel header, the mix closing the
-              header above the list. Both are drag areas; the links and the add button in them stop the drag. */}
-          <div onPointerDown={startDrag} className="@container shrink-0 touch-none px-4 pb-3">
-            <DayHeading date={selectedDate} size="sheet">
-              <Link
-                to={getDayPath(selectedDate)}
-                onPointerDown={stopPropagation}
-                aria-label="Open day"
-                // a 20px line with a 44px tall hit area; in the narrowest row (a 320px phone) only the arrow shows,
-                // so the weekday reads in full, and the hit area widens to 44px
-                className="relative mb-0.5 inline-flex shrink-0 items-center gap-1 text-para-s text-text-muted transition-colors before:absolute before:-inset-x-2 before:-inset-y-3 before:content-[''] @max-xs:before:-inset-x-3.5 hover:text-text focus-visible:text-text">
-                <span className="@max-xs:hidden">Open day</span>
-                <ArrowRight size="size-4" aria-hidden />
-              </Link>
-              <SheetAddButton date={selectedDate} />
-            </DayHeading>
+          {/* The sheet header, everything above the events list, on its own band: the overlay surface (which the handle
+              above shares, so the band starts at the sheet's top edge) with a hairline under it, lifted over the list
+              by a short shadow, so the list reads as scrolling under it */}
+          <div className="relative z-1 flex shrink-0 flex-col border-b border-line bg-surface-overlay pt-1 pb-2 shadow-band">
+            {/* The date with Open day (bottom-aligned with the month line) and the green add at its right, then the
+                events total over the Calendar mix, as in the Agenda panel header. One drag area; the links and the add
+                button in it stop the drag. */}
+            <div onPointerDown={startDrag} className="flex shrink-0 touch-none flex-col px-4">
+              <div className="@container pb-3">
+                <DayHeading date={selectedDate} size="sheet">
+                  <Link
+                    to={getDayPath(selectedDate)}
+                    onPointerDown={stopPropagation}
+                    aria-label="Open day"
+                    // a 20px line with a 44px tall hit area; in the narrowest row (a 320px phone) only the arrow shows,
+                    // so the weekday reads in full, and the hit area widens to 44px
+                    className="relative mb-0.5 inline-flex shrink-0 items-center gap-1 text-para-s text-text-muted transition-colors before:absolute before:-inset-x-2 before:-inset-y-3 before:content-[''] @max-xs:before:-inset-x-3.5 hover:text-text focus-visible:text-text">
+                    <span className="@max-xs:hidden">Open day</span>
+                    <ArrowRight size="size-4" aria-hidden />
+                  </Link>
+                  <SheetAddButton date={selectedDate} />
+                </DayHeading>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <EventsTotal count={eventsCount} emptyLabel="Free day" />
+                {/* a free day has no mix: an empty 3px spacer keeps the list in place, as in the Agenda header */}
+                {eventsCount === 0 ? <div aria-hidden className="h-0.75" /> : <CalendarMix date={selectedDate} />}
+              </div>
+            </div>
+
+            {/* What kind of day it is, under the mix as in the Agenda panel header, on busy and free days alike. Not a
+                drag area, so tapping the chip or Retry never moves the sheet; the Popover is portalled out of the sheet.
+                Its spacing rides on the line itself, so with AI insights off it leaves no gap. */}
+            {isSheetShown && <HolidayLine date={selectedDate} className="mx-4 mt-2 shrink-0" />}
           </div>
 
-          <div onPointerDown={startDrag} className="flex shrink-0 touch-none flex-col gap-2 px-4">
-            <EventsTotal count={eventsCount} emptyLabel="Free day" />
-            {/* a free day has no mix: an empty 3px spacer keeps the list in place, as in the Agenda header */}
-            {eventsCount === 0 ? <div aria-hidden className="h-0.75" /> : <CalendarMix date={selectedDate} />}
-          </div>
-
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 pt-2 pb-6">
-            {/* What kind of day it is: on a free day it leads the body, ahead of the Next event, so the peek opens on
-                the day's character instead of an absence */}
-            {isSheetShown && eventsCount === 0 && <HolidayLine date={selectedDate} className="mb-4" />}
-
+          {/* Where scrollbars take layout space (a fine pointer), the gutter is always reserved and comes out of the right
+              padding, so rows keep the header's width whether the list scrolls or not. Exact in Chromium (a 4px
+              scrollbar, index.css); Firefox's thin scrollbar is a little wider, so there rows sit a few px narrower.
+              Its top padding, equal to the bottom, is budgeted in SHEET_PEEK (constants.ts). */}
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 pointer-fine:pr-3 pointer-fine:scrollbar-gutter-stable">
             {eventsCount === 0 ? (
               <AgendaEmpty date={selectedDate} placement="sheet" />
             ) : (
@@ -104,10 +119,6 @@ const BottomSheet = ({peek}: TBottomSheetProps) => {
                 ))}
               </ul>
             )}
-
-            {/* On a busy day what kind of day it is comes after what it holds, out of the peek (scroll or expand).
-                Not a drag area anyway; the Popover is portalled out of the sheet. */}
-            {isSheetShown && eventsCount > 0 && <HolidayLine date={selectedDate} className="mt-4" />}
           </div>
 
           {/* Pinned under the list: the sheet keeps its full height and slides down when collapsed, so the note only

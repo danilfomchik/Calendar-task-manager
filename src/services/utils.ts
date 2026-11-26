@@ -7,7 +7,7 @@ import {extendTailwindMerge} from 'tailwind-merge';
 const twMerge = extendTailwindMerge({
   extend: {
     classGroups: {
-      shadow: [{shadow: ['sheet', 'modal', 'popover', 'dropdown', 'fab', 'float']}],
+      shadow: [{shadow: ['sheet', 'modal', 'popover', 'dropdown', 'fab', 'float', 'band']}],
       'font-size': [
         {
           text: [
